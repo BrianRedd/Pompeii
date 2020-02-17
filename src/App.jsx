@@ -1,11 +1,11 @@
-import React from 'react';
+import React from "react";
 
-import './styles/App.scss';
+import "./styles/App.scss";
 
 function App() {
   return (
     <div className="App">
-      Hello World!
+      <img alt="Board" src="/assets/Board-grid.png" />
     </div>
   );
 }
