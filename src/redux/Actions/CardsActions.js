@@ -1,15 +1,16 @@
 /** @module CardsActions */
 
-import { ADD_CARDS, ADD_DECK } from "../ActionTypes";
+import * as actions from "../ActionTypes";
 import { cardsData } from "../../data/cards";
+import { updatePlayerHand } from "./PlayersActions";
 
 /**
  * @function addCards
- * @description adds cards array to CardsState store
+ * @description adds cards dictionary to CardsState store
  * @param {Object} cards - cards dictionary
  */
 export const addCards = cards => ({
-  type: ADD_CARDS,
+  type: actions.ADD_CARDS,
   payload: cards
 });
 
@@ -19,7 +20,7 @@ export const addCards = cards => ({
  * @param {Array} deck
  */
 export const addDeck = deck => ({
-  type: ADD_DECK,
+  type: actions.ADD_DECK,
   payload: deck
 });
 
@@ -48,7 +49,10 @@ const shuffleCards = cards => {
  * @function generateDeck
  * @description generates deck for game
  */
-export const generateDeck = () => dispatch => {
+export const generateDeck = () => (dispatch, getState) => {
+  const {
+    playersState: { players }
+  } = getState();
   dispatch(addCards(cardsData));
   let deck = [];
   const omens = [];
@@ -86,5 +90,16 @@ export const generateDeck = () => dispatch => {
 
   deck.splice(Math.floor(Math.random(1) * 15), 0, ad79s.shift());
 
-  dispatch(addDeck([...deck, ...ad79s, ...hands[0], ...hands[1]]));
+  deck = [...deck, ...ad79s, ...hands[5], ...hands[6]];
+
+  dispatch(addDeck(deck));
+
+  const promises = [];
+
+  console.log("players:", players);
+  players.forEach((player, idx) => {
+    promises.push(dispatch(updatePlayerHand(player, hands[idx])));
+  });
+
+  Promise.all(promises);
 };

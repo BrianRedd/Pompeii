@@ -12,20 +12,21 @@ import Main from "./Main";
 
 const mapStateToProps = state => {
   return {
-    cardsState: state.cardsState
+    cardsState: state.cardsState,
+    playersState: state.playerState
   };
 };
 
 const mapDispatchToProps = {
-  generateDeck: actions.generateDeck
+  gameSetup: actions.gameSetup
 };
 
 const MainContainer = props => {
-  const { cardsState, generateDeck } = props;
+  const { cardsState, gameSetup } = props;
 
   useState(() => {
     if (!_.get(cardsState.cards)) {
-      generateDeck();
+      gameSetup();
     }
   }, []);
 
@@ -38,12 +39,12 @@ const MainContainer = props => {
 
 MainContainer.propTypes = {
   cardsState: types.cardsState.types,
-  generateDeck: PropTypes.func
+  gameSetup: PropTypes.func
 };
 
 MainContainer.defaultProps = {
   cardsState: types.cardsState.defaults,
-  generateDeck: () => {}
+  gameSetup: () => {}
 };
 
 export const MainContainerTest = MainContainer;

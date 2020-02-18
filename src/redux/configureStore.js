@@ -5,13 +5,15 @@ import thunk from "redux-thunk";
 import { createLogger } from "redux-logger";
 
 import cardsState from "./Reducers/CardsReducer";
+import playersState from "./Reducers/PlayersReducer";
 
 const logger = createLogger({ collapsed: true, diff: true });
 
 const ConfigureStore = () => {
   const storeTemplate = createStore(
     combineReducers({
-      cardsState
+      cardsState,
+      playersState
     }),
     /* eslint-disable no-underscore-dangle */
     window.__REDUX_DEVTOOLS_EXTENSION__ &&

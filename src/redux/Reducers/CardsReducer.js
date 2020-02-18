@@ -1,6 +1,6 @@
 /** @module CardsReducer */
 
-import { ADD_CARDS, ADD_DECK } from "../ActionTypes";
+import * as actions from "../ActionTypes";
 
 /**
  * @constant cardsState
@@ -16,12 +16,12 @@ const cardsState = (
 ) => {
   const { type, payload } = action;
   switch (type) {
-    case ADD_CARDS:
+    case actions.ADD_CARDS:
       return {
         ...state,
         cards: payload
       };
-    case ADD_DECK:
+    case actions.ADD_DECK:
       return {
         ...state,
         deck: payload
