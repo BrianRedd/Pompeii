@@ -68,11 +68,23 @@ export const generateDeck = () => dispatch => {
     }
   });
   deck = shuffleCards(deck);
+
+  // 7 hands of 4 cards each
   const hands = [];
   for (let i = 0; i < 7; i += 1) {
+    hands.push([]);
     for (let ii = 0; ii < 4; ii += 1) {
-      hands[i] = deck.shift();
+      const hand = deck.shift();
+      hands[i].push(hand);
     }
   }
-  dispatch(addDeck([...deck, ...ad79s, ...hands[0]]));
+
+  // add omens
+  deck = shuffleCards([...deck, ...omens]);
+
+  // add AD79 to first 15 (2-3 players) cards
+
+  deck.splice(Math.floor(Math.random(1) * 15), 0, ad79s.shift());
+
+  dispatch(addDeck([...deck, ...ad79s, ...hands[0], ...hands[1]]));
 };
