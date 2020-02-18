@@ -28,7 +28,11 @@ const MainContainer = props => {
     }
   }, []);
 
-  return <Main cardsState={cardsState} />;
+  return (
+    <div data-test="container-main">
+      <Main cardsState={cardsState} />
+    </div>
+  );
 };
 
 MainContainer.propTypes = {

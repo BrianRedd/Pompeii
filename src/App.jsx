@@ -13,7 +13,7 @@ import store from "./redux/configureStore";
 function App() {
   return (
     <Provider store={store}>
-      <div className="App">
+      <div className="App" data-test="component-app">
         <MainContainer />
       </div>
     </Provider>
