@@ -9,7 +9,7 @@ import { ADD_CARDS, ADD_DECK } from "../ActionTypes";
  */
 const cardsState = (
   state = {
-    cards: [],
+    cards: {},
     deck: []
   },
   action

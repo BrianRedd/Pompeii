@@ -1,11 +1,12 @@
 /** @module CardsActions */
 
 import { ADD_CARDS, ADD_DECK } from "../ActionTypes";
+import { cardsData } from "../../data/cards";
 
 /**
  * @function addCards
  * @description adds cards array to CardsState store
- * @param {Array} cards
+ * @param {Object} cards - cards dictionary
  */
 export const addCards = cards => ({
   type: ADD_CARDS,
@@ -23,5 +24,6 @@ export const addDeck = deck => ({
 });
 
 export const generateDeck = () => dispatch => {
-  dispatch(addCards([{ card: "test" }]));
+  dispatch(addCards(cardsData));
+  dispatch(addDeck(Object.keys(cardsData)));
 };

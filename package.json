@@ -29,7 +29,7 @@
     "sass-loader": "^8.0.2"
   },
   "scripts": {
-    "start": "node scripts/start.js",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "jest": "jest",
     "test": "jest --watch",

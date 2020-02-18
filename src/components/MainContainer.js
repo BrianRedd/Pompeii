@@ -6,6 +6,7 @@ import { connect } from "react-redux";
 import _ from "lodash";
 
 import actions from "../redux/Actions";
+import * as types from "../types/types";
 
 import Main from "./Main";
 
@@ -36,18 +37,12 @@ const MainContainer = props => {
 };
 
 MainContainer.propTypes = {
-  cardsState: PropTypes.shape({
-    cards: PropTypes.arrayOf(PropTypes.object),
-    deck: PropTypes.arrayOf(PropTypes.object)
-  }),
+  cardsState: types.cardsState.types,
   generateDeck: PropTypes.func
 };
 
 MainContainer.defaultProps = {
-  cardsState: {
-    cards: [],
-    deck: []
-  },
+  cardsState: types.cardsState.defaults,
   generateDeck: () => {}
 };
 
