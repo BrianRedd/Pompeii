@@ -2,6 +2,7 @@
 
 import React from "react";
 import _ from "lodash";
+import { Tooltip } from "@material-ui/core";
 
 import * as types from "../types/types";
 
@@ -9,14 +10,18 @@ import Board from "./Board/Board";
 
 const Deck = ({ cardsState }) => {
   const { cards, deck } = cardsState;
-  const deckArray = deck.map(card => {
+  const deckArray = deck.map((card, idx) => {
+    const key = `${card}_${idx}`;
     return (
-      <img
-        className="pompeii-card"
-        key={card}
-        alt={cards[card].name}
-        src={`/assets/cards/${cards[card].type}-${cards[card].number}-${cards[card].color}.png`}
-      />
+      <Tooltip key={key} title={`${idx + 1}: ${cards[card].name}`}>
+        <span>
+          <img
+            className="pompeii-card"
+            alt={cards[card].name}
+            src={`/assets/cards/${cards[card].type}-${cards[card].number}-${cards[card].color}.png`}
+          />
+        </span>
+      </Tooltip>
     );
   });
   return deckArray;

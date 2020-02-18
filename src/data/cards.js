@@ -1,20 +1,6 @@
 /** @module cards */
 
 export const cardsData = {
-  AD79: {
-    name: "AD 79",
-    type: "AD79",
-    number: 0,
-    color: "S",
-    count: 2
-  },
-  OMEN: {
-    name: "Omen",
-    type: "Omen",
-    number: 0,
-    color: "S",
-    count: 7
-  },
   CARD1: {
     name: "Grey 1",
     type: "Pomp",
@@ -91,5 +77,19 @@ export const cardsData = {
     number: 11,
     color: "B",
     count: 5
+  },
+  OMEN: {
+    name: "Omen",
+    type: "Omen",
+    number: 0,
+    color: "S",
+    count: 7
+  },
+  AD79: {
+    name: "AD 79",
+    type: "AD79",
+    number: 0,
+    color: "S",
+    count: 2
   }
 };
