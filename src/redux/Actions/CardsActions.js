@@ -86,9 +86,11 @@ export const generateDeck = () => (dispatch, getState) => {
   // add omens
   deck = shuffleCards([...deck, ...omens]);
 
-  // add AD79 to first 15 (2-3 players) cards
+  // add AD79 to first 10 (4 players) or 15 (2-3 players) cards
 
-  deck.splice(Math.floor(Math.random(1) * 15), 0, ad79s.shift());
+  const numberOfCards = players.length > 3 ? 10 : 15;
+
+  deck.splice(Math.floor(Math.random(1) * numberOfCards), 0, ad79s.shift());
 
   deck = [...deck, ...ad79s, ...hands[5], ...hands[6]];
 
@@ -96,7 +98,6 @@ export const generateDeck = () => (dispatch, getState) => {
 
   const promises = [];
 
-  console.log("players:", players);
   players.forEach((player, idx) => {
     promises.push(dispatch(updatePlayerHand(player, hands[idx])));
   });

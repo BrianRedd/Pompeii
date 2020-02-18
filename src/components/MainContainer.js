@@ -13,7 +13,7 @@ import Main from "./Main";
 const mapStateToProps = state => {
   return {
     cardsState: state.cardsState,
-    playersState: state.playerState
+    playersState: state.playersState
   };
 };
 
@@ -22,7 +22,7 @@ const mapDispatchToProps = {
 };
 
 const MainContainer = props => {
-  const { cardsState, gameSetup } = props;
+  const { cardsState, playersState, gameSetup } = props;
 
   useState(() => {
     if (!_.get(cardsState.cards)) {
@@ -32,18 +32,20 @@ const MainContainer = props => {
 
   return (
     <div data-test="container-main">
-      <Main cardsState={cardsState} />
+      <Main cardsState={cardsState} playersState={playersState} />
     </div>
   );
 };
 
 MainContainer.propTypes = {
   cardsState: types.cardsState.types,
+  playersState: types.playersState.types,
   gameSetup: PropTypes.func
 };
 
 MainContainer.defaultProps = {
   cardsState: types.cardsState.defaults,
+  playersState: types.playersState.defaults,
   gameSetup: () => {}
 };
 

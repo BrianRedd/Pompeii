@@ -2,6 +2,15 @@
 
 import * as actions from "../ActionTypes";
 
+const compareCards = (a, b) => {
+  const cardA = parseFloat(a.split("_")[1]);
+  const cardB = parseFloat(b.split("_")[1]);
+  if (cardA === cardB) {
+    return 0;
+  }
+  return cardA < cardB ? -1 : 1;
+};
+
 /**
  * @constant playersState
  * @param {Object} state - players state object
@@ -41,7 +50,7 @@ const playersState = (
           ...state.details,
           [payload.playerId]: {
             ...state.details[payload.playerId],
-            hand: payload.hand
+            hand: payload.hand.sort(compareCards)
           }
         }
       };
