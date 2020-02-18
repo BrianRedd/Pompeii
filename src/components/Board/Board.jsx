@@ -1,9 +1,14 @@
 /** @module board */
 
 import React from "react";
+import { Container } from "reactstrap";
 
 const Board = () => {
-  return <img alt="Board" src="/assets/Board-grid.png" />;
+  return (
+    <Container>
+      <img alt="Board" src="/assets/Board-grid.png" />
+    </Container>
+  );
 };
 
 export default Board;
