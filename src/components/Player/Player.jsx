@@ -4,6 +4,8 @@ import React from "react";
 
 import * as types from "../../types/types";
 
+import Card from "../Helpers/Card";
+
 /**
  * @function Player
  * @description Functional Presentational component for Player
@@ -15,7 +17,7 @@ const Player = props => {
   return (
     <fieldset data-test="presentation-player" className="mt-3">
       <legend>{details.name}</legend>
-      {JSON.stringify(details.hand)}
+      <Card cardId={details.hand[0]} />
     </fieldset>
   );
 };

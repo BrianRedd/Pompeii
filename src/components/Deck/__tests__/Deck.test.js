@@ -6,7 +6,7 @@ import TestedComponent from "../Deck";
 const mockDraw = jest.fn();
 
 const defaultProps = {
-  topDiscardSrc: null,
+  topDiscard: null,
   drawCard: mockDraw,
   deckSizes: {
     deck: 10,
@@ -16,7 +16,7 @@ const defaultProps = {
 
 const cardDrawnProps = {
   ...defaultProps,
-  topDiscardSrc: "Test",
+  topDiscard: "Test",
   deckSizes: {
     deck: 0,
     discard: 10
@@ -84,6 +84,5 @@ describe("discard pile", () => {
     empty = findByTestAttr(wrapper, "card-pile-discard-empty");
     expect(discard.length).toBe(1);
     expect(empty.length).toBe(0);
-    expect(discard.props().src).toBe("/assets/cards/Test.png");
   });
 });

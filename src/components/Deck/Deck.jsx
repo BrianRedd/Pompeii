@@ -5,13 +5,15 @@ import PropTypes from "prop-types";
 import { Col, Row } from "reactstrap";
 import { ButtonBase } from "@material-ui/core";
 
+import Card from "../Helpers/Card";
+
 /**
  * @function Deck
  * @description Functional Presentational component for Deck
  * @returns {React.Component} - Rendered component.
  */
 const Deck = props => {
-  const { topDiscardSrc, drawCard, deckSizes } = props;
+  const { topDiscard, drawCard, deckSizes } = props;
 
   return (
     <Row data-test="presentation-deck">
@@ -40,13 +42,8 @@ const Deck = props => {
       </Col>
       <Col xs={6}>
         <div data-test="card-pile-discard" className="text-center">
-          {topDiscardSrc ? (
-            <img
-              data-test="card-discard"
-              className="image-fluid pompeii-card"
-              alt="Discard"
-              src={`/assets/cards/${topDiscardSrc}.png`}
-            />
+          {topDiscard ? (
+            <Card data-test="card-discard" cardId={topDiscard} />
           ) : (
             <div
               data-test="card-pile-discard-empty"
@@ -65,7 +62,7 @@ Deck.propTypes = {
     deck: PropTypes.number,
     discard: PropTypes.number
   }),
-  topDiscardSrc: PropTypes.string,
+  topDiscard: PropTypes.string,
   drawCard: PropTypes.func
 };
 
@@ -74,7 +71,7 @@ Deck.defaultProps = {
     deck: 0,
     discard: 0
   },
-  topDiscardSrc: "",
+  topDiscard: "",
   drawCard: () => {}
 };
 export default Deck;

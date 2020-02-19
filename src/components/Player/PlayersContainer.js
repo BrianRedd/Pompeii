@@ -1,10 +1,24 @@
 /** @module PlayersContainer */
 
 import React from "react";
+import _ from "lodash";
 
 import * as types from "../../types/types";
 
 import Player from "./Player";
+
+/**
+ * @function PlayerCards
+ * @description List components for player cards
+ * @param {Object} props.playersState
+ * @returns {React.Component}
+ */
+const PlayerCards = ({ playersState }) => {
+  const playerCards = playersState.players.map(player => {
+    return <Player key={player} details={playersState.details[player]} />;
+  });
+  return playerCards;
+};
 
 /**
  * @function PlayersContainer
@@ -16,8 +30,9 @@ const PlayersContainer = props => {
 
   return (
     <div data-test="container-players">
-      <Player details={playersState.details.player1} />
-      <Player details={playersState.details.player2} />
+      {!_.isEmpty(playersState.details) && (
+        <PlayerCards playersState={playersState} />
+      )}
     </div>
   );
 };
