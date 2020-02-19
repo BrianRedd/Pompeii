@@ -5,6 +5,11 @@ import PropTypes from "prop-types";
 import { Col, Row } from "reactstrap";
 import { ButtonBase } from "@material-ui/core";
 
+/**
+ * @function Deck
+ * @description Functional Presentational component for Deck
+ * @returns {React.Component} - Rendered component.
+ */
 const Deck = props => {
   const { topDiscardSrc, drawCard, deckSizes } = props;
 

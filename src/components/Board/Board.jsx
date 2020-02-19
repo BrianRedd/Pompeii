@@ -2,6 +2,11 @@
 
 import React from "react";
 
+/**
+ * @function Board
+ * @description Functional Presentational component for Board
+ * @returns {React.Component} - Rendered component.
+ */
 const Board = () => {
   return (
     <div data-test="presentation-board">

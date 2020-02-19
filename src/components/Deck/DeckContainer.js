@@ -8,8 +8,13 @@ import * as types from "../../types/types";
 
 import Deck from "./Deck";
 
+/**
+ * @function DeckContainer
+ * @description Functional Container component for Deck
+ * @returns {React.Component} - Rendered component.
+ */
 const DeckContainer = props => {
-  const { cardsState, takeCard, discardCard } = props;
+  const { cardsState, drawCard } = props;
 
   const [lastDrawnCard, setLastDrawnCard] = useState(null);
   const [topDiscardSrc, setTopDiscardSrc] = useState(null);
@@ -28,17 +33,6 @@ const DeckContainer = props => {
     }
   }, [cardsState, lastDrawnCard]);
 
-  /**
-   * @function drawCard
-   * @description draw card from deck
-   */
-  const drawCard = () => {
-    const takenCard = cardsState.deck[cardsState.deck.length - 1];
-    console.log("drawCard:", takenCard);
-    takeCard();
-    discardCard(takenCard);
-  };
-
   return (
     <div data-test="container-deck">
       <Deck
@@ -55,14 +49,12 @@ const DeckContainer = props => {
 
 DeckContainer.propTypes = {
   cardsState: types.cardsState.types,
-  takeCard: PropTypes.func,
-  discardCard: PropTypes.func
+  drawCard: PropTypes.func
 };
 
 DeckContainer.defaultProps = {
   cardsState: types.cardsState.defaults,
-  takeCard: () => {},
-  discardCard: () => {}
+  drawCard: () => {}
 };
 
 export default DeckContainer;
