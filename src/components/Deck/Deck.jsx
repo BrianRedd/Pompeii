@@ -11,9 +11,13 @@ const Deck = props => {
   return (
     <Row>
       <Col xs={6}>
-        <div className="text-center">
+        <div className="text-center" data-test="card-pile-deck">
           {deckSizes.deck > 0 ? (
-            <ButtonBase focusRipple onClick={() => drawCard()}>
+            <ButtonBase
+              focusRipple
+              onClick={() => drawCard()}
+              data-test="card-deck"
+            >
               <img
                 className="image-fluid pompeii-card"
                 alt="Deck"
@@ -23,19 +27,23 @@ const Deck = props => {
           ) : (
             <div className="discard-pile-empty" />
           )}
-          <div>Deck ({deckSizes.deck})</div>
+          <div data-test="card-pile-deck-empty">Deck ({deckSizes.deck})</div>
         </div>
       </Col>
       <Col xs={6}>
-        <div className="text-center">
+        <div className="text-center" data-test="card-pile-discard">
           {topDiscardSrc ? (
             <img
+              data-test="card-discard"
               className="image-fluid pompeii-card"
               alt="Discard"
               src={`/assets/cards/${topDiscardSrc}.png`}
             />
           ) : (
-            <div className="discard-pile-empty" />
+            <div
+              data-test="card-pile-discard-empty"
+              className="discard-pile-empty"
+            />
           )}
           <div>Discard ({deckSizes.discard})</div>
         </div>
