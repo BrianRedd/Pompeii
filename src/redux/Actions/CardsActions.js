@@ -25,6 +25,15 @@ export const addDeck = deck => ({
 });
 
 /**
+ * @function drawCard
+ * @description takes top card from deck and moves to discard
+ */
+export const drawCard = () => ({
+  type: actionTypes.DRAW_CARD,
+  payload: null
+});
+
+/**
  * @function shuffleCards
  * @description shuffles any array of cards provided and returns randomized (using Fisher-Yates shuffle)
  * @param {Array} cards

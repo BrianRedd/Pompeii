@@ -6,7 +6,7 @@ import Board from "./Board";
 
 const BoardContainer = () => {
   return (
-    <div data-test="container-board">
+    <div data-test="container-board" className="board-container">
       <Board />
     </div>
   );

@@ -25,6 +25,14 @@ test("addDeck", () => {
   expect(actions.addDeck(payload)).toEqual(expectedAction);
 });
 
+test("drawCard", () => {
+  const expectedAction = {
+    type: actionTypes.DRAW_CARD,
+    payload: null
+  };
+  expect(actions.drawCard()).toEqual(expectedAction);
+});
+
 test("shuffleCards", () => {
   const originalDeck = ["A", "B", "C", "D", "E"];
   expect(actions.shuffleCards(originalDeck)).not.toEqual(originalDeck);

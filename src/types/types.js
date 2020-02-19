@@ -20,11 +20,13 @@ export const deck = {
 export const cardsState = {
   types: shape({
     cards: cards.types,
-    deck: deck.types
+    deck: deck.types,
+    discard: deck.types
   }),
   defaults: {
     cards: cards.defaults,
-    deck: deck.defaults
+    deck: deck.defaults,
+    discard: deck.defaults
   }
 };
 

@@ -10,11 +10,15 @@ import * as actions from "../ActionTypes";
 const cardsState = (
   state = {
     cards: {},
-    deck: []
+    deck: [],
+    discard: []
   },
   action
 ) => {
   const { type, payload } = action;
+  let drawnCard = "";
+  const tempDeck = state.deck;
+  const tempDiscard = state.discard;
   switch (type) {
     case actions.ADD_CARDS:
       return {
@@ -25,6 +29,14 @@ const cardsState = (
       return {
         ...state,
         deck: payload
+      };
+    case actions.DRAW_CARD:
+      drawnCard = tempDeck.pop();
+      tempDiscard.push(drawnCard);
+      return {
+        ...state,
+        deck: tempDeck,
+        discard: tempDiscard
       };
     default:
       return state;

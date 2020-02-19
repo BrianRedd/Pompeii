@@ -5,7 +5,8 @@ import Reducer from "../cardsReducer";
 
 const defaultState = {
   cards: {},
-  deck: []
+  deck: [],
+  discard: []
 };
 
 test("should return initial state", () => {
@@ -34,4 +35,14 @@ test("should handle ADD_DECK action", () => {
   };
   const state = Reducer(undefined, action);
   expect(state.deck).toEqual(payload);
+});
+
+test("should handle DRAW_CARD action", () => {
+  const action = {
+    type: actionTypes.DRAW_CARD,
+    payload: null
+  };
+  const state = Reducer({ deck: ["card1", "card2"], discard: [] }, action);
+  expect(state.deck).toEqual(["card1"]);
+  expect(state.discard).toEqual(["card2"]);
 });
