@@ -16,9 +16,6 @@ const cardsState = (
   action
 ) => {
   const { type, payload } = action;
-  let drawnCard = "";
-  const tempDeck = state.deck;
-  const tempDiscard = state.discard;
   switch (type) {
     case actions.ADD_CARDS:
       return {
@@ -30,13 +27,15 @@ const cardsState = (
         ...state,
         deck: payload
       };
-    case actions.DRAW_CARD:
-      drawnCard = tempDeck.pop();
-      tempDiscard.push(drawnCard);
+    case actions.TAKE_CARD:
       return {
         ...state,
-        deck: tempDeck,
-        discard: tempDiscard
+        deck: state.deck.slice(0, -1)
+      };
+    case actions.DISCARD_CARD:
+      return {
+        ...state,
+        discard: [...state.discard, payload]
       };
     default:
       return state;

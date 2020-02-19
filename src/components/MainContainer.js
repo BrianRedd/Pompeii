@@ -19,11 +19,12 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = {
   gameSetup: actions.gameSetup,
-  drawCard: actions.drawCard
+  takeCard: actions.takeCard,
+  discardCard: actions.discardCard
 };
 
 const MainContainer = props => {
-  const { cardsState, playersState, gameSetup, drawCard } = props;
+  const { cardsState, playersState, gameSetup, takeCard, discardCard } = props;
 
   useState(() => {
     if (!_.get(cardsState.cards)) {
@@ -36,7 +37,8 @@ const MainContainer = props => {
       <Main
         cardsState={cardsState}
         playersState={playersState}
-        drawCard={drawCard}
+        takeCard={takeCard}
+        discardCard={discardCard}
       />
     </div>
   );
@@ -46,14 +48,16 @@ MainContainer.propTypes = {
   cardsState: types.cardsState.types,
   playersState: types.playersState.types,
   gameSetup: PropTypes.func,
-  drawCard: PropTypes.func
+  takeCard: PropTypes.func,
+  discardCard: PropTypes.func
 };
 
 MainContainer.defaultProps = {
   cardsState: types.cardsState.defaults,
   playersState: types.playersState.defaults,
   gameSetup: () => {},
-  drawCard: () => {}
+  takeCard: () => {},
+  discardCard: () => {}
 };
 
 export const MainContainerTest = MainContainer;

@@ -9,7 +9,7 @@ import * as types from "../../types/types";
 import Deck from "./Deck";
 
 const DeckContainer = props => {
-  const { cardsState, drawCard } = props;
+  const { cardsState, takeCard, discardCard } = props;
 
   const [lastDrawnCard, setLastDrawnCard] = useState(null);
   const [topDiscardSrc, setTopDiscardSrc] = useState(null);
@@ -28,6 +28,17 @@ const DeckContainer = props => {
     }
   }, [cardsState, lastDrawnCard]);
 
+  /**
+   * @function drawCard
+   * @description draw card from deck
+   */
+  const drawCard = () => {
+    const takenCard = cardsState.deck[cardsState.deck.length - 1];
+    console.log("drawCard:", takenCard);
+    takeCard();
+    discardCard(takenCard);
+  };
+
   return (
     <div data-test="container-deck">
       <Deck
@@ -44,12 +55,14 @@ const DeckContainer = props => {
 
 DeckContainer.propTypes = {
   cardsState: types.cardsState.types,
-  drawCard: PropTypes.func
+  takeCard: PropTypes.func,
+  discardCard: PropTypes.func
 };
 
 DeckContainer.defaultProps = {
   cardsState: types.cardsState.defaults,
-  drawCard: () => {}
+  takeCard: () => {},
+  discardCard: () => {}
 };
 
 export default DeckContainer;

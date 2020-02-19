@@ -1,7 +1,7 @@
-/** cardsReducer.test */
+/** CardsReducer.test */
 
 import * as actionTypes from "../../ActionTypes";
-import Reducer from "../cardsReducer";
+import Reducer from "../CardsReducer";
 
 const defaultState = {
   cards: {},
@@ -37,12 +37,24 @@ test("should handle ADD_DECK action", () => {
   expect(state.deck).toEqual(payload);
 });
 
-test("should handle DRAW_CARD action", () => {
+test("should handle TAKE_CARD action", () => {
   const action = {
-    type: actionTypes.DRAW_CARD,
+    type: actionTypes.TAKE_CARD,
     payload: null
   };
   const state = Reducer({ deck: ["card1", "card2"], discard: [] }, action);
   expect(state.deck).toEqual(["card1"]);
-  expect(state.discard).toEqual(["card2"]);
+});
+
+test("should handle DISCARD_CARD action", () => {
+  const payload = "card2";
+  const action = {
+    type: actionTypes.DISCARD_CARD,
+    payload
+  };
+  const state = Reducer(
+    { deck: ["card1", "card2"], discard: ["card3"] },
+    action
+  );
+  expect(state.discard).toEqual(["card3", "card2"]);
 });

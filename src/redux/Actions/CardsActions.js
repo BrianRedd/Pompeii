@@ -25,12 +25,22 @@ export const addDeck = deck => ({
 });
 
 /**
- * @function drawCard
- * @description takes top card from deck and moves to discard
+ * @function takeCard
+ * @description takes top card from deck
  */
-export const drawCard = () => ({
-  type: actionTypes.DRAW_CARD,
+export const takeCard = () => ({
+  type: actionTypes.TAKE_CARD,
   payload: null
+});
+
+/**
+ * @function discardCard
+ * @description places card into discard pile
+ * @param {String} card
+ */
+export const discardCard = card => ({
+  type: actionTypes.DISCARD_CARD,
+  payload: card
 });
 
 /**

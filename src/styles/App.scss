@@ -5,18 +5,20 @@
   height: 200px;
 }
 
-.board-container {
-  width: 1320px;
-}
-
-.off-board {
-  margin: 15px;
-  width: 400px;
-  .discard-pile-empty {
-    width: 125px;
-    height: 200px;
-    margin-left: auto;
-    margin-right: auto;
-    border: 1px solid grey;
+.main-container {
+  min-width: 1750px;
+  .board-container {
+    width: 1320px;
+  }
+  .off-board {
+    margin: 15px;
+    width: 400px;
+    .discard-pile-empty {
+      width: 125px;
+      height: 200px;
+      margin-left: auto;
+      margin-right: auto;
+      border: 1px solid grey;
+    }
   }
 }

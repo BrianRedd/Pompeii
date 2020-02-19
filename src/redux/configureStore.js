@@ -4,8 +4,8 @@ import { createStore, applyMiddleware, combineReducers } from "redux";
 import thunk from "redux-thunk";
 import { createLogger } from "redux-logger";
 
-import cardsState from "./Reducers/cardsReducer";
-import playersState from "./Reducers/playersReducer";
+import cardsState from "./Reducers/CardsReducer";
+import playersState from "./Reducers/PlayersReducer";
 
 const logger = createLogger({ collapsed: true, diff: true });
 

@@ -1,7 +1,7 @@
-/** playersReducer.test */
+/** PlayersReducer.test */
 
 import * as actionTypes from "../../ActionTypes";
-import Reducer from "../playersReducer";
+import Reducer from "../PlayersReducer";
 
 const defaultState = {
   players: [],
