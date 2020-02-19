@@ -23,7 +23,8 @@
     "react-hooks/exhaustive-deps": "warn",
     "camelcase": ["error", { "allow": ["token"] }],
     "import/prefer-default-export": "off",
-    "import/no-unresolved": "off"
+    "import/no-unresolved": "off",
+    "react/jsx-fragments": "off"
   },
   "env": {
     "es6": true,

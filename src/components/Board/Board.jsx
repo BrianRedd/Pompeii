@@ -1,4 +1,4 @@
-/** @module board */
+/** @module Board */
 
 import React from "react";
 

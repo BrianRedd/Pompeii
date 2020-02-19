@@ -8,6 +8,7 @@ import * as types from "../types/types";
 
 import BoardContainer from "./Board/BoardContainer";
 import DeckContainer from "./Deck/DeckContainer";
+import PlayersContainer from "./Player/PlayersContainer";
 
 /**
  * @function Main
@@ -20,10 +21,10 @@ const Main = props => {
   return (
     <Col data-test="presentation-main" className="main-container">
       <Row>
-        <BoardContainer playersState={playersState} />
+        <BoardContainer />
         <div className="off-board">
           <DeckContainer cardsState={cardsState} drawCard={drawCard} />
-          <div>Player 1 here</div>
+          <PlayersContainer playersState={playersState} />
         </div>
       </Row>
     </Col>

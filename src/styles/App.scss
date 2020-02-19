@@ -22,3 +22,28 @@
     }
   }
 }
+
+fieldset {
+  border: 1px solid rgba(25, 58, 74, 0.1);
+  margin-left: -5px;
+  padding-left: 5px;
+  max-width: 100%;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 4px;
+  //Material-UI 'Paper' effect
+  box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.2),
+    0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 2px 1px -1px rgba(0, 0, 0, 0.12);
+  * {
+    margin-right: 0px;
+  }
+  legend {
+    width: initial;
+    max-width: initial;
+    line-height: 1;
+    font-size: 0.95rem;
+    align-self: center;
+    font-weight: bold;
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+}
