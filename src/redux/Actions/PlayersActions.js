@@ -1,6 +1,6 @@
 /** @module PlayersActions */
 
-import * as actions from "../ActionTypes";
+import * as actionTypes from "../ActionTypes";
 
 /**
  * @function setPlayerArray
@@ -8,7 +8,7 @@ import * as actions from "../ActionTypes";
  * @param {Array} playerIds - array of player IDs
  */
 export const setPlayerArray = playerIds => ({
-  type: actions.SET_PLAYERS_ARRAY,
+  type: actionTypes.SET_PLAYERS_ARRAY,
   payload: playerIds
 });
 
@@ -18,7 +18,7 @@ export const setPlayerArray = playerIds => ({
  * @param {Array} playersObj
  */
 export const addPlayers = playersObj => ({
-  type: actions.ADD_PLAYERS,
+  type: actionTypes.ADD_PLAYERS,
   payload: playersObj
 });
 
@@ -29,7 +29,7 @@ export const addPlayers = playersObj => ({
  * @param {Object} details - player object
  */
 export const addPlayer = (playerId, details) => ({
-  type: actions.ADD_PLAYER,
+  type: actionTypes.ADD_PLAYER,
   payload: { playerId, details }
 });
 
@@ -40,6 +40,6 @@ export const addPlayer = (playerId, details) => ({
  * @param {Object} hand - player hand array
  */
 export const updatePlayerHand = (playerId, hand) => ({
-  type: actions.UPDATE_PLAYER_HAND,
+  type: actionTypes.UPDATE_PLAYER_HAND,
   payload: { playerId, hand }
 });

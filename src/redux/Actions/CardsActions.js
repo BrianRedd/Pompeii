@@ -1,6 +1,6 @@
 /** @module CardsActions */
 
-import * as actions from "../ActionTypes";
+import * as actionTypes from "../ActionTypes";
 import { cardsData } from "../../data/cards";
 import { updatePlayerHand } from "./PlayersActions";
 
@@ -10,7 +10,7 @@ import { updatePlayerHand } from "./PlayersActions";
  * @param {Object} cards - cards dictionary
  */
 export const addCards = cards => ({
-  type: actions.ADD_CARDS,
+  type: actionTypes.ADD_CARDS,
   payload: cards
 });
 
@@ -20,7 +20,7 @@ export const addCards = cards => ({
  * @param {Array} deck
  */
 export const addDeck = deck => ({
-  type: actions.ADD_DECK,
+  type: actionTypes.ADD_DECK,
   payload: deck
 });
 
@@ -30,7 +30,7 @@ export const addDeck = deck => ({
  * @param {Array} cards
  * @returns {Array}
  */
-const shuffleCards = cards => {
+export const shuffleCards = cards => {
   const shuffledCards = [...cards];
   const numberOfShuffles = 5;
   for (let s = 0; s < numberOfShuffles; s += 1) {
@@ -53,7 +53,11 @@ export const generateDeck = () => (dispatch, getState) => {
   const {
     playersState: { players }
   } = getState();
+
+  // pull cards from cardsData
   dispatch(addCards(cardsData));
+
+  // populate deck arrays
   let deck = [];
   const omens = [];
   const ad79s = [];
@@ -87,20 +91,17 @@ export const generateDeck = () => (dispatch, getState) => {
   deck = shuffleCards([...deck, ...omens]);
 
   // add AD79 to first 10 (4 players) or 15 (2-3 players) cards
-
   const numberOfCards = players.length > 3 ? 10 : 15;
-
   deck.splice(Math.floor(Math.random(1) * numberOfCards), 0, ad79s.shift());
 
+  // add two hands to end of deck
   deck = [...deck, ...ad79s, ...hands[5], ...hands[6]];
-
   dispatch(addDeck(deck));
 
+  // pass hands to players
   const promises = [];
-
   players.forEach((player, idx) => {
     promises.push(dispatch(updatePlayerHand(player, hands[idx])));
   });
-
   Promise.all(promises);
 };
