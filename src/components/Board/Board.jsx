@@ -1,13 +1,12 @@
 /** @module board */
 
 import React from "react";
-import { Container } from "reactstrap";
 
 const Board = () => {
   return (
-    <Container>
+    <div data-test="presentation-board">
       <img alt="Board" src="/assets/Board-grid.png" />
-    </Container>
+    </div>
   );
 };
 
