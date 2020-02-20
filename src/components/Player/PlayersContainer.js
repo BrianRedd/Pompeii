@@ -29,7 +29,7 @@ const PlayersContainer = props => {
   const { playersState } = props;
 
   return (
-    <div data-test="container-players">
+    <div data-test="container-players" className="players-container">
       {!_.isEmpty(playersState.details) && (
         <PlayerCards playersState={playersState} />
       )}

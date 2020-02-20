@@ -31,9 +31,11 @@ const mapDispatchToProps = {
 const MainContainer = props => {
   const { cardsState, playersState, gameSetup, takeCard, discardCard } = props;
 
+  const numberOfPlayers = 3;
+
   useState(() => {
     if (!_.get(cardsState.cards)) {
-      gameSetup();
+      gameSetup(numberOfPlayers);
     }
   }, []);
 

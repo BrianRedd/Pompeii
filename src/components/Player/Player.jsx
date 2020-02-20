@@ -1,10 +1,35 @@
 /** @module Player */
 
 import React from "react";
+import PropTypes from "prop-types";
+import { ButtonBase } from "@material-ui/core";
 
 import * as types from "../../types/types";
 
 import Card from "../Helpers/Card";
+
+const HandCards = ({ hand }) => {
+  if (hand.length > 0) {
+    const handCards = hand.map((card, idx) => {
+      const key = `${card}-${idx}`;
+      return (
+        <ButtonBase key={key} focusRipple onClick={() => console.log(card)}>
+          <Card cardId={card} />
+        </ButtonBase>
+      );
+    });
+    return handCards;
+  }
+  return null;
+};
+
+HandCards.propTypes = {
+  hand: PropTypes.arrayOf(PropTypes.string)
+};
+
+HandCards.defaultProps = {
+  hand: []
+};
 
 /**
  * @function Player
@@ -17,7 +42,7 @@ const Player = props => {
   return (
     <fieldset data-test="presentation-player" className="mt-3">
       <legend>{details.name}</legend>
-      <Card cardId={details.hand[0]} />
+      <HandCards hand={details.hand} />
     </fieldset>
   );
 };

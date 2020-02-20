@@ -56,3 +56,11 @@ test("updatePlayerHand", () => {
   };
   expect(actions.updatePlayerHand(playerId, hand)).toEqual(expectedAction);
 });
+
+test("nextPlayerTurn", () => {
+  const expectedAction = {
+    type: actionTypes.NEXT_PLAYER_TURN,
+    payload: null
+  };
+  expect(actions.nextPlayerTurn()).toEqual(expectedAction);
+});

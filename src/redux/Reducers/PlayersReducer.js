@@ -1,29 +1,17 @@
 /** @module PlayersReducer */
 
 import * as actions from "../ActionTypes";
-
-const compareCards = (a, b) => {
-  const cardA = parseFloat(a.split("_")[1]);
-  const cardB = parseFloat(b.split("_")[1]);
-  if (cardA === cardB) {
-    return 0;
-  }
-  return cardA < cardB ? -1 : 1;
-};
+import * as types from "../../types/types";
+import { compareCards } from "../../utils/utilsCommon";
 
 /**
  * @constant playersState
  * @param {Object} state - players state object
  * @param {Object} action
  */
-const playersState = (
-  state = {
-    players: [],
-    details: {}
-  },
-  action
-) => {
+const playersState = (state = types.playersState.defaults, action) => {
   const { type, payload } = action;
+  let nextTurn = state.turn + 1;
   switch (type) {
     case actions.SET_PLAYERS_ARRAY:
       return {
@@ -53,6 +41,14 @@ const playersState = (
             hand: payload.hand.sort(compareCards)
           }
         }
+      };
+    case actions.NEXT_PLAYER_TURN:
+      if (nextTurn >= state.players.length) {
+        nextTurn = 0;
+      }
+      return {
+        ...state,
+        turn: nextTurn
       };
     default:
       return state;

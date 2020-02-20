@@ -1,6 +1,6 @@
 /** @module types */
 
-import { string, shape, arrayOf, object } from "prop-types";
+import { arrayOf, number, object, string, shape } from "prop-types";
 
 // card types
 export const cards = {
@@ -49,10 +49,12 @@ export const player = {
 export const playersState = {
   types: shape({
     players: arrayOf(string),
-    details: player.types
+    details: player.types,
+    turn: number
   }),
   defaults: {
     players: ["player1"],
-    details: player.details
+    details: player.defaults,
+    turn: 0
   }
 };
