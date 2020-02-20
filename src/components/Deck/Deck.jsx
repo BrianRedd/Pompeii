@@ -17,7 +17,7 @@ const Deck = props => {
 
   return (
     <Row data-test="presentation-deck">
-      <Col xs={6}>
+      <Col xs={4}>
         <div data-test="card-pile-deck" className="text-center">
           {deckSizes.deck > 0 ? (
             <ButtonBase
@@ -37,7 +37,7 @@ const Deck = props => {
           <div>Deck ({deckSizes.deck})</div>
         </div>
       </Col>
-      <Col xs={6}>
+      <Col xs={4}>
         <div data-test="card-pile-discard" className="text-center">
           {topDiscard ? (
             <Card data-test="card-discard" cardId={topDiscard} />
@@ -49,6 +49,14 @@ const Deck = props => {
           )}
           <div>Discard ({deckSizes.discard})</div>
         </div>
+      </Col>
+      <Col xs={4}>
+        <div data-test="tile-pile" className="text-center tile-pile">
+          <ButtonBase focusRipple disabled>
+            <img alt="Tiles" src="/assets/tiles/back.png" />
+          </ButtonBase>
+        </div>
+        <div className="text-center">Lava Tiles</div>
       </Col>
     </Row>
   );
