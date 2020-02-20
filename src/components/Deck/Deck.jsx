@@ -13,7 +13,7 @@ import Card, { CardBack } from "../Helpers/Card";
  * @returns {React.Component} - Rendered component.
  */
 const Deck = props => {
-  const { topDiscard, drawCard, deckSizes } = props;
+  const { topDiscard, drawCard, deckSizes, deckEnabled } = props;
 
   return (
     <Row data-test="presentation-deck">
@@ -22,6 +22,7 @@ const Deck = props => {
           {deckSizes.deck > 0 ? (
             <ButtonBase
               focusRipple
+              disabled={!deckEnabled}
               onClick={() => drawCard()}
               data-test="card-deck"
             >
@@ -59,6 +60,7 @@ Deck.propTypes = {
     discard: PropTypes.number
   }),
   topDiscard: PropTypes.string,
+  deckEnabled: PropTypes.bool,
   drawCard: PropTypes.func
 };
 
@@ -68,6 +70,7 @@ Deck.defaultProps = {
     discard: 0
   },
   topDiscard: "",
+  deckEnabled: false,
   drawCard: () => {}
 };
 export default Deck;

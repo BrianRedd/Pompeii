@@ -14,7 +14,7 @@ import Deck from "./Deck";
  * @returns {React.Component} - Rendered component.
  */
 const DeckContainer = props => {
-  const { cardsState, drawCard } = props;
+  const { cardsState, drawCard, deckEnabled } = props;
 
   const [lastDrawnCard, setLastDrawnCard] = useState(null);
 
@@ -37,6 +37,7 @@ const DeckContainer = props => {
           discard: _.get(cardsState, "discard.length", 0)
         }}
         drawCard={drawCard}
+        deckEnabled={deckEnabled}
       />
     </div>
   );
@@ -44,11 +45,13 @@ const DeckContainer = props => {
 
 DeckContainer.propTypes = {
   cardsState: types.cardsState.types,
+  deckEnabled: PropTypes.bool,
   drawCard: PropTypes.func
 };
 
 DeckContainer.defaultProps = {
   cardsState: types.cardsState.defaults,
+  deckEnabled: false,
   drawCard: () => {}
 };
 

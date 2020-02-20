@@ -8,7 +8,7 @@ import * as types from "../../types/types";
 
 import Card, { CardBack } from "../Helpers/Card";
 
-const HandCards = ({ hand, myTurn }) => {
+const HandCards = ({ hand, myTurn, playCard }) => {
   if (hand.length > 0) {
     const handCards = hand.map((card, idx) => {
       const key = `${card}-${idx}`;
@@ -16,8 +16,13 @@ const HandCards = ({ hand, myTurn }) => {
         <ButtonBase
           key={key}
           focusRipple
-          onClick={() => console.log(card)}
-          disabled={!myTurn}
+          onClick={() => playCard(idx)}
+          disabled={
+            !myTurn ||
+            hand.length < 4 ||
+            (hand.includes("AD79") && card !== "AD79") ||
+            (hand.includes("OMEN") && card !== "OMEN")
+          }
         >
           {myTurn ? <Card cardId={card} /> : <CardBack />}
         </ButtonBase>
@@ -30,12 +35,14 @@ const HandCards = ({ hand, myTurn }) => {
 
 HandCards.propTypes = {
   hand: PropTypes.arrayOf(PropTypes.string),
-  myTurn: PropTypes.bool
+  myTurn: PropTypes.bool,
+  playCard: PropTypes.func
 };
 
 HandCards.defaultProps = {
   hand: [],
-  myTurn: false
+  myTurn: false,
+  playCard: () => {}
 };
 
 /**
@@ -44,26 +51,28 @@ HandCards.defaultProps = {
  * @returns {React.Component} - Rendered component.
  */
 const Player = props => {
-  const { details, myTurn } = props;
+  const { details, myTurn, playCard } = props;
 
   return (
     <fieldset data-test="presentation-player" className="mt-3">
       <legend style={{ color: myTurn ? details.color : "#999999" }}>
         {details.name}
       </legend>
-      <HandCards hand={details.hand} myTurn={myTurn} />
+      <HandCards hand={details.hand} myTurn={myTurn} playCard={playCard} />
     </fieldset>
   );
 };
 
 Player.propTypes = {
   details: types.player.types,
-  myTurn: PropTypes.bool
+  myTurn: PropTypes.bool,
+  playCard: PropTypes.func
 };
 
 Player.defaultProps = {
   details: types.player.defaults,
-  myTurn: false
+  myTurn: false,
+  playCard: () => {}
 };
 
 export default Player;

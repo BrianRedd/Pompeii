@@ -1,6 +1,6 @@
 /** @module MainContainer */
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import _ from "lodash";
@@ -20,7 +20,9 @@ const mapStateToProps = state => {
 const mapDispatchToProps = {
   gameSetup: actions.gameSetup,
   takeCard: actions.takeCard,
-  discardCard: actions.discardCard
+  discardCard: actions.discardCard,
+  nextPlayerTurn: actions.nextPlayerTurn,
+  updatePlayerHand: actions.updatePlayerHand
 };
 
 /**
@@ -29,7 +31,15 @@ const mapDispatchToProps = {
  * @returns {React.Component} - Rendered component.
  */
 const MainContainer = props => {
-  const { cardsState, playersState, gameSetup, takeCard, discardCard } = props;
+  const {
+    cardsState,
+    playersState,
+    gameSetup,
+    takeCard,
+    discardCard,
+    nextPlayerTurn,
+    updatePlayerHand
+  } = props;
 
   const numberOfPlayers = 3;
 
@@ -39,14 +49,33 @@ const MainContainer = props => {
     }
   }, []);
 
+  const [activePlayer, setActivePlayer] = useState();
+
+  useEffect(() => {
+    setActivePlayer(_.get(playersState, `players[${playersState.turn}]`));
+  }, [playersState]);
+
   /**
    * @function drawCard
    * @description draw card from deck
    */
   const drawCard = () => {
+    // draw card
     const takenCard = cardsState.deck[cardsState.deck.length - 1];
     takeCard();
-    discardCard(takenCard);
+    const newHand = [
+      ..._.get(playersState, `details[${activePlayer}].hand`),
+      takenCard
+    ];
+
+    // add card to player hand
+    updatePlayerHand(activePlayer, newHand);
+
+    // check for Omen or AD79
+    if (_.get(cardsState, `cards[${takenCard}].type`) === "Pomp") {
+      // next player's turn
+      nextPlayerTurn();
+    }
   };
 
   return (
@@ -55,6 +84,11 @@ const MainContainer = props => {
         cardsState={cardsState}
         playersState={playersState}
         drawCard={drawCard}
+        discardCard={discardCard}
+        updatePlayerHand={updatePlayerHand}
+        deckEnabled={
+          _.get(playersState, `details[${activePlayer}].hand.length`) < 4
+        }
       />
     </div>
   );
@@ -65,7 +99,9 @@ MainContainer.propTypes = {
   playersState: types.playersState.types,
   gameSetup: PropTypes.func,
   takeCard: PropTypes.func,
-  discardCard: PropTypes.func
+  discardCard: PropTypes.func,
+  nextPlayerTurn: PropTypes.func,
+  updatePlayerHand: PropTypes.func
 };
 
 MainContainer.defaultProps = {
@@ -73,7 +109,9 @@ MainContainer.defaultProps = {
   playersState: types.playersState.defaults,
   gameSetup: () => {},
   takeCard: () => {},
-  discardCard: () => {}
+  discardCard: () => {},
+  nextPlayerTurn: () => {},
+  updatePlayerHand: () => {}
 };
 
 export const MainContainerTest = MainContainer;

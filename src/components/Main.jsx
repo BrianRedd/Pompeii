@@ -16,15 +16,30 @@ import PlayersContainer from "./Player/PlayersContainer";
  * @returns {React.Component} - Rendered component.
  */
 const Main = props => {
-  const { cardsState, playersState, drawCard } = props;
+  const {
+    cardsState,
+    playersState,
+    deckEnabled,
+    drawCard,
+    discardCard,
+    updatePlayerHand
+  } = props;
 
   return (
     <Col data-test="presentation-main" className="main-container">
       <Row>
         <BoardContainer />
         <div className="off-board">
-          <DeckContainer cardsState={cardsState} drawCard={drawCard} />
-          <PlayersContainer playersState={playersState} />
+          <DeckContainer
+            cardsState={cardsState}
+            drawCard={drawCard}
+            deckEnabled={deckEnabled}
+          />
+          <PlayersContainer
+            playersState={playersState}
+            discardCard={discardCard}
+            updatePlayerHand={updatePlayerHand}
+          />
         </div>
       </Row>
     </Col>
@@ -34,13 +49,19 @@ const Main = props => {
 Main.propTypes = {
   cardsState: types.cardsState.types,
   playersState: types.playersState.types,
-  drawCard: PropTypes.func
+  deckEnabled: PropTypes.bool,
+  drawCard: PropTypes.func,
+  discardCard: PropTypes.func,
+  updatePlayerHand: PropTypes.func
 };
 
 Main.defaultProps = {
   cardsState: types.cardsState.defaults,
   playersState: types.playersState.defaults,
-  drawCard: () => {}
+  deckEnabled: false,
+  drawCard: () => {},
+  discardCard: () => {},
+  updatePlayerHand: () => {}
 };
 
 export default Main;
