@@ -35,13 +35,15 @@ export const player = {
   types: shape({
     player1: shape({
       name: string,
-      hand: arrayOf(string)
+      hand: arrayOf(string),
+      color: string
     })
   }),
   defaults: {
     player1: {
       name: "Player 1",
-      hand: []
+      hand: [],
+      color: "#FFFFFF"
     }
   }
 };

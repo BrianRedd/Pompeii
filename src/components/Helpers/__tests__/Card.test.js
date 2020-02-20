@@ -1,14 +1,21 @@
 /** @module Card.test */
 
 import { findByTestAttr, commonSetup } from "../../../utils/utilsTest";
-import { CardTest } from "../Card";
+import { CardTest, CardBack } from "../Card";
 
 const TestedComponent = CardTest;
 
-test("renders without error", () => {
-  const wrapper = commonSetup(TestedComponent);
-  const component = findByTestAttr(wrapper, "presentation-card");
-  expect(component.length).toBe(1);
+describe("renders without error", () => {
+  test("card", () => {
+    const wrapper = commonSetup(TestedComponent);
+    const component = findByTestAttr(wrapper, "presentation-card");
+    expect(component.length).toBe(1);
+  });
+  test("card back", () => {
+    const wrapper = commonSetup(CardBack);
+    const component = findByTestAttr(wrapper, "presentation-card-back");
+    expect(component.length).toBe(1);
+  });
 });
 
 /* test("top discard card displayed if there is one", () => {

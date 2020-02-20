@@ -56,5 +56,16 @@ Card.defaultProps = {
   cardId: ""
 };
 
+export const CardBack = () => {
+  return (
+    <img
+      data-test="presentation-card-back"
+      className="image-fluid pompeii-card"
+      alt="Deck"
+      src="/assets/cards/Back.png"
+    />
+  );
+};
+
 export const CardTest = Card;
 export default connect(mapStateToProps, null)(Card);

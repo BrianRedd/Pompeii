@@ -6,15 +6,20 @@ import { ButtonBase } from "@material-ui/core";
 
 import * as types from "../../types/types";
 
-import Card from "../Helpers/Card";
+import Card, { CardBack } from "../Helpers/Card";
 
-const HandCards = ({ hand }) => {
+const HandCards = ({ hand, myTurn }) => {
   if (hand.length > 0) {
     const handCards = hand.map((card, idx) => {
       const key = `${card}-${idx}`;
       return (
-        <ButtonBase key={key} focusRipple onClick={() => console.log(card)}>
-          <Card cardId={card} />
+        <ButtonBase
+          key={key}
+          focusRipple
+          onClick={() => console.log(card)}
+          disabled={!myTurn}
+        >
+          {myTurn ? <Card cardId={card} /> : <CardBack />}
         </ButtonBase>
       );
     });
@@ -24,11 +29,13 @@ const HandCards = ({ hand }) => {
 };
 
 HandCards.propTypes = {
-  hand: PropTypes.arrayOf(PropTypes.string)
+  hand: PropTypes.arrayOf(PropTypes.string),
+  myTurn: PropTypes.bool
 };
 
 HandCards.defaultProps = {
-  hand: []
+  hand: [],
+  myTurn: false
 };
 
 /**
@@ -37,22 +44,26 @@ HandCards.defaultProps = {
  * @returns {React.Component} - Rendered component.
  */
 const Player = props => {
-  const { details } = props;
+  const { details, myTurn } = props;
 
   return (
     <fieldset data-test="presentation-player" className="mt-3">
-      <legend>{details.name}</legend>
-      <HandCards hand={details.hand} />
+      <legend style={{ color: myTurn ? details.color : "#999999" }}>
+        {details.name}
+      </legend>
+      <HandCards hand={details.hand} myTurn={myTurn} />
     </fieldset>
   );
 };
 
 Player.propTypes = {
-  details: types.player.types
+  details: types.player.types,
+  myTurn: PropTypes.bool
 };
 
 Player.defaultProps = {
-  details: types.player.defaults
+  details: types.player.defaults,
+  myTurn: false
 };
 
 export default Player;

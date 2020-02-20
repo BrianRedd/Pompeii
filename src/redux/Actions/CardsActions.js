@@ -1,7 +1,7 @@
 /** @module CardsActions */
 
 import * as actionTypes from "../ActionTypes";
-import { cardsData } from "../../data/cards";
+import { cardsData } from "../../data/data";
 import { updatePlayerHand } from "./PlayersActions";
 
 /**

@@ -1,4 +1,4 @@
-/** @module cards */
+/** @module data */
 
 export const cardsData = {
   CARD_1: {
@@ -93,3 +93,5 @@ export const cardsData = {
     count: 2
   }
 };
+
+export const playerColors = ["#0000A0", "#FF8000", "#FF0000", "#000000"];

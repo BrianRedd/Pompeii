@@ -14,8 +14,14 @@ import Player from "./Player";
  * @returns {React.Component}
  */
 const PlayerCards = ({ playersState }) => {
-  const playerCards = playersState.players.map(player => {
-    return <Player key={player} details={playersState.details[player]} />;
+  const playerCards = playersState.players.map((player, idx) => {
+    return (
+      <Player
+        key={player}
+        details={playersState.details[player]}
+        myTurn={playersState.turn === idx}
+      />
+    );
   });
   return playerCards;
 };

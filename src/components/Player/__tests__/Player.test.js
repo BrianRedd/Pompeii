@@ -4,7 +4,8 @@ import { findByTestAttr, commonSetup } from "../../../utils/utilsTest";
 import TestedComponent from "../Player";
 
 const defaultProps = {
-  details: { name: "Test", hand: ["card1"] }
+  details: { name: "Test", color: "#FFFFFF", hand: ["card1"] },
+  myTurn: false
 };
 
 test("renders without error", () => {

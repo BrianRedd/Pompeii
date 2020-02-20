@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import { Col, Row } from "reactstrap";
 import { ButtonBase } from "@material-ui/core";
 
-import Card from "../Helpers/Card";
+import Card, { CardBack } from "../Helpers/Card";
 
 /**
  * @function Deck
@@ -25,11 +25,7 @@ const Deck = props => {
               onClick={() => drawCard()}
               data-test="card-deck"
             >
-              <img
-                className="image-fluid pompeii-card"
-                alt="Deck"
-                src="/assets/cards/Back.png"
-              />
+              <CardBack />
             </ButtonBase>
           ) : (
             <div

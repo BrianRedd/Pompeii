@@ -2,6 +2,7 @@
 
 import { generateDeck } from "./CardsActions";
 import { setPlayerArray, addPlayers } from "./PlayersActions";
+import { playerColors } from "../../data/data";
 
 export const gameSetup = numberOfPlayers => async dispatch => {
   let nop = numberOfPlayers;
@@ -17,7 +18,8 @@ export const gameSetup = numberOfPlayers => async dispatch => {
   players.forEach((player, idx) => {
     details[player] = {
       name: `Player ${idx + 1}`,
-      hand: []
+      hand: [],
+      color: playerColors[idx]
     };
   });
   await dispatch(addPlayers(details));
