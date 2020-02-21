@@ -1,6 +1,6 @@
-/** @module data */
+/** @module cardData */
 
-export const cardsData = {
+export const cardDictionary = {
   CARD_1: {
     name: "Grey 1",
     type: "Pomp",
@@ -104,5 +104,3 @@ export const cardsData = {
     count: 2
   }
 };
-
-export const playerColors = ["#0000A0", "#FF8000", "#FF0000", "#000000"];

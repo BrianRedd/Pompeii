@@ -60,3 +60,34 @@ export const playersState = {
     turn: 0
   }
 };
+
+// grid types
+
+export const occupant = {
+  types: shape({
+    player: string,
+    gender: string
+  })
+};
+
+export const gridSquare = {
+  types: shape({
+    buildingColor: string,
+    buildingNumber: string,
+    occupants: arrayOf(occupant.types)
+  }),
+  defaults: {
+    buildingColor: null,
+    buildingNumber: null,
+    occupants: []
+  }
+};
+
+export const grid = {
+  types: shape({
+    "0_0": gridSquare.types
+  }),
+  defaults: {
+    "0_0": gridSquare.defaults
+  }
+};

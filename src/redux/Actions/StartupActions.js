@@ -1,8 +1,10 @@
 /** @module StartupActions */
 
 import { generateDeck } from "./CardsActions";
+import { addGrid } from "./GridActions";
 import { setPlayerArray, addPlayers } from "./PlayersActions";
-import { playerColors } from "../../data/data";
+import { playerColors } from "../../data/playerData";
+import { gridSquares } from "../../data/gridData";
 
 export const gameSetup = numberOfPlayers => async dispatch => {
   let nop = numberOfPlayers;
@@ -24,4 +26,5 @@ export const gameSetup = numberOfPlayers => async dispatch => {
   });
   await dispatch(addPlayers(details));
   await dispatch(generateDeck());
+  await dispatch(addGrid(gridSquares));
 };

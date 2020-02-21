@@ -1,7 +1,7 @@
 /** @module CardsActions */
 
 import * as actionTypes from "../ActionTypes";
-import { cardsData } from "../../data/data";
+import { cardDictionary } from "../../data/cardData";
 import { updatePlayerHand } from "./PlayersActions";
 
 /**
@@ -73,16 +73,16 @@ export const generateDeck = () => (dispatch, getState) => {
     playersState: { players }
   } = getState();
 
-  // pull cards from cardsData
-  dispatch(addCards(cardsData));
+  // pull cards from cardDictionary
+  dispatch(addCards(cardDictionary));
 
   // populate deck arrays
   let deck = [];
   const omens = [];
   const ad79s = [];
-  Object.keys(cardsData).forEach(card => {
-    for (let i = 0; i < cardsData[card].count; i += 1) {
-      switch (cardsData[card].type) {
+  Object.keys(cardDictionary).forEach(card => {
+    for (let i = 0; i < cardDictionary[card].count; i += 1) {
+      switch (cardDictionary[card].type) {
         case "Omen":
           omens.push(card);
           break;
