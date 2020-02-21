@@ -72,13 +72,19 @@ export const occupant = {
 
 export const gridSquare = {
   types: shape({
+    type: string,
     buildingColor: string,
-    buildingNumber: string,
+    buildingNumber: number,
+    buildingCapacity: number,
+    ventName: string,
     occupants: arrayOf(occupant.types)
   }),
   defaults: {
+    type: "open",
     buildingColor: null,
     buildingNumber: null,
+    buildingCapacity: null,
+    ventName: null,
     occupants: []
   }
 };

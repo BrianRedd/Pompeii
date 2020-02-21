@@ -45,9 +45,12 @@ test("should handle UPDATE_GRID_SQUARE action", () => {
   const state = Reducer(defaultState, action);
   expect(state.grid).toEqual({
     "0_0": {
+      buildingCapacity: null,
       buildingColor: null,
       buildingNumber: null,
-      occupants: [{ player: "tester", gender: "neuter" }]
+      occupants: [{ gender: "neuter", player: "tester" }],
+      type: "open",
+      ventName: null
     }
   });
 });
