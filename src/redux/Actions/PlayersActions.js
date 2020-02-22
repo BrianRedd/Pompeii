@@ -1,6 +1,9 @@
 /** @module PlayersActions */
 
+import _ from "lodash";
+
 import * as actionTypes from "../ActionTypes";
+import { updateInstructions } from "./MessageActions";
 
 /**
  * @function setPlayerArray
@@ -45,10 +48,32 @@ export const updatePlayerHand = (playerId, hand) => ({
 });
 
 /**
- * @function nextPlayerTurn
- * @description increment player turn in PlayersState store
+ * @function setPlayerTurn
+ * @description sets player turn in PlayersState store
+ * @param {Number} player - whose turn it is
  */
-export const nextPlayerTurn = () => ({
-  type: actionTypes.NEXT_PLAYER_TURN,
-  payload: null
+export const setPlayerturn = player => ({
+  type: actionTypes.SET_PLAYER_TURN,
+  payload: player
 });
+
+export const incrementPlayerTurn = () => (dispatch, getState) => {
+  const { playersState } = getState();
+  let nextPlayer = playersState.turn + 1;
+  if (nextPlayer >= playersState.players.length) {
+    nextPlayer = 0;
+  }
+  dispatch(setPlayerturn(nextPlayer));
+  dispatch(
+    updateInstructions({
+      text: `${_.get(
+        playersState,
+        `details.${playersState.players[nextPlayer]}.name`
+      )}: Play a Card`,
+      color: _.get(
+        playersState,
+        `details.${playersState.players[nextPlayer]}.color`
+      )
+    })
+  );
+};

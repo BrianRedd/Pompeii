@@ -6,6 +6,7 @@ import { createLogger } from "redux-logger";
 
 import cardsState from "./Reducers/CardsReducer";
 import gridState from "./Reducers/GridReducer";
+import messageState from "./Reducers/MessageReducer";
 import playersState from "./Reducers/PlayersReducer";
 
 const logger = createLogger({ collapsed: true, diff: true });
@@ -15,6 +16,7 @@ const ConfigureStore = () => {
     combineReducers({
       cardsState,
       gridState,
+      messageState,
       playersState
     }),
     /* eslint-disable no-underscore-dangle */

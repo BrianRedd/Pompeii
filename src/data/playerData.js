@@ -1,3 +1,3 @@
 /** @module playerData */
 
-export const playerColors = ["#0000A0", "#FF8000", "#FF0000", "#000000"];
+export const playerColors = ["#27239c", "#239c2d", "#c92722", "#000000"];

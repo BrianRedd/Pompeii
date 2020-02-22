@@ -13,6 +13,7 @@ import Main from "./Main";
 const mapStateToProps = state => {
   return {
     cardsState: state.cardsState,
+    messageState: state.messageState,
     playersState: state.playersState
   };
 };
@@ -21,8 +22,9 @@ const mapDispatchToProps = {
   gameSetup: actions.gameSetup,
   takeCard: actions.takeCard,
   discardCard: actions.discardCard,
-  nextPlayerTurn: actions.nextPlayerTurn,
-  updatePlayerHand: actions.updatePlayerHand
+  incrementPlayerTurn: actions.incrementPlayerTurn,
+  updatePlayerHand: actions.updatePlayerHand,
+  updateInstructions: actions.updateInstructions
 };
 
 /**
@@ -33,12 +35,14 @@ const mapDispatchToProps = {
 const MainContainer = props => {
   const {
     cardsState,
+    messageState,
     playersState,
     gameSetup,
     takeCard,
     discardCard,
-    nextPlayerTurn,
-    updatePlayerHand
+    incrementPlayerTurn,
+    updatePlayerHand,
+    updateInstructions
   } = props;
 
   const numberOfPlayers = 3;
@@ -62,9 +66,12 @@ const MainContainer = props => {
    * @param {String} card
    */
   const playPompCard = (player, card) => {
-    console.log(
-      `${playersState.details[player].name} plays ${cardsState.cards[card].name}`
-    );
+    const playerName = _.get(playersState, `details[${player}].name`);
+    console.log(`${playerName} plays ${cardsState.cards[card].name}`);
+    updateInstructions({
+      text: `${playerName}: Draw a Card`,
+      color: _.get(playersState, `details[${player}].color`)
+    });
   };
 
   /**
@@ -115,13 +122,14 @@ const MainContainer = props => {
     updatePlayerHand(activePlayer, newHand);
 
     // next player's turn
-    nextPlayerTurn();
+    incrementPlayerTurn();
   };
 
   return (
     <div data-test="container-main">
       <Main
         cardsState={cardsState}
+        messageState={messageState}
         playersState={playersState}
         drawCard={drawCard}
         discardCard={discardCard}
@@ -137,22 +145,26 @@ const MainContainer = props => {
 
 MainContainer.propTypes = {
   cardsState: types.cardsState.types,
+  messageState: types.messageState.types,
   playersState: types.playersState.types,
   gameSetup: PropTypes.func,
   takeCard: PropTypes.func,
   discardCard: PropTypes.func,
-  nextPlayerTurn: PropTypes.func,
-  updatePlayerHand: PropTypes.func
+  incrementPlayerTurn: PropTypes.func,
+  updatePlayerHand: PropTypes.func,
+  updateInstructions: PropTypes.func
 };
 
 MainContainer.defaultProps = {
   cardsState: types.cardsState.defaults,
+  messageState: types.messageState.defaults,
   playersState: types.playersState.defaults,
   gameSetup: () => {},
   takeCard: () => {},
   discardCard: () => {},
-  nextPlayerTurn: () => {},
-  updatePlayerHand: () => {}
+  incrementPlayerTurn: () => {},
+  updatePlayerHand: () => {},
+  updateInstructions: () => {}
 };
 
 export const MainContainerTest = MainContainer;

@@ -2,6 +2,7 @@
 
 import { generateDeck } from "./CardsActions";
 import { addGrid } from "./GridActions";
+import { updateInstructions } from "./MessageActions";
 import { setPlayerArray, addPlayers } from "./PlayersActions";
 import { playerColors } from "../../data/playerData";
 import { gridSquares } from "../../data/gridData";
@@ -24,7 +25,13 @@ export const gameSetup = numberOfPlayers => async dispatch => {
       color: playerColors[idx]
     };
   });
+  await dispatch(addGrid(gridSquares));
   await dispatch(addPlayers(details));
   await dispatch(generateDeck());
-  await dispatch(addGrid(gridSquares));
+  await dispatch(
+    updateInstructions({
+      text: "Player 1: Play a Card",
+      color: playerColors[0]
+    })
+  );
 };

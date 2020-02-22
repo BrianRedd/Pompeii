@@ -1,5 +1,8 @@
 /** @module PlayersActions.test */
 
+import configureMockStore from "redux-mock-store";
+import thunk from "redux-thunk";
+
 import * as actionTypes from "../../ActionTypes";
 import * as actions from "../PlayersActions";
 
@@ -57,10 +60,92 @@ test("updatePlayerHand", () => {
   expect(actions.updatePlayerHand(playerId, hand)).toEqual(expectedAction);
 });
 
-test("nextPlayerTurn", () => {
+test("setPlayerturn", () => {
+  const payload = 1;
   const expectedAction = {
-    type: actionTypes.NEXT_PLAYER_TURN,
-    payload: null
+    type: actionTypes.SET_PLAYER_TURN,
+    payload
   };
-  expect(actions.nextPlayerTurn()).toEqual(expectedAction);
+  expect(actions.setPlayerturn(1)).toEqual(expectedAction);
 });
+
+describe("incrementPlayerTurn", () => {
+  const initialState = {
+    playersState: {
+      players: ["player1", "player2"],
+      details: {
+        player1: {
+          name: "Player 1",
+          color: "#000000"
+        },
+        player2: {
+          name: "Player 2",
+          color: "#FFFFFF"
+        }
+      }
+    }
+  };
+  test("0 -> 1", () => {
+    const thisState = { ...initialState };
+    thisState.playersState.turn = 0;
+    const expectedActions = [
+      {
+        type: "SET_PLAYER_TURN",
+        payload: 1
+      },
+      {
+        type: "UPDATE_INSTRUCTIONS",
+        payload: {
+          text: "Player 2: Play a Card",
+          color: "#FFFFFF"
+        }
+      }
+    ];
+    const store = configureMockStore([thunk])(thisState);
+    store.dispatch(actions.incrementPlayerTurn());
+    const dispatchedActions = store.getActions();
+    expect(dispatchedActions).toEqual(expectedActions);
+  });
+  test("1 -> 0", () => {
+    const thisState = { ...initialState };
+    thisState.playersState.turn = 1;
+    const expectedActions = [
+      {
+        type: "SET_PLAYER_TURN",
+        payload: 0
+      },
+      {
+        type: "UPDATE_INSTRUCTIONS",
+        payload: {
+          text: "Player 1: Play a Card",
+          color: "#000000"
+        }
+      }
+    ];
+    const store = configureMockStore([thunk])(thisState);
+    store.dispatch(actions.incrementPlayerTurn());
+    const dispatchedActions = store.getActions();
+    expect(dispatchedActions).toEqual(expectedActions);
+  });
+});
+
+/*
+test("0 -> 1", () => {
+  const payload = null;
+  const action = {
+    type: actionTypes.SET_PLAYER_TURN,
+    payload
+  };
+  const state = Reducer({ turn: 0, players: ["1", "2"] }, action);
+  expect(state.turn).toEqual(1);
+});
+test("2 -> 0", () => {
+  const payload = null;
+  const action = {
+    type: actionTypes.SET_PLAYER_TURN,
+    payload
+  };
+  const state = Reducer({ turn: 2, players: ["1", "2", "3"] }, action);
+  expect(state.turn).toEqual(0);
+});
+*/

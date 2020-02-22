@@ -18,6 +18,7 @@ import PlayersContainer from "./Player/PlayersContainer";
 const Main = props => {
   const {
     cardsState,
+    messageState,
     playersState,
     deckEnabled,
     drawCard,
@@ -29,7 +30,7 @@ const Main = props => {
   return (
     <Col data-test="presentation-main" className="main-container">
       <Row>
-        <BoardContainer />
+        <BoardContainer messageState={messageState} />
         <div className="off-board">
           <DeckContainer
             cardsState={cardsState}
@@ -50,6 +51,7 @@ const Main = props => {
 
 Main.propTypes = {
   cardsState: types.cardsState.types,
+  messageState: types.messageState.types,
   playersState: types.playersState.types,
   deckEnabled: PropTypes.bool,
   drawCard: PropTypes.func,
@@ -60,6 +62,7 @@ Main.propTypes = {
 
 Main.defaultProps = {
   cardsState: types.cardsState.defaults,
+  messageState: types.messageState.defaults,
   playersState: types.playersState.defaults,
   deckEnabled: false,
   drawCard: () => {},

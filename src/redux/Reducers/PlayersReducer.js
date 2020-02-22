@@ -11,7 +11,6 @@ import { compareCards } from "../../utils/utilsCommon";
  */
 const playersState = (state = types.playersState.defaults, action) => {
   const { type, payload } = action;
-  let nextTurn = state.turn + 1;
   switch (type) {
     case actions.SET_PLAYERS_ARRAY:
       return {
@@ -42,13 +41,10 @@ const playersState = (state = types.playersState.defaults, action) => {
           }
         }
       };
-    case actions.NEXT_PLAYER_TURN:
-      if (nextTurn >= state.players.length) {
-        nextTurn = 0;
-      }
+    case actions.SET_PLAYER_TURN:
       return {
         ...state,
-        turn: nextTurn
+        turn: payload
       };
     default:
       return state;

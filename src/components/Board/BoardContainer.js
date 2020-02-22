@@ -2,6 +2,8 @@
 
 import React from "react";
 
+import * as types from "../../types/types";
+
 import Board from "./Board";
 
 /**
@@ -9,12 +11,21 @@ import Board from "./Board";
  * @description Functional Container component for Board
  * @returns {React.Component} - Rendered component.
  */
-const BoardContainer = () => {
+const BoardContainer = props => {
+  const { messageState } = props;
   return (
     <div data-test="container-board" className="board-container">
-      <Board />
+      <Board messageState={messageState} />
     </div>
   );
+};
+
+BoardContainer.propTypes = {
+  messageState: types.messageState.types
+};
+
+BoardContainer.defaultProps = {
+  messageState: types.messageState.defaults
 };
 
 export default BoardContainer;

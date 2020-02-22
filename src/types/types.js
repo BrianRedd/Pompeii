@@ -95,3 +95,22 @@ export const grid = {
     "0_0": gridSquare.defaults
   }
 };
+
+// message types
+
+export const messageState = {
+  types: shape({
+    stage: number,
+    instruction: shape({
+      text: string,
+      color: string
+    })
+  }),
+  defaults: {
+    stage: 0,
+    instruction: {
+      text: "",
+      color: ""
+    }
+  }
+};
