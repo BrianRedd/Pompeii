@@ -15,13 +15,11 @@ test("should return initial state", () => {
 test("should handle ADD_GRID action", () => {
   const payload = {
     "0_0": {
-      buildingColor: null,
-      buildingNumber: null,
+      buildingName: null,
       occupants: []
     },
     "1_0": {
-      buildingColor: "Grey",
-      buildingNumber: 1,
+      buildingName: "Grey 1",
       occupants: []
     }
   };
@@ -45,12 +43,11 @@ test("should handle UPDATE_GRID_SQUARE action", () => {
   const state = Reducer(defaultState, action);
   expect(state.grid).toEqual({
     "0_0": {
+      buildingName: null,
       buildingCapacity: null,
-      buildingColor: null,
-      buildingNumber: null,
       occupants: [{ gender: "neuter", player: "tester" }],
-      type: "open",
-      ventName: null
+      ventName: null,
+      gateName: null
     }
   });
 });
