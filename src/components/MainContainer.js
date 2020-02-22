@@ -56,6 +56,34 @@ const MainContainer = props => {
   }, [playersState]);
 
   /**
+   * @function playPompCard
+   * @description when player plays pompeii card
+   * @param {String} player
+   * @param {String} card
+   */
+  const playPompCard = (player, card) => {
+    console.log(
+      `${playersState.details[player].name} plays ${cardsState.cards[card].name}`
+    );
+  };
+
+  /**
+   * @function resolveAd79
+   * @description resolve AD 79 card when drawn
+   */
+  const resolveAd79 = () => {
+    alert("AD 79 Card");
+  };
+
+  /**
+   * @function resolveOmen
+   * @description resolve Omen card when drawn
+   */
+  const resolveOmen = () => {
+    alert("Omen Card");
+  };
+
+  /**
    * @function drawCard
    * @description draw card from deck
    */
@@ -63,6 +91,21 @@ const MainContainer = props => {
     // draw card
     const takenCard = cardsState.deck[cardsState.deck.length - 1];
     takeCard();
+
+    // check for AD79
+    if (_.get(cardsState, `cards[${takenCard}].type`) === "AD79") {
+      discardCard(takenCard);
+      resolveAd79();
+      return;
+    }
+
+    // check for Omen
+    if (_.get(cardsState, `cards[${takenCard}].type`) === "OMEN") {
+      discardCard(takenCard);
+      resolveOmen();
+      return;
+    }
+
     const newHand = [
       ..._.get(playersState, `details[${activePlayer}].hand`),
       takenCard
@@ -71,11 +114,8 @@ const MainContainer = props => {
     // add card to player hand
     updatePlayerHand(activePlayer, newHand);
 
-    // check for Omen or AD79
-    if (_.get(cardsState, `cards[${takenCard}].type`) === "Pomp") {
-      // next player's turn
-      nextPlayerTurn();
-    }
+    // next player's turn
+    nextPlayerTurn();
   };
 
   return (
@@ -89,6 +129,7 @@ const MainContainer = props => {
         deckEnabled={
           _.get(playersState, `details[${activePlayer}].hand.length`) < 4
         }
+        playPompCard={playPompCard}
       />
     </div>
   );

@@ -22,7 +22,8 @@ const Main = props => {
     deckEnabled,
     drawCard,
     discardCard,
-    updatePlayerHand
+    updatePlayerHand,
+    playPompCard
   } = props;
 
   return (
@@ -39,6 +40,7 @@ const Main = props => {
             playersState={playersState}
             discardCard={discardCard}
             updatePlayerHand={updatePlayerHand}
+            playPompCard={playPompCard}
           />
         </div>
       </Row>
@@ -52,7 +54,8 @@ Main.propTypes = {
   deckEnabled: PropTypes.bool,
   drawCard: PropTypes.func,
   discardCard: PropTypes.func,
-  updatePlayerHand: PropTypes.func
+  updatePlayerHand: PropTypes.func,
+  playPompCard: PropTypes.func
 };
 
 Main.defaultProps = {
@@ -61,7 +64,8 @@ Main.defaultProps = {
   deckEnabled: false,
   drawCard: () => {},
   discardCard: () => {},
-  updatePlayerHand: () => {}
+  updatePlayerHand: () => {},
+  playPompCard: () => {}
 };
 
 export default Main;

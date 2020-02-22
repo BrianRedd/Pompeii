@@ -34,7 +34,7 @@ const PlayerCards = ({ playersState, playCard }) => {
  * @returns {React.Component} - Rendered component.
  */
 const PlayersContainer = props => {
-  const { playersState, discardCard, updatePlayerHand } = props;
+  const { playersState, discardCard, updatePlayerHand, playPompCard } = props;
 
   /**
    * @function playCard
@@ -48,6 +48,7 @@ const PlayersContainer = props => {
     thisHand.splice(cardIdx, 1);
     discardCard(cardId);
     updatePlayerHand(player, thisHand);
+    playPompCard(player, cardId);
   };
 
   return (
@@ -62,13 +63,15 @@ const PlayersContainer = props => {
 PlayersContainer.propTypes = {
   playersState: types.playersState.types,
   discardCard: PropTypes.func,
-  updatePlayerHand: PropTypes.func
+  updatePlayerHand: PropTypes.func,
+  playPompCard: PropTypes.func
 };
 
 PlayersContainer.defaultProps = {
   playersState: types.playersState.defaults,
   discardCard: () => {},
-  updatePlayerHand: () => {}
+  updatePlayerHand: () => {},
+  playPompCard: () => {}
 };
 
 export default PlayersContainer;
