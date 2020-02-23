@@ -7,7 +7,7 @@ import _ from "lodash";
 
 import actions from "../redux/Actions";
 import * as types from "../types/types";
-import { phaseMessage } from "../data/messageData";
+import * as constant from "../data/constants";
 
 import Main from "./Main";
 
@@ -62,7 +62,7 @@ const MainContainer = props => {
 
   const [cardGrid, setCardGrid] = useState([]);
 
-  const [phase, setPhase] = useState(0);
+  const [placingPerson, setPersonPlacing] = useState(false);
 
   /**
    * @function placePerson
@@ -71,11 +71,10 @@ const MainContainer = props => {
    */
   const placePerson = grid => {
     console.log(grid);
-    setPhase(2);
-
+    setPersonPlacing(false);
     updateInstructions({
       text: `${_.get(playersState, `details[${activePlayer}].name`)}: ${
-        phaseMessage[2]
+        constant.DRAW
       }`,
       color: _.get(playersState, `details[${activePlayer}].color`)
     });
@@ -88,10 +87,10 @@ const MainContainer = props => {
    * @param {String} card
    */
   const playPompCard = card => {
-    setPhase(1);
+    setPersonPlacing(true);
     updateInstructions({
       text: `${_.get(playersState, `details[${activePlayer}].name`)}: ${
-        phaseMessage[1]
+        constant.PLACE
       }`,
       color: _.get(playersState, `details[${activePlayer}].color`)
     });
@@ -160,7 +159,7 @@ const MainContainer = props => {
         updatePlayerHand={updatePlayerHand}
         deckEnabled={
           _.get(playersState, `details[${activePlayer}].hand.length`) < 4 &&
-          phase !== 1
+          !placingPerson
         }
         playPompCard={playPompCard}
         cardGrid={cardGrid}

@@ -5,6 +5,7 @@ import thunk from "redux-thunk";
 
 import * as actionTypes from "../../ActionTypes";
 import * as actions from "../PlayersActions";
+import * as constant from "../../../data/constants";
 
 test("setPlayerArray", () => {
   const payload = ["player1", "player2"];
@@ -96,7 +97,7 @@ describe("incrementPlayerTurn", () => {
       {
         type: "UPDATE_INSTRUCTIONS",
         payload: {
-          text: "Player 2: Play a Card",
+          text: `Player 2: ${constant.PLAY}`,
           color: "#FFFFFF"
         }
       }
@@ -117,7 +118,7 @@ describe("incrementPlayerTurn", () => {
       {
         type: "UPDATE_INSTRUCTIONS",
         payload: {
-          text: "Player 1: Play a Card",
+          text: `Player 1: ${constant.PLAY}`,
           color: "#000000"
         }
       }

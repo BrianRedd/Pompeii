@@ -21,6 +21,7 @@ const Highlighter = props => {
     const y = parseFloat(coords[1]);
     return (
       <ButtonBase
+        data-test="square-highlighted"
         key={square}
         onClick={placePerson}
         className="highlighter"
@@ -29,12 +30,12 @@ const Highlighter = props => {
           top: `${y * 110 + constant.Y_OFFSET}px`
         }}
       >
-        <div data-test="square-highlighted" />
+        <div />
       </ButtonBase>
     );
   });
 
-  return <React.Fragment>{highLighter}</React.Fragment>;
+  return <div data-test="layer-highlight">{highLighter}</div>;
 };
 
 Highlighter.propTypes = {

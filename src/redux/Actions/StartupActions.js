@@ -6,6 +6,7 @@ import { updateInstructions } from "./MessageActions";
 import { setPlayerArray, addPlayers } from "./PlayersActions";
 import { playerColors } from "../../data/playerData";
 import { gridSquares } from "../../data/gridData";
+import * as constant from "../../data/constants";
 
 export const gameSetup = numberOfPlayers => async dispatch => {
   let nop = numberOfPlayers;
@@ -30,7 +31,7 @@ export const gameSetup = numberOfPlayers => async dispatch => {
   await dispatch(generateDeck());
   await dispatch(
     updateInstructions({
-      text: "Player 1: Play a Card",
+      text: `Player 1: ${constant.PLAY}`,
       color: playerColors[0]
     })
   );

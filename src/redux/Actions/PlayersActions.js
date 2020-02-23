@@ -3,6 +3,7 @@
 import _ from "lodash";
 
 import * as actionTypes from "../ActionTypes";
+import * as constant from "../../data/constants";
 import { updateInstructions } from "./MessageActions";
 
 /**
@@ -69,7 +70,7 @@ export const incrementPlayerTurn = () => (dispatch, getState) => {
       text: `${_.get(
         playersState,
         `details.${playersState.players[nextPlayer]}.name`
-      )}: Play a Card`,
+      )}: ${constant.PLAY}`,
       color: _.get(
         playersState,
         `details.${playersState.players[nextPlayer]}.color`
