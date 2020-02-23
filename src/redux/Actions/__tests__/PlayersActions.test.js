@@ -128,24 +128,3 @@ describe("incrementPlayerTurn", () => {
     expect(dispatchedActions).toEqual(expectedActions);
   });
 });
-
-/*
-test("0 -> 1", () => {
-  const payload = null;
-  const action = {
-    type: actionTypes.SET_PLAYER_TURN,
-    payload
-  };
-  const state = Reducer({ turn: 0, players: ["1", "2"] }, action);
-  expect(state.turn).toEqual(1);
-});
-test("2 -> 0", () => {
-  const payload = null;
-  const action = {
-    type: actionTypes.SET_PLAYER_TURN,
-    payload
-  };
-  const state = Reducer({ turn: 2, players: ["1", "2", "3"] }, action);
-  expect(state.turn).toEqual(0);
-});
-*/

@@ -5,6 +5,11 @@
   height: 200px;
 }
 
+@mixin square-size {
+  width: 110px;
+  height: 110px;
+}
+
 .pompeii-card {
   @include card-size;
 }
@@ -65,5 +70,15 @@ fieldset {
   opacity: 1;
   &:hover {
     opacity: 0.9;
+  }
+}
+
+.highlighter {
+  @include square-size;
+  position: absolute !important;
+  div {
+    @include square-size;
+    background-color: #ff0000;
+    opacity: 0.4;
   }
 }

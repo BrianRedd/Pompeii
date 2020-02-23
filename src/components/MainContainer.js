@@ -7,6 +7,7 @@ import _ from "lodash";
 
 import actions from "../redux/Actions";
 import * as types from "../types/types";
+import { phaseMessage } from "../data/messageData";
 
 import Main from "./Main";
 
@@ -59,19 +60,42 @@ const MainContainer = props => {
     setActivePlayer(_.get(playersState, `players[${playersState.turn}]`));
   }, [playersState]);
 
+  const [cardGrid, setCardGrid] = useState([]);
+
+  const [phase, setPhase] = useState(0);
+
+  /**
+   * @function placePerson
+   * @description function when person is placed
+   * @param {String} grid
+   */
+  const placePerson = grid => {
+    console.log(grid);
+    setPhase(2);
+
+    updateInstructions({
+      text: `${_.get(playersState, `details[${activePlayer}].name`)}: ${
+        phaseMessage[2]
+      }`,
+      color: _.get(playersState, `details[${activePlayer}].color`)
+    });
+    setCardGrid([]);
+  };
+
   /**
    * @function playPompCard
    * @description when player plays pompeii card
-   * @param {String} player
    * @param {String} card
    */
-  const playPompCard = (player, card) => {
-    const playerName = _.get(playersState, `details[${player}].name`);
-    console.log(`${playerName} plays ${cardsState.cards[card].name}`);
+  const playPompCard = card => {
+    setPhase(1);
     updateInstructions({
-      text: `${playerName}: Draw a Card`,
-      color: _.get(playersState, `details[${player}].color`)
+      text: `${_.get(playersState, `details[${activePlayer}].name`)}: ${
+        phaseMessage[1]
+      }`,
+      color: _.get(playersState, `details[${activePlayer}].color`)
     });
+    setCardGrid(cardsState.cards[card].grid);
   };
 
   /**
@@ -135,9 +159,12 @@ const MainContainer = props => {
         discardCard={discardCard}
         updatePlayerHand={updatePlayerHand}
         deckEnabled={
-          _.get(playersState, `details[${activePlayer}].hand.length`) < 4
+          _.get(playersState, `details[${activePlayer}].hand.length`) < 4 &&
+          phase !== 1
         }
         playPompCard={playPompCard}
+        cardGrid={cardGrid}
+        placePerson={placePerson}
       />
     </div>
   );

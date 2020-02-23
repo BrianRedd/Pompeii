@@ -14,3 +14,5 @@ export const stageData = [
     text: "A.D. 79: VESUVIUS ERUPTS!"
   }
 ];
+
+export const phaseMessage = ["Play a Card", "Place a Person", "Draw a Card"];

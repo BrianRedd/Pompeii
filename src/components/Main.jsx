@@ -9,10 +9,12 @@ import * as types from "../types/types";
 import BoardContainer from "./Board/BoardContainer";
 import DeckContainer from "./Deck/DeckContainer";
 import PlayersContainer from "./Player/PlayersContainer";
+import Highlighter from "./Board/Highlighter";
 
 /**
  * @function Main
  * @description Functional Presentational component for Main
+ * @param {Object} props
  * @returns {React.Component} - Rendered component.
  */
 const Main = props => {
@@ -24,7 +26,9 @@ const Main = props => {
     drawCard,
     discardCard,
     updatePlayerHand,
-    playPompCard
+    playPompCard,
+    cardGrid,
+    placePerson
   } = props;
 
   return (
@@ -45,6 +49,9 @@ const Main = props => {
           />
         </div>
       </Row>
+      {cardGrid.length > 0 && (
+        <Highlighter cardGrid={cardGrid} placePerson={placePerson} />
+      )}
     </Col>
   );
 };
@@ -53,22 +60,26 @@ Main.propTypes = {
   cardsState: types.cardsState.types,
   messageState: types.messageState.types,
   playersState: types.playersState.types,
+  cardGrid: PropTypes.arrayOf(PropTypes.string),
   deckEnabled: PropTypes.bool,
   drawCard: PropTypes.func,
   discardCard: PropTypes.func,
   updatePlayerHand: PropTypes.func,
-  playPompCard: PropTypes.func
+  playPompCard: PropTypes.func,
+  placePerson: PropTypes.func
 };
 
 Main.defaultProps = {
   cardsState: types.cardsState.defaults,
   messageState: types.messageState.defaults,
   playersState: types.playersState.defaults,
+  cardGrid: [],
   deckEnabled: false,
   drawCard: () => {},
   discardCard: () => {},
   updatePlayerHand: () => {},
-  playPompCard: () => {}
+  playPompCard: () => {},
+  placePerson: () => {}
 };
 
 export default Main;

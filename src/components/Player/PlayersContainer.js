@@ -48,7 +48,7 @@ const PlayersContainer = props => {
     thisHand.splice(cardIdx, 1);
     discardCard(cardId);
     updatePlayerHand(player, thisHand);
-    playPompCard(player, cardId);
+    playPompCard(cardId);
   };
 
   return (
