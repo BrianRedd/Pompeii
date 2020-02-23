@@ -8,6 +8,7 @@ import _ from "lodash";
 import actions from "../redux/Actions";
 import * as types from "../types/types";
 import * as constant from "../data/constants";
+import { whiteGrid } from "../data/gridData";
 
 import Main from "./Main";
 
@@ -27,7 +28,8 @@ const mapDispatchToProps = {
   incrementPlayerTurn: actions.incrementPlayerTurn,
   updatePlayerHand: actions.updatePlayerHand,
   updateInstructions: actions.updateInstructions,
-  placePersonInSquare: actions.placePersonInSquare
+  placePersonInSquare: actions.placePersonInSquare,
+  incrementStage: actions.incrementStage
 };
 
 /**
@@ -47,7 +49,8 @@ const MainContainer = props => {
     incrementPlayerTurn,
     updatePlayerHand,
     updateInstructions,
-    placePersonInSquare
+    placePersonInSquare,
+    incrementStage
   } = props;
 
   const numberOfPlayers = 3;
@@ -67,6 +70,8 @@ const MainContainer = props => {
   const [cardGrid, setCardGrid] = useState([]);
 
   const [placingPerson, setPersonPlacing] = useState(false);
+
+  const [relatives, setRelatives] = useState(false);
 
   /**
    * @function placePerson
@@ -90,7 +95,13 @@ const MainContainer = props => {
       }`,
       color: _.get(playersState, `details[${activePlayer}].color`)
     });
-    setCardGrid([]);
+    if (messageState.stage === 1 && !relatives) {
+      setRelatives(true);
+      setCardGrid([...cardGrid, ...whiteGrid]);
+    } else {
+      setRelatives(false);
+      setCardGrid([]);
+    }
   };
 
   /**
@@ -115,7 +126,7 @@ const MainContainer = props => {
    * @description resolve AD 79 card when drawn
    */
   const resolveAd79 = () => {
-    alert("AD 79 Card");
+    incrementStage();
   };
 
   /**
@@ -194,7 +205,8 @@ MainContainer.propTypes = {
   incrementPlayerTurn: PropTypes.func,
   updatePlayerHand: PropTypes.func,
   updateInstructions: PropTypes.func,
-  placePersonInSquare: PropTypes.func
+  placePersonInSquare: PropTypes.func,
+  incrementStage: PropTypes.func
 };
 
 MainContainer.defaultProps = {
@@ -208,7 +220,8 @@ MainContainer.defaultProps = {
   incrementPlayerTurn: () => {},
   updatePlayerHand: () => {},
   updateInstructions: () => {},
-  placePersonInSquare: () => {}
+  placePersonInSquare: () => {},
+  incrementStage: () => {}
 };
 
 export const MainContainerTest = MainContainer;

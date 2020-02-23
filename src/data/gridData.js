@@ -297,3 +297,18 @@ export const gridSquares = {
     occupants: []
   }
 };
+
+export const whiteGrid = [
+  "0_6",
+  "1_3",
+  "1_7",
+  "2_0",
+  "2_4",
+  "3_1",
+  "3_7",
+  "3_9",
+  "3_10",
+  "5_1",
+  "5_3",
+  "5_7"
+];

@@ -2,6 +2,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
+import { ButtonBase } from "@material-ui/core";
 import _ from "lodash";
 
 import * as types from "../../types/types";
@@ -12,15 +13,16 @@ const OccupancySquare = ({ occupants, playersState }) => {
     const key = `${person.player}-${person.gender}-${idx}`;
     const color = `${_.get(playersState, `details.${person.player}.color`)}`;
     return (
-      <div
+      <ButtonBase
         key={key}
         className="person"
         style={{
           backgroundColor: color
         }}
+        onClick={() => console.log(key)}
       >
         <span className={`fas fa-${person.gender} fa-lg`} />
-      </div>
+      </ButtonBase>
     );
   });
   return <div>{occupancySquare}</div>;

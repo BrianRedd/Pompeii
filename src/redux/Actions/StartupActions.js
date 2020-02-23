@@ -27,6 +27,13 @@ export const gameSetup = numberOfPlayers => async dispatch => {
     };
   });
   await dispatch(addGrid(gridSquares));
+  const whiteGrid = [];
+  Object.keys(gridSquares).forEach(square => {
+    if (gridSquares[square].buildingName === "White") {
+      whiteGrid.push(square);
+    }
+  });
+  console.log("whiteGrid:", whiteGrid);
   await dispatch(addPlayers(details));
   await dispatch(generateDeck());
   await dispatch(
