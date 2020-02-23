@@ -7,7 +7,7 @@ export const stageData = [
   },
   {
     color: "warning",
-    text: "A.D. 79: Vesuvius Seethes!"
+    text: "A.D. 79: Vesuvius SEETHES!"
   },
   {
     color: "danger",

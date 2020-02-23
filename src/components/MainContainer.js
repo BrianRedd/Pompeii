@@ -8,7 +8,7 @@ import _ from "lodash";
 import actions from "../redux/Actions";
 import * as types from "../types/types";
 import * as constant from "../data/constants";
-import { whiteGrid } from "../data/gridData";
+import { gridByColor } from "../data/gridData";
 
 import Main from "./Main";
 
@@ -55,11 +55,11 @@ const MainContainer = props => {
 
   const numberOfPlayers = 3;
 
-  useState(() => {
+  useEffect(() => {
     if (!_.get(cardsState.cards)) {
       gameSetup(numberOfPlayers);
     }
-  }, []);
+  }, [cardsState.cards, gameSetup]);
 
   const [activePlayer, setActivePlayer] = useState();
 
@@ -69,9 +69,48 @@ const MainContainer = props => {
 
   const [cardGrid, setCardGrid] = useState([]);
 
-  const [placingPerson, setPersonPlacing] = useState(false);
+  const [placingPerson, setPlacingPerson] = useState(false);
 
-  const [relatives, setRelatives] = useState(0);
+  const [numberOfRelatives, setNumberOfRelatives] = useState(0);
+  const [placedRelatives, setPlacedRelatives] = useState([]);
+  const [wildCard, setWildCard] = useState(false);
+
+  /**
+   * @function placeRelatives
+   * @description function when relatives is placed
+   * @param {String} grid - grid where "parent" was placed
+   */
+  const placeRelatives = grid => {
+    // current other occupants
+    const currentOccupants = _.get(gridState, `grid.${grid}.occupants`, []);
+    let thisPlacedRelatives = placedRelatives;
+
+    // place relative in square
+    placePersonInSquare(grid, [
+      ...currentOccupants,
+      {
+        player: activePlayer,
+        gender: Math.round(Math.random()) ? "male" : "female"
+      }
+    ]);
+    thisPlacedRelatives = [...placedRelatives, grid];
+    setPlacedRelatives(thisPlacedRelatives);
+    setCardGrid([...cardGrid].filter(val => val !== grid));
+
+    // if enough relatives have been placed, end relative placement
+    if (thisPlacedRelatives.length === numberOfRelatives) {
+      setNumberOfRelatives(0);
+      setPlacedRelatives([]);
+      setCardGrid([]);
+      setPlacingPerson(false);
+      updateInstructions({
+        text: `${_.get(playersState, `details[${activePlayer}].name`)}: ${
+          constant.DRAW
+        }`,
+        color: _.get(playersState, `details[${activePlayer}].color`)
+      });
+    }
+  };
 
   /**
    * @function placePerson
@@ -79,19 +118,16 @@ const MainContainer = props => {
    * @param {String} grid
    */
   const placePerson = grid => {
-    const currentOccupants = _.get(gridState, `grid.${grid}.occupants`, []);
-
-    let thisRelatives = relatives;
-
-    if (
-      messageState.stage === 1 &&
-      currentOccupants.length > 0 &&
-      !thisRelatives
-    ) {
-      thisRelatives = currentOccupants.length;
-      setRelatives(currentOccupants.length);
+    // if number of relatives is set, place relative instead
+    if (numberOfRelatives > 0) {
+      placeRelatives(grid);
+      return;
     }
 
+    // current other occupants
+    const currentOccupants = _.get(gridState, `grid.${grid}.occupants`, []);
+
+    // place person in square
     placePersonInSquare(grid, [
       ...currentOccupants,
       {
@@ -100,23 +136,57 @@ const MainContainer = props => {
       }
     ]);
 
-    setPersonPlacing(false);
-    updateInstructions({
-      text: `${_.get(playersState, `details[${activePlayer}].name`)}: ${
-        constant.DRAW
-      }`,
-      color: _.get(playersState, `details[${activePlayer}].color`)
-    });
-
-    if (messageState.stage === 1 && thisRelatives > 0) {
-      if (cardGrid.length < 5) {
-        setCardGrid([...cardGrid, ...whiteGrid]);
-      }
-      thisRelatives -= 1;
-      setRelatives(thisRelatives);
+    // if there should be relatives, set relative states
+    if (
+      messageState.stage === 1 &&
+      currentOccupants.length > 0 &&
+      numberOfRelatives === 0 &&
+      !wildCard
+    ) {
+      setNumberOfRelatives(currentOccupants.length);
+      setPlacedRelatives([]);
+      const newGridArray = _.uniq([
+        ...cardGrid,
+        ...gridByColor.White,
+        ...gridByColor[
+          _.get(gridState, `grid.${grid}.buildingName`, "").split(" ")[0]
+        ]
+      ]).filter(val => val !== grid);
+      setCardGrid(newGridArray);
+      updateInstructions({
+        text: `${_.get(playersState, `details[${activePlayer}].name`)}: ${
+          constant.RELATIVE
+        }`,
+        color: _.get(playersState, `details[${activePlayer}].color`)
+      });
     } else {
+      // else complete placement
       setCardGrid([]);
+      setPlacingPerson(false);
+      setWildCard(false);
+      updateInstructions({
+        text: `${_.get(playersState, `details[${activePlayer}].name`)}: ${
+          constant.DRAW
+        }`,
+        color: _.get(playersState, `details[${activePlayer}].color`)
+      });
     }
+  };
+
+  /**
+   * @function vacancy
+   * @description checks for vacancy within a square
+   * @param {String} square
+   * @return {Boolean}
+   */
+  const vacancy = square => {
+    if (
+      _.get(gridState, `grid.${square}.occupants.length`, 0) <
+      _.get(gridState, `grid.${square}.buildingCapacity`, 0)
+    ) {
+      return true;
+    }
+    return false;
   };
 
   /**
@@ -125,9 +195,24 @@ const MainContainer = props => {
    * @param {String} card
    */
   const playPompCard = card => {
-    setCardGrid(cardsState.cards[card].grid);
+    let gridHighlights = cardsState.cards[card].grid.filter(val =>
+      vacancy(val)
+    );
 
-    setPersonPlacing(true);
+    if (!gridHighlights.length) {
+      gridHighlights = _.uniqBy([
+        ...gridByColor.White,
+        ...gridByColor.Grey,
+        ...gridByColor.Purple,
+        ...gridByColor.Turquoise,
+        ...gridByColor.Brown
+      ]).filter(val => vacancy(val));
+      setWildCard(true);
+    }
+
+    setPlacingPerson(true);
+
+    setCardGrid(gridHighlights);
     updateInstructions({
       text: `${_.get(playersState, `details[${activePlayer}].name`)}: ${
         constant.PLACE

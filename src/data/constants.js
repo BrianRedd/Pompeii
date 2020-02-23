@@ -9,6 +9,7 @@ export const WHITE = "White";
 export const PLAY = "PLAY a Card";
 export const PLACE = "PLACE a Person";
 export const DRAW = "DRAW a Card";
+export const RELATIVE = "PLACE a Relative";
 
 // card types
 export const POMP = "Pomp";

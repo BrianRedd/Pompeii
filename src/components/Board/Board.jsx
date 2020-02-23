@@ -19,7 +19,8 @@ const Board = props => {
     <div data-test="presentation-board">
       <Alert
         color={stageData[messageState.stage].color}
-        className="justify-content-center m-0 p-1 row"
+        className={`justify-content-center m-0 p-1 row ${messageState.stage >
+          0 && "font-weight-bold"}`}
       >
         {stageData[messageState.stage].text}
       </Alert>
