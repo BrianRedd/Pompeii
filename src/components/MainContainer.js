@@ -14,6 +14,7 @@ import Main from "./Main";
 const mapStateToProps = state => {
   return {
     cardsState: state.cardsState,
+    gridState: state.gridState,
     messageState: state.messageState,
     playersState: state.playersState
   };
@@ -37,6 +38,7 @@ const mapDispatchToProps = {
 const MainContainer = props => {
   const {
     cardsState,
+    gridState,
     messageState,
     playersState,
     gameSetup,
@@ -72,11 +74,12 @@ const MainContainer = props => {
    * @param {String} grid
    */
   const placePerson = grid => {
-    console.log(grid);
+    const currentOccupants = _.get(gridState, `grid.${grid}.occupants`, []);
     placePersonInSquare(grid, [
+      ...currentOccupants,
       {
         player: activePlayer,
-        gender: "male"
+        gender: Math.round(Math.random()) ? "male" : "female"
       }
     ]);
 
@@ -133,14 +136,14 @@ const MainContainer = props => {
     takeCard();
 
     // check for AD79
-    if (_.get(cardsState, `cards[${takenCard}].type`) === "AD79") {
+    if (_.get(cardsState, `cards[${takenCard}].type`) === constant.AD79) {
       discardCard(takenCard);
       resolveAd79();
       return;
     }
 
     // check for Omen
-    if (_.get(cardsState, `cards[${takenCard}].type`) === "OMEN") {
+    if (_.get(cardsState, `cards[${takenCard}].type`) === constant.OMEN) {
       discardCard(takenCard);
       resolveOmen();
       return;
@@ -162,6 +165,7 @@ const MainContainer = props => {
     <div data-test="container-main">
       <Main
         cardsState={cardsState}
+        gridState={gridState}
         messageState={messageState}
         playersState={playersState}
         drawCard={drawCard}
@@ -181,6 +185,7 @@ const MainContainer = props => {
 
 MainContainer.propTypes = {
   cardsState: types.cardsState.types,
+  gridState: types.gridState.types,
   messageState: types.messageState.types,
   playersState: types.playersState.types,
   gameSetup: PropTypes.func,
@@ -194,6 +199,7 @@ MainContainer.propTypes = {
 
 MainContainer.defaultProps = {
   cardsState: types.cardsState.defaults,
+  gridState: types.gridState.defaults,
   messageState: types.messageState.defaults,
   playersState: types.playersState.defaults,
   gameSetup: () => {},

@@ -8,7 +8,7 @@ import * as types from "../../types/types";
  * @param {Object} state - cards state object
  * @param {Object} action
  */
-const gridState = (state = { grid: types.grid.defaults }, action) => {
+const gridState = (state = { grid: types.gridState.defaults }, action) => {
   const { type, payload } = action;
   let newGrid = {};
   switch (type) {

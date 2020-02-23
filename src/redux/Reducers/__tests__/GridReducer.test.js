@@ -5,7 +5,7 @@ import * as types from "../../../types/types";
 import Reducer from "../GridReducer";
 
 const defaultState = {
-  grid: types.grid.defaults
+  grid: types.gridState.defaults
 };
 
 test("should return initial state", () => {

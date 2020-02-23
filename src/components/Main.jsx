@@ -20,6 +20,7 @@ import PlacementHighlighter from "./Board/PlacementHighlighter";
 const Main = props => {
   const {
     cardsState,
+    gridState,
     messageState,
     playersState,
     deckEnabled,
@@ -34,7 +35,11 @@ const Main = props => {
   return (
     <Col data-test="presentation-main" className="main-container">
       <Row>
-        <BoardContainer messageState={messageState} />
+        <BoardContainer
+          messageState={messageState}
+          gridState={gridState}
+          playersState={playersState}
+        />
         <div className="off-board">
           <DeckContainer
             cardsState={cardsState}
@@ -58,6 +63,7 @@ const Main = props => {
 
 Main.propTypes = {
   cardsState: types.cardsState.types,
+  gridState: types.gridState.types,
   messageState: types.messageState.types,
   playersState: types.playersState.types,
   cardGrid: PropTypes.arrayOf(PropTypes.string),
@@ -71,6 +77,7 @@ Main.propTypes = {
 
 Main.defaultProps = {
   cardsState: types.cardsState.defaults,
+  gridState: types.gridState.defaults,
   messageState: types.messageState.defaults,
   playersState: types.playersState.defaults,
   cardGrid: [],

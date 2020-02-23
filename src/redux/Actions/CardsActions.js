@@ -3,6 +3,7 @@
 import * as actionTypes from "../ActionTypes";
 import { cardDictionary } from "../../data/cardData";
 import { updatePlayerHand } from "./PlayersActions";
+import * as constant from "../../data/constants";
 
 /**
  * @function addCards
@@ -83,10 +84,10 @@ export const generateDeck = () => (dispatch, getState) => {
   Object.keys(cardDictionary).forEach(card => {
     for (let i = 0; i < cardDictionary[card].count; i += 1) {
       switch (cardDictionary[card].type) {
-        case "Omen":
+        case constant.OMEN:
           omens.push(card);
           break;
-        case "AD79":
+        case constant.AD79:
           ad79s.push(card);
           break;
         default:

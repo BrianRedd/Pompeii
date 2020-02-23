@@ -87,7 +87,7 @@ export const gridSquare = {
   }
 };
 
-export const grid = {
+export const gridState = {
   types: shape({
     "0_0": gridSquare.types
   }),

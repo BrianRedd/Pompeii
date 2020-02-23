@@ -1,9 +1,11 @@
 /** @module cardData */
 
+import * as constant from "./constants";
+
 export const cardDictionary = {
   CARD_1: {
     name: "Grey 1",
-    type: "Pomp",
+    type: constant.POMP,
     number: 1,
     color: "G",
     count: 4,
@@ -11,7 +13,7 @@ export const cardDictionary = {
   },
   CARD_2: {
     name: "Purple 2",
-    type: "Pomp",
+    type: constant.POMP,
     number: 2,
     color: "P",
     count: 4,
@@ -19,7 +21,7 @@ export const cardDictionary = {
   },
   CARD_3: {
     name: "Purple 3",
-    type: "Pomp",
+    type: constant.POMP,
     number: 3,
     color: "P",
     count: 5,
@@ -27,7 +29,7 @@ export const cardDictionary = {
   },
   CARD_4: {
     name: "Grey 4",
-    type: "Pomp",
+    type: constant.POMP,
     number: 4,
     color: "G",
     count: 7,
@@ -35,7 +37,7 @@ export const cardDictionary = {
   },
   CARD_5: {
     name: "Purple 5",
-    type: "Pomp",
+    type: constant.POMP,
     number: 5,
     color: "P",
     count: 4,
@@ -43,7 +45,7 @@ export const cardDictionary = {
   },
   CARD_6: {
     name: "Turquoise 6",
-    type: "Pomp",
+    type: constant.POMP,
     number: 6,
     color: "T",
     count: 7,
@@ -51,7 +53,7 @@ export const cardDictionary = {
   },
   CARD_7: {
     name: "Purple 7",
-    type: "Pomp",
+    type: constant.POMP,
     number: 7,
     color: "P",
     count: 3,
@@ -59,7 +61,7 @@ export const cardDictionary = {
   },
   CARD_8: {
     name: "Grey 8",
-    type: "Pomp",
+    type: constant.POMP,
     number: 8,
     color: "G",
     count: 5,
@@ -67,7 +69,7 @@ export const cardDictionary = {
   },
   CARD_9: {
     name: "Turquoise 9",
-    type: "Pomp",
+    type: constant.POMP,
     number: 9,
     color: "T",
     count: 4,
@@ -75,7 +77,7 @@ export const cardDictionary = {
   },
   CARD_10: {
     name: "Brown 10",
-    type: "Pomp",
+    type: constant.POMP,
     number: 10,
     color: "B",
     count: 5,
@@ -83,7 +85,7 @@ export const cardDictionary = {
   },
   CARD_11: {
     name: "Brown 11",
-    type: "Pomp",
+    type: constant.POMP,
     number: 11,
     color: "B",
     count: 5,
@@ -91,14 +93,14 @@ export const cardDictionary = {
   },
   OMEN: {
     name: "Omen",
-    type: "Omen",
+    type: constant.OMEN,
     number: 0,
     color: "S",
     count: 7
   },
   AD79: {
     name: "AD 79",
-    type: "AD79",
+    type: constant.AD79,
     number: 0,
     color: "S",
     count: 2

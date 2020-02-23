@@ -7,7 +7,7 @@ const mockGridSelect = jest.fn();
 
 test("renders without error", () => {
   const wrapper = commonSetup(TestedComponent);
-  const component = findByTestAttr(wrapper, "layer-highlight");
+  const component = findByTestAttr(wrapper, "overlay-highlight-placement");
   expect(component.length).toBe(1);
 });
 

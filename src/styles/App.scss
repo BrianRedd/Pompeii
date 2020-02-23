@@ -82,3 +82,32 @@ fieldset {
     opacity: 0.4;
   }
 }
+
+.overlay-occupancy {
+  position: absolute;
+  top: 0;
+  left: 0;
+  min-width: 1840px;
+  height: 100%;
+  .occupancy-square {
+    @include square-size;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    white-space: normal;
+    div {
+      align-self: center;
+      .person {
+        display: inline-block;
+        height: 25px;
+        width: 25px;
+        text-align: center;
+        border-radius: 50%;
+        border: 1px solid #000000;
+        span {
+          color: #ffffff;
+        }
+      }
+    }
+  }
+}

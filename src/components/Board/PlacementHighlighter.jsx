@@ -35,7 +35,9 @@ const PlacementHighlighter = props => {
     );
   });
 
-  return <div data-test="layer-highlight">{placementHighlighter}</div>;
+  return (
+    <div data-test="overlay-highlight-placement">{placementHighlighter}</div>
+  );
 };
 
 PlacementHighlighter.propTypes = {
