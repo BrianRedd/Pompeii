@@ -289,6 +289,7 @@ const MainContainer = props => {
         playPompCard={playPompCard}
         cardGrid={cardGrid}
         placePerson={placePerson}
+        vacancy={vacancy}
       />
     </div>
   );

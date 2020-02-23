@@ -29,7 +29,8 @@ const Main = props => {
     updatePlayerHand,
     playPompCard,
     cardGrid,
-    placePerson
+    placePerson,
+    vacancy
   } = props;
 
   return (
@@ -56,9 +57,9 @@ const Main = props => {
       </Row>
       {cardGrid.length > 0 && (
         <PlacementHighlighter
-          gridState={gridState}
           cardGrid={cardGrid}
           placePerson={placePerson}
+          vacancy={vacancy}
         />
       )}
     </Col>
@@ -76,7 +77,8 @@ Main.propTypes = {
   discardCard: PropTypes.func,
   updatePlayerHand: PropTypes.func,
   playPompCard: PropTypes.func,
-  placePerson: PropTypes.func
+  placePerson: PropTypes.func,
+  vacancy: PropTypes.func
 };
 
 Main.defaultProps = {
@@ -90,7 +92,8 @@ Main.defaultProps = {
   discardCard: () => {},
   updatePlayerHand: () => {},
   playPompCard: () => {},
-  placePerson: () => {}
+  placePerson: () => {},
+  vacancy: () => {}
 };
 
 export default Main;

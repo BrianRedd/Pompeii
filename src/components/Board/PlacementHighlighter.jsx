@@ -3,10 +3,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { ButtonBase } from "@material-ui/core";
-import _ from "lodash";
 
 import * as constant from "../../data/constants";
-import * as types from "../../types/types";
 
 /**
  * @function PlacementHighlighter
@@ -15,13 +13,10 @@ import * as types from "../../types/types";
  * @returns {React.Component} - Rendered component.
  */
 const PlacementHighlighter = props => {
-  const { cardGrid, gridState, placePerson } = props;
+  const { cardGrid, vacancy, placePerson } = props;
 
   const placementHighlighter = cardGrid.map(square => {
-    if (
-      _.get(gridState, `grid.${square}.occupants.length`, 0) <
-      _.get(gridState, `grid.${square}.buildingCapacity`, 0)
-    ) {
+    if (vacancy(square)) {
       const coords = square.split("_");
       const row = parseFloat(coords[0]);
       const col = parseFloat(coords[1]);
@@ -49,15 +44,15 @@ const PlacementHighlighter = props => {
 };
 
 PlacementHighlighter.propTypes = {
-  gridState: types.gridState.types,
   cardGrid: PropTypes.arrayOf(PropTypes.string),
-  placePerson: PropTypes.func
+  placePerson: PropTypes.func,
+  vacancy: PropTypes.func
 };
 
 PlacementHighlighter.defaultProps = {
-  gridState: types.gridState.defaults,
   cardGrid: [],
-  placePerson: () => {}
+  placePerson: () => {},
+  vacancy: () => {}
 };
 
 export default PlacementHighlighter;

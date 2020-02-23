@@ -4,6 +4,9 @@ import { findByTestAttr, commonSetup } from "../../../utils/utilsTest";
 import TestedComponent from "../PlacementHighlighter";
 
 const mockGridSelect = jest.fn();
+const mockVacancy = jest.fn(() => {
+  return true;
+});
 
 test("renders without error", () => {
   const wrapper = commonSetup(TestedComponent);
@@ -21,6 +24,7 @@ describe("highlighted tiles", () => {
   });
   test("one square", () => {
     wrapper = commonSetup(TestedComponent, {
+      vacancy: mockVacancy,
       cardGrid: ["0_0"]
     });
     squares = findByTestAttr(wrapper, "square-highlighted");
@@ -28,6 +32,7 @@ describe("highlighted tiles", () => {
   });
   test("two squares", () => {
     wrapper = commonSetup(TestedComponent, {
+      vacancy: mockVacancy,
       cardGrid: ["0_0", "0_1"]
     });
     squares = findByTestAttr(wrapper, "square-highlighted");
@@ -36,6 +41,7 @@ describe("highlighted tiles", () => {
   test("clicking one places person", () => {
     wrapper = commonSetup(TestedComponent, {
       placePerson: mockGridSelect,
+      vacancy: mockVacancy,
       cardGrid: ["0_0"]
     });
     squares = findByTestAttr(wrapper, "square-highlighted", true);
