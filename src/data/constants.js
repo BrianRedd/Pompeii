@@ -3,6 +3,7 @@
 // board
 export const Y_OFFSET = 121;
 export const X_OFFSET = 58;
+export const WHITE = "White";
 
 // messages
 export const PLAY = "PLAY a Card";

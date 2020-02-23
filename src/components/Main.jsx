@@ -55,7 +55,11 @@ const Main = props => {
         </div>
       </Row>
       {cardGrid.length > 0 && (
-        <PlacementHighlighter cardGrid={cardGrid} placePerson={placePerson} />
+        <PlacementHighlighter
+          gridState={gridState}
+          cardGrid={cardGrid}
+          placePerson={placePerson}
+        />
       )}
     </Col>
   );

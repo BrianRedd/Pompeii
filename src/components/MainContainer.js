@@ -71,7 +71,7 @@ const MainContainer = props => {
 
   const [placingPerson, setPersonPlacing] = useState(false);
 
-  const [relatives, setRelatives] = useState(false);
+  const [relatives, setRelatives] = useState(0);
 
   /**
    * @function placePerson
@@ -80,6 +80,18 @@ const MainContainer = props => {
    */
   const placePerson = grid => {
     const currentOccupants = _.get(gridState, `grid.${grid}.occupants`, []);
+
+    let thisRelatives;
+
+    if (
+      messageState.stage === 1 &&
+      currentOccupants.length > 0 &&
+      _.get(gridState, `grid.${grid}.buildingName`) !== constant.WHITE
+    ) {
+      thisRelatives = currentOccupants.length;
+      setRelatives(thisRelatives);
+    }
+
     placePersonInSquare(grid, [
       ...currentOccupants,
       {
@@ -95,11 +107,12 @@ const MainContainer = props => {
       }`,
       color: _.get(playersState, `details[${activePlayer}].color`)
     });
-    if (messageState.stage === 1 && !relatives) {
-      setRelatives(true);
+
+    if (messageState.stage === 1 && (relatives > 0 || thisRelatives > 0)) {
       setCardGrid([...cardGrid, ...whiteGrid]);
+      thisRelatives -= 1;
+      setRelatives(thisRelatives);
     } else {
-      setRelatives(false);
       setCardGrid([]);
     }
   };

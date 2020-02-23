@@ -1,11 +1,15 @@
 /** @module gridData */
 
+import * as constant from "./constants";
+
 export const gridSquares = {
   "0_0": {
     gateName: "Porta Errolano",
     occupants: []
   },
   "0_1": {
+    buildingName: constant.WHITE,
+    buildingCapacity: 1,
     occupants: []
   },
   "0_2": {
@@ -24,7 +28,7 @@ export const gridSquares = {
     occupants: []
   },
   "0_6": {
-    buildingName: "White",
+    buildingName: constant.WHITE,
     buildingCapacity: 2,
     occupants: []
   },
@@ -45,7 +49,7 @@ export const gridSquares = {
     ventName: "Coin"
   },
   "1_3": {
-    buildingName: "White",
+    buildingName: constant.WHITE,
     buildingCapacity: 3,
     occupants: []
   },
@@ -61,7 +65,7 @@ export const gridSquares = {
     occupants: []
   },
   "1_7": {
-    buildingName: "White",
+    buildingName: constant.WHITE,
     buildingCapacity: 2,
     occupants: []
   },
@@ -73,7 +77,7 @@ export const gridSquares = {
     occupants: []
   },
   "2_0": {
-    buildingName: "White",
+    buildingName: constant.WHITE,
     buildingCapacity: 2,
     occupants: []
   },
@@ -91,7 +95,7 @@ export const gridSquares = {
     occupants: []
   },
   "2_4": {
-    buildingName: "White",
+    buildingName: constant.WHITE,
 
     buildingCapacity: 2,
     occupants: []
@@ -125,7 +129,7 @@ export const gridSquares = {
     occupants: []
   },
   "3_1": {
-    buildingName: "White",
+    buildingName: constant.WHITE,
     buildingCapacity: 3,
     occupants: []
   },
@@ -152,7 +156,7 @@ export const gridSquares = {
     occupants: []
   },
   "3_7": {
-    buildingName: "White",
+    buildingName: constant.WHITE,
     buildingCapacity: 3,
     occupants: []
   },
@@ -160,12 +164,12 @@ export const gridSquares = {
     occupants: []
   },
   "3_9": {
-    buildingName: "White",
+    buildingName: constant.WHITE,
     buildingCapacity: 2,
     occupants: []
   },
   "3_10": {
-    buildingName: "White",
+    buildingName: constant.WHITE,
     buildingCapacity: 1,
     occupants: []
   },
@@ -216,7 +220,7 @@ export const gridSquares = {
     occupants: []
   },
   "5_1": {
-    buildingName: "White",
+    buildingName: constant.WHITE,
     buildingCapacity: 2,
     occupants: []
   },
@@ -224,7 +228,7 @@ export const gridSquares = {
     occupants: []
   },
   "5_3": {
-    buildingName: "White",
+    buildingName: constant.WHITE,
     buildingCapacity: 2,
     occupants: []
   },
@@ -243,7 +247,7 @@ export const gridSquares = {
     occupants: []
   },
   "5_7": {
-    buildingName: "White",
+    buildingName: constant.WHITE,
     buildingCapacity: 2,
     occupants: []
   },
@@ -299,6 +303,7 @@ export const gridSquares = {
 };
 
 export const whiteGrid = [
+  "0_1",
   "0_6",
   "1_3",
   "1_7",
