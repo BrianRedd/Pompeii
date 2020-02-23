@@ -2,7 +2,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { ButtonBase } from "@material-ui/core";
+import { ButtonBase, Tooltip } from "@material-ui/core";
 import _ from "lodash";
 
 import * as types from "../../types/types";
@@ -16,18 +16,26 @@ const OccupancySquare = ({
 }) => {
   const occupancySquare = occupants.map((person, idx) => {
     const key = `${person.player}-${person.gender}-${idx}`;
-    const color = `${_.get(playersState, `details.${person.player}.color`)}`;
+    const color = `rgb(${_.get(
+      playersState,
+      `details.${person.player}.color`
+    )})`;
+    const playerName = `${_.get(
+      playersState,
+      `details.${person.player}.name`
+    )}`;
     return (
-      <ButtonBase
-        key={key}
-        className="person"
-        style={{
-          backgroundColor: color
-        }}
-        onClick={() => performSacrifice(key, square)}
-      >
-        <span className={`fas fa-${person.gender} fa-lg`} />
-      </ButtonBase>
+      <Tooltip key={key} title={`${playerName}`} placement="top" arrow>
+        <ButtonBase
+          className="person"
+          style={{
+            backgroundColor: color
+          }}
+          onClick={() => performSacrifice(key, square)}
+        >
+          <span className={`fas fa-${person.gender} fa-lg`} />
+        </ButtonBase>
+      </Tooltip>
     );
   });
   return <div>{occupancySquare}</div>;

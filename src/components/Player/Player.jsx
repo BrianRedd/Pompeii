@@ -54,9 +54,15 @@ const Player = props => {
   const { details, myTurn, playCard } = props;
 
   return (
-    <fieldset data-test="presentation-player" className="mt-3">
+    <fieldset
+      data-test="presentation-player"
+      className="mt-3"
+      style={{
+        backgroundColor: myTurn ? `rgba(${details.color}, 0.3)` : "transparent"
+      }}
+    >
       <legend
-        style={{ color: myTurn ? details.color : "#999999" }}
+        style={{ color: `rgb(${details.color})` }}
         className="d-flex w-100 justify-content-between"
       >
         <span className="font-weight-bold">{details.name}</span>
