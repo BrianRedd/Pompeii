@@ -12,10 +12,12 @@ export const ADD_PLAYERS = "ADD_PLAYERS";
 export const ADD_PLAYER = "ADD_PLAYER";
 export const UPDATE_PLAYER_HAND = "UPDATE_PLAYER_HAND";
 export const SET_PLAYER_TURN = "SET_PLAYER_TURN";
+export const INCREMENT_PLAYER_POPULATION = "INCREMENT_PLAYER_POPULATION";
+export const INCREMENT_PLAYER_CASUALTIES = "INCREMENT_PLAYER_CASUALTIES";
 
 // grid actions
 export const ADD_GRID = "ADD_GRID";
-export const PLACE_PERSON = "PLACE_PERSON";
+export const PLACE_PEOPLE = "PLACE_PEOPLE";
 
 // message actions
 export const INCREMENT_STAGE = "INCREMENT_STAGE";

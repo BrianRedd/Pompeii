@@ -23,7 +23,9 @@ export const gameSetup = numberOfPlayers => async dispatch => {
     details[player] = {
       name: `Player ${idx + 1}`,
       hand: [],
-      color: playerColors[idx]
+      color: playerColors[idx],
+      population: 0,
+      casualties: 0
     };
   });
   await dispatch(addGrid(gridSquares));

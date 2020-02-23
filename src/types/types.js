@@ -31,19 +31,23 @@ export const cardsState = {
 };
 
 // player types
-export const player = {
+export const playerDetails = {
   types: shape({
     player1: shape({
       name: string,
       hand: arrayOf(string),
-      color: string
+      color: string,
+      population: number,
+      casualties: number
     })
   }),
   defaults: {
     player1: {
       name: "Player 1",
       hand: [],
-      color: "#FFFFFF"
+      color: "#FFFFFF",
+      population: 0,
+      casualties: 0
     }
   }
 };
@@ -51,12 +55,12 @@ export const player = {
 export const playersState = {
   types: shape({
     players: arrayOf(string),
-    details: player.types,
+    details: playerDetails.types,
     turn: number
   }),
   defaults: {
     players: ["player1"],
-    details: player.defaults,
+    details: playerDetails.defaults,
     turn: 0
   }
 };

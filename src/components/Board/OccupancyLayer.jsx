@@ -8,7 +8,12 @@ import _ from "lodash";
 import * as types from "../../types/types";
 import * as constant from "../../data/constants";
 
-const OccupancySquare = ({ occupants, playersState }) => {
+const OccupancySquare = ({
+  occupants,
+  square,
+  playersState,
+  performSacrifice
+}) => {
   const occupancySquare = occupants.map((person, idx) => {
     const key = `${person.player}-${person.gender}-${idx}`;
     const color = `${_.get(playersState, `details.${person.player}.color`)}`;
@@ -19,7 +24,7 @@ const OccupancySquare = ({ occupants, playersState }) => {
         style={{
           backgroundColor: color
         }}
-        onClick={() => console.log(key)}
+        onClick={() => performSacrifice(key, square)}
       >
         <span className={`fas fa-${person.gender} fa-lg`} />
       </ButtonBase>
@@ -30,12 +35,16 @@ const OccupancySquare = ({ occupants, playersState }) => {
 
 OccupancySquare.propTypes = {
   playersState: types.playersState.types,
-  occupants: PropTypes.arrayOf(PropTypes.object)
+  occupants: PropTypes.arrayOf(PropTypes.object),
+  square: PropTypes.string,
+  performSacrifice: PropTypes.func
 };
 
 OccupancySquare.defaultProps = {
   playersState: types.playersState.defaults,
-  occupants: []
+  occupants: [],
+  square: "",
+  performSacrifice: () => {}
 };
 
 /**
@@ -47,7 +56,8 @@ OccupancySquare.defaultProps = {
 const OccupancyLayer = props => {
   const {
     gridState: { grid },
-    playersState
+    playersState,
+    performSacrifice
   } = props;
 
   const occupancy = Object.keys(grid).map(square => {
@@ -67,7 +77,9 @@ const OccupancyLayer = props => {
         {_.get(grid, `${square}.occupants.length`) > 0 && (
           <OccupancySquare
             occupants={_.get(grid, `${square}.occupants`, [])}
+            square={square}
             playersState={playersState}
+            performSacrifice={performSacrifice}
           />
         )}
       </div>
@@ -83,12 +95,14 @@ const OccupancyLayer = props => {
 
 OccupancyLayer.propTypes = {
   gridState: types.gridState.types,
-  playersState: types.playersState.types
+  playersState: types.playersState.types,
+  performSacrifice: PropTypes.func
 };
 
 OccupancyLayer.defaultProps = {
   gridState: types.gridState.defaults,
-  playersState: types.playersState.defaults
+  playersState: types.playersState.defaults,
+  performSacrifice: () => {}
 };
 
 export default OccupancyLayer;

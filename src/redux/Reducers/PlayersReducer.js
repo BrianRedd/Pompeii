@@ -41,6 +41,32 @@ const playersState = (state = types.playersState.defaults, action) => {
           }
         }
       };
+    case actions.INCREMENT_PLAYER_POPULATION:
+      return {
+        ...state,
+        details: {
+          ...state.details,
+          [payload.playerId]: {
+            ...state.details[payload.playerId],
+            population:
+              state.details[payload.playerId].population + payload.population
+          }
+        }
+      };
+    case actions.INCREMENT_PLAYER_CASUALTIES:
+      return {
+        ...state,
+        details: {
+          ...state.details,
+          [payload.playerId]: {
+            ...state.details[payload.playerId],
+            population:
+              state.details[payload.playerId].population - payload.casualties,
+            casualties:
+              state.details[payload.playerId].casualties + payload.casualties
+          }
+        }
+      };
     case actions.SET_PLAYER_TURN:
       return {
         ...state,

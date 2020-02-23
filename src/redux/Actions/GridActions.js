@@ -13,13 +13,13 @@ export const addGrid = grid => ({
 });
 
 /**
- * @function placePersonInSquare
+ * @function placePeopleInSquare
  * @description updates singular grid square within GridState store
  * with updated occupants (replacing existing)
  * @param {String} squareId - square Id
  * @param {Array} occupants - occupants array
  */
-export const placePersonInSquare = (squareId, occupants) => ({
-  type: actionTypes.PLACE_PERSON,
+export const placePeopleInSquare = (squareId, occupants) => ({
+  type: actionTypes.PLACE_PEOPLE,
   payload: { squareId, occupants }
 });

@@ -31,13 +31,13 @@ test("should handle ADD_GRID action", () => {
   expect(state.grid).toEqual(payload);
 });
 
-test("should handle PLACE_PERSON action", () => {
+test("should handle PLACE_PEOPLE action", () => {
   const payload = {
     squareId: "0_0",
     occupants: [{ player: "tester", gender: "neuter" }]
   };
   const action = {
-    type: actionTypes.PLACE_PERSON,
+    type: actionTypes.PLACE_PEOPLE,
     payload
   };
   const state = Reducer(defaultState, action);

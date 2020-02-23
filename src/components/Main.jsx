@@ -30,7 +30,8 @@ const Main = props => {
     playPompCard,
     cardGrid,
     placePerson,
-    vacancy
+    vacancy,
+    performSacrifice
   } = props;
 
   return (
@@ -40,6 +41,7 @@ const Main = props => {
           messageState={messageState}
           gridState={gridState}
           playersState={playersState}
+          performSacrifice={performSacrifice}
         />
         <div className="off-board">
           <DeckContainer
@@ -78,7 +80,8 @@ Main.propTypes = {
   updatePlayerHand: PropTypes.func,
   playPompCard: PropTypes.func,
   placePerson: PropTypes.func,
-  vacancy: PropTypes.func
+  vacancy: PropTypes.func,
+  performSacrifice: PropTypes.func
 };
 
 Main.defaultProps = {
@@ -93,7 +96,8 @@ Main.defaultProps = {
   updatePlayerHand: () => {},
   playPompCard: () => {},
   placePerson: () => {},
-  vacancy: () => {}
+  vacancy: () => {},
+  performSacrifice: () => {}
 };
 
 export default Main;

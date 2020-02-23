@@ -17,7 +17,7 @@ const gridState = (state = { grid: types.gridState.defaults }, action) => {
         ...state,
         grid: payload
       };
-    case actions.PLACE_PERSON:
+    case actions.PLACE_PEOPLE:
       newGrid = { ...state.grid[payload.squareId] };
       newGrid.occupants = payload.occupants;
       return {

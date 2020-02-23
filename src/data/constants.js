@@ -10,6 +10,7 @@ export const PLAY = "PLAY a Card";
 export const PLACE = "PLACE a Person";
 export const DRAW = "DRAW a Card";
 export const RELATIVE = "PLACE a Relative";
+export const SACRIFICE = "Choose a SACRIFICE";
 
 // card types
 export const POMP = "Pomp";

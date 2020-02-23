@@ -61,6 +61,36 @@ test("updatePlayerHand", () => {
   expect(actions.updatePlayerHand(playerId, hand)).toEqual(expectedAction);
 });
 
+test("incrementPlayerPopulation", () => {
+  const playerId = "player1";
+  const population = 1;
+  const expectedAction = {
+    type: actionTypes.INCREMENT_PLAYER_POPULATION,
+    payload: {
+      playerId,
+      population
+    }
+  };
+  expect(actions.incrementPlayerPopulation(playerId, population)).toEqual(
+    expectedAction
+  );
+});
+
+test("incrementPlayerCasualties", () => {
+  const playerId = "player1";
+  const casualties = 1;
+  const expectedAction = {
+    type: actionTypes.INCREMENT_PLAYER_CASUALTIES,
+    payload: {
+      playerId,
+      casualties
+    }
+  };
+  expect(actions.incrementPlayerCasualties(playerId, casualties)).toEqual(
+    expectedAction
+  );
+});
+
 test("setPlayerturn", () => {
   const payload = 1;
   const expectedAction = {

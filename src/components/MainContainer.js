@@ -28,8 +28,10 @@ const mapDispatchToProps = {
   incrementPlayerTurn: actions.incrementPlayerTurn,
   updatePlayerHand: actions.updatePlayerHand,
   updateInstructions: actions.updateInstructions,
-  placePersonInSquare: actions.placePersonInSquare,
-  incrementStage: actions.incrementStage
+  placePeopleInSquare: actions.placePeopleInSquare,
+  incrementStage: actions.incrementStage,
+  incrementPlayerPopulation: actions.incrementPlayerPopulation,
+  incrementPlayerCasualties: actions.incrementPlayerCasualties
 };
 
 /**
@@ -49,8 +51,10 @@ const MainContainer = props => {
     incrementPlayerTurn,
     updatePlayerHand,
     updateInstructions,
-    placePersonInSquare,
-    incrementStage
+    placePeopleInSquare,
+    incrementStage,
+    incrementPlayerPopulation,
+    incrementPlayerCasualties
   } = props;
 
   const numberOfPlayers = 3;
@@ -69,11 +73,13 @@ const MainContainer = props => {
 
   const [cardGrid, setCardGrid] = useState([]);
 
-  const [placingPerson, setPlacingPerson] = useState(false);
+  const [placingPersonFlag, setPlacingPersonFlag] = useState(false);
 
   const [numberOfRelatives, setNumberOfRelatives] = useState(0);
   const [placedRelatives, setPlacedRelatives] = useState([]);
-  const [wildCard, setWildCard] = useState(false);
+  const [wildCardFlag, setWildCardFlag] = useState(false);
+
+  const [omenFlag, setOmenFlag] = useState(false);
 
   /**
    * @function placeRelatives
@@ -86,13 +92,14 @@ const MainContainer = props => {
     let thisPlacedRelatives = placedRelatives;
 
     // place relative in square
-    placePersonInSquare(grid, [
+    placePeopleInSquare(grid, [
       ...currentOccupants,
       {
         player: activePlayer,
         gender: Math.round(Math.random()) ? "male" : "female"
       }
     ]);
+    incrementPlayerPopulation(activePlayer, 1);
     thisPlacedRelatives = [...placedRelatives, grid];
     setPlacedRelatives(thisPlacedRelatives);
     setCardGrid([...cardGrid].filter(val => val !== grid));
@@ -102,7 +109,7 @@ const MainContainer = props => {
       setNumberOfRelatives(0);
       setPlacedRelatives([]);
       setCardGrid([]);
-      setPlacingPerson(false);
+      setPlacingPersonFlag(false);
       updateInstructions({
         text: `${_.get(playersState, `details[${activePlayer}].name`)}: ${
           constant.DRAW
@@ -128,20 +135,21 @@ const MainContainer = props => {
     const currentOccupants = _.get(gridState, `grid.${grid}.occupants`, []);
 
     // place person in square
-    placePersonInSquare(grid, [
+    placePeopleInSquare(grid, [
       ...currentOccupants,
       {
         player: activePlayer,
         gender: Math.round(Math.random()) ? "male" : "female"
       }
     ]);
+    incrementPlayerPopulation(activePlayer, 1);
 
     // if there should be relatives, set relative states
     if (
       messageState.stage === 1 &&
       currentOccupants.length > 0 &&
       numberOfRelatives === 0 &&
-      !wildCard
+      !wildCardFlag
     ) {
       setNumberOfRelatives(currentOccupants.length);
       setPlacedRelatives([]);
@@ -162,8 +170,8 @@ const MainContainer = props => {
     } else {
       // else complete placement
       setCardGrid([]);
-      setPlacingPerson(false);
-      setWildCard(false);
+      setPlacingPersonFlag(false);
+      setWildCardFlag(false);
       updateInstructions({
         text: `${_.get(playersState, `details[${activePlayer}].name`)}: ${
           constant.DRAW
@@ -207,10 +215,10 @@ const MainContainer = props => {
         ...gridByColor.Turquoise,
         ...gridByColor.Brown
       ]).filter(val => vacancy(val));
-      setWildCard(true);
+      setWildCardFlag(true);
     }
 
-    setPlacingPerson(true);
+    setPlacingPersonFlag(true);
 
     setCardGrid(gridHighlights);
     updateInstructions({
@@ -229,12 +237,41 @@ const MainContainer = props => {
     incrementStage();
   };
 
+  const performSacrifice = (id, square) => {
+    const idArray = id.split("-");
+    if (!omenFlag || idArray[0] === activePlayer) return;
+
+    const currentOccupants = _.get(gridState, `grid.${square}.occupants`, []);
+    const idx = currentOccupants.indexOf({
+      player: idArray[0],
+      gender: idArray[1]
+    });
+    currentOccupants.splice(idx, 1);
+    alert(`${activePlayer} sacrifices ${id}`);
+    placePeopleInSquare(square, currentOccupants);
+    incrementPlayerCasualties(idArray[0], 1);
+
+    setOmenFlag(false);
+    updateInstructions({
+      text: `${_.get(playersState, `details[${activePlayer}].name`)}: ${
+        constant.DRAW
+      }`,
+      color: _.get(playersState, `details[${activePlayer}].color`)
+    });
+  };
+
   /**
    * @function resolveOmen
-   * @description resolve Omen card when drawn
+   * @description resolve Omen card when drawn - sacrifice another player's person
    */
   const resolveOmen = () => {
-    alert("Omen Card");
+    updateInstructions({
+      text: `${_.get(playersState, `details[${activePlayer}].name`)}: ${
+        constant.SACRIFICE
+      }`,
+      color: _.get(playersState, `details[${activePlayer}].color`)
+    });
+    setOmenFlag(true);
   };
 
   /**
@@ -284,12 +321,14 @@ const MainContainer = props => {
         updatePlayerHand={updatePlayerHand}
         deckEnabled={
           _.get(playersState, `details[${activePlayer}].hand.length`) < 4 &&
-          !placingPerson
+          !placingPersonFlag &&
+          !omenFlag
         }
         playPompCard={playPompCard}
         cardGrid={cardGrid}
         placePerson={placePerson}
         vacancy={vacancy}
+        performSacrifice={performSacrifice}
       />
     </div>
   );
@@ -306,8 +345,10 @@ MainContainer.propTypes = {
   incrementPlayerTurn: PropTypes.func,
   updatePlayerHand: PropTypes.func,
   updateInstructions: PropTypes.func,
-  placePersonInSquare: PropTypes.func,
-  incrementStage: PropTypes.func
+  placePeopleInSquare: PropTypes.func,
+  incrementStage: PropTypes.func,
+  incrementPlayerPopulation: PropTypes.func,
+  incrementPlayerCasualties: PropTypes.func
 };
 
 MainContainer.defaultProps = {
@@ -321,8 +362,10 @@ MainContainer.defaultProps = {
   incrementPlayerTurn: () => {},
   updatePlayerHand: () => {},
   updateInstructions: () => {},
-  placePersonInSquare: () => {},
-  incrementStage: () => {}
+  placePeopleInSquare: () => {},
+  incrementStage: () => {},
+  incrementPlayerPopulation: () => {},
+  incrementPlayerCasualties: () => {}
 };
 
 export const MainContainerTest = MainContainer;

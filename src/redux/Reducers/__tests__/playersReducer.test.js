@@ -56,7 +56,51 @@ test("should handle UPDATE_PLAYER_HAND action", () => {
   };
   const state = Reducer(undefined, action);
   expect(state.details).toEqual({
-    player1: { name: "Player 1", color: "#FFFFFF", hand: ["card_1", "card_2"] }
+    player1: {
+      name: "Player 1",
+      color: "#FFFFFF",
+      hand: ["card_1", "card_2"],
+      casualties: 0,
+      population: 0
+    }
+  });
+});
+
+test("should handle INCREMENT_PLAYER_POPULATION action", () => {
+  const payload = {
+    playerId: "player1",
+    population: 1
+  };
+  const action = {
+    type: actionTypes.INCREMENT_PLAYER_POPULATION,
+    payload
+  };
+  const state = Reducer({ details: { player1: { population: 1 } } }, action);
+  expect(state.details).toEqual({
+    player1: {
+      population: 2
+    }
+  });
+});
+
+test("should handle INCREMENT_PLAYER_CASUALTIES action", () => {
+  const payload = {
+    playerId: "player1",
+    casualties: 1
+  };
+  const action = {
+    type: actionTypes.INCREMENT_PLAYER_CASUALTIES,
+    payload
+  };
+  const state = Reducer(
+    { details: { player1: { casualties: 0, population: 2 } } },
+    action
+  );
+  expect(state.details).toEqual({
+    player1: {
+      casualties: 1,
+      population: 1
+    }
   });
 });
 

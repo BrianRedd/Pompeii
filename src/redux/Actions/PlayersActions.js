@@ -49,6 +49,28 @@ export const updatePlayerHand = (playerId, hand) => ({
 });
 
 /**
+ * @function incrementPlayerPopulation
+ * @description adds/updates single player population to PlayersState store
+ * @param {String} playerId
+ * @param {Object} population - player population increase
+ */
+export const incrementPlayerPopulation = (playerId, population) => ({
+  type: actionTypes.INCREMENT_PLAYER_POPULATION,
+  payload: { playerId, population }
+});
+
+/**
+ * @function incrementPlayerCasualties
+ * @description adds/updates single player casualties to PlayersState store
+ * @param {String} playerId
+ * @param {Object} casualties - player casualties increase
+ */
+export const incrementPlayerCasualties = (playerId, casualties) => ({
+  type: actionTypes.INCREMENT_PLAYER_CASUALTIES,
+  payload: { playerId, casualties }
+});
+
+/**
  * @function setPlayerTurn
  * @description sets player turn in PlayersState store
  * @param {Number} player - whose turn it is

@@ -55,8 +55,13 @@ const Player = props => {
 
   return (
     <fieldset data-test="presentation-player" className="mt-3">
-      <legend style={{ color: myTurn ? details.color : "#999999" }}>
-        {details.name}
+      <legend
+        style={{ color: myTurn ? details.color : "#999999" }}
+        className="d-flex w-100 justify-content-between"
+      >
+        <span className="font-weight-bold">{details.name}</span>
+        <span>Population: {details.population}</span>
+        <span>Casualites: {details.casualties}</span>
       </legend>
       <HandCards hand={details.hand} myTurn={myTurn} playCard={playCard} />
     </fieldset>
@@ -64,13 +69,13 @@ const Player = props => {
 };
 
 Player.propTypes = {
-  details: types.player.types,
+  details: types.playerDetails.types,
   myTurn: PropTypes.bool,
   playCard: PropTypes.func
 };
 
 Player.defaultProps = {
-  details: types.player.defaults,
+  details: types.playerDetails.defaults,
   myTurn: false,
   playCard: () => {}
 };
