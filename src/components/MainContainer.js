@@ -81,15 +81,15 @@ const MainContainer = props => {
   const placePerson = grid => {
     const currentOccupants = _.get(gridState, `grid.${grid}.occupants`, []);
 
-    let thisRelatives;
+    let thisRelatives = relatives;
 
     if (
       messageState.stage === 1 &&
       currentOccupants.length > 0 &&
-      _.get(gridState, `grid.${grid}.buildingName`) !== constant.WHITE
+      !thisRelatives
     ) {
       thisRelatives = currentOccupants.length;
-      setRelatives(thisRelatives);
+      setRelatives(currentOccupants.length);
     }
 
     placePersonInSquare(grid, [
@@ -108,8 +108,10 @@ const MainContainer = props => {
       color: _.get(playersState, `details[${activePlayer}].color`)
     });
 
-    if (messageState.stage === 1 && (relatives > 0 || thisRelatives > 0)) {
-      setCardGrid([...cardGrid, ...whiteGrid]);
+    if (messageState.stage === 1 && thisRelatives > 0) {
+      if (cardGrid.length < 5) {
+        setCardGrid([...cardGrid, ...whiteGrid]);
+      }
       thisRelatives -= 1;
       setRelatives(thisRelatives);
     } else {
