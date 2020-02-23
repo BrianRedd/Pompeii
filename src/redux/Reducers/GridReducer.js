@@ -10,21 +10,21 @@ import * as types from "../../types/types";
  */
 const gridState = (state = { grid: types.grid.defaults }, action) => {
   const { type, payload } = action;
+  let newGrid = {};
   switch (type) {
     case actions.ADD_GRID:
       return {
         ...state,
         grid: payload
       };
-    case actions.UPDATE_GRID_SQUARE:
+    case actions.PLACE_PERSON:
+      newGrid = { ...state.grid[payload.squareId] };
+      newGrid.occupants = payload.occupants;
       return {
         ...state,
         grid: {
           ...state.grid,
-          [payload.squareId]: {
-            ...state.grid[payload.squareId],
-            ...payload.squareObj
-          }
+          [payload.squareId]: newGrid
         }
       };
     default:

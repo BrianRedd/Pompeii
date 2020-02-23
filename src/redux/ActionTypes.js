@@ -15,7 +15,7 @@ export const SET_PLAYER_TURN = "SET_PLAYER_TURN";
 
 // grid actions
 export const ADD_GRID = "ADD_GRID";
-export const UPDATE_GRID_SQUARE = "UPDATE_GRID_SQUARE";
+export const PLACE_PERSON = "PLACE_PERSON";
 
 // message actions
 export const INCREMENT_STAGE = "INCREMENT_STAGE";

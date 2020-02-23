@@ -9,7 +9,7 @@ import * as types from "../types/types";
 import BoardContainer from "./Board/BoardContainer";
 import DeckContainer from "./Deck/DeckContainer";
 import PlayersContainer from "./Player/PlayersContainer";
-import Highlighter from "./Board/Highlighter";
+import PlacementHighlighter from "./Board/PlacementHighlighter";
 
 /**
  * @function Main
@@ -50,7 +50,7 @@ const Main = props => {
         </div>
       </Row>
       {cardGrid.length > 0 && (
-        <Highlighter cardGrid={cardGrid} placePerson={placePerson} />
+        <PlacementHighlighter cardGrid={cardGrid} placePerson={placePerson} />
       )}
     </Col>
   );

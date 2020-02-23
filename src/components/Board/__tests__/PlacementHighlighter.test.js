@@ -1,7 +1,7 @@
-/** @module Highlighter.test */
+/** @module PlacementHighlighter.test */
 
 import { findByTestAttr, commonSetup } from "../../../utils/utilsTest";
-import TestedComponent from "../Highlighter";
+import TestedComponent from "../PlacementHighlighter";
 
 const mockGridSelect = jest.fn();
 
@@ -21,14 +21,14 @@ describe("highlighted tiles", () => {
   });
   test("one square", () => {
     wrapper = commonSetup(TestedComponent, {
-      cardGrid: ["0-0"]
+      cardGrid: ["0_0"]
     });
     squares = findByTestAttr(wrapper, "square-highlighted");
     expect(squares.length).toBe(1);
   });
   test("two squares", () => {
     wrapper = commonSetup(TestedComponent, {
-      cardGrid: ["0-0", "0-1"]
+      cardGrid: ["0_0", "0_1"]
     });
     squares = findByTestAttr(wrapper, "square-highlighted");
     expect(squares.length).toBe(2);
@@ -36,7 +36,7 @@ describe("highlighted tiles", () => {
   test("clicking one places person", () => {
     wrapper = commonSetup(TestedComponent, {
       placePerson: mockGridSelect,
-      cardGrid: ["0-0"]
+      cardGrid: ["0_0"]
     });
     squares = findByTestAttr(wrapper, "square-highlighted", true);
     squares.simulate("click");

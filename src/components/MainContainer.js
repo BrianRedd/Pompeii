@@ -25,7 +25,8 @@ const mapDispatchToProps = {
   discardCard: actions.discardCard,
   incrementPlayerTurn: actions.incrementPlayerTurn,
   updatePlayerHand: actions.updatePlayerHand,
-  updateInstructions: actions.updateInstructions
+  updateInstructions: actions.updateInstructions,
+  placePersonInSquare: actions.placePersonInSquare
 };
 
 /**
@@ -43,7 +44,8 @@ const MainContainer = props => {
     discardCard,
     incrementPlayerTurn,
     updatePlayerHand,
-    updateInstructions
+    updateInstructions,
+    placePersonInSquare
   } = props;
 
   const numberOfPlayers = 3;
@@ -71,6 +73,13 @@ const MainContainer = props => {
    */
   const placePerson = grid => {
     console.log(grid);
+    placePersonInSquare(grid, [
+      {
+        player: activePlayer,
+        gender: "male"
+      }
+    ]);
+
     setPersonPlacing(false);
     updateInstructions({
       text: `${_.get(playersState, `details[${activePlayer}].name`)}: ${
@@ -87,6 +96,8 @@ const MainContainer = props => {
    * @param {String} card
    */
   const playPompCard = card => {
+    setCardGrid(cardsState.cards[card].grid);
+
     setPersonPlacing(true);
     updateInstructions({
       text: `${_.get(playersState, `details[${activePlayer}].name`)}: ${
@@ -94,7 +105,6 @@ const MainContainer = props => {
       }`,
       color: _.get(playersState, `details[${activePlayer}].color`)
     });
-    setCardGrid(cardsState.cards[card].grid);
   };
 
   /**
@@ -178,7 +188,8 @@ MainContainer.propTypes = {
   discardCard: PropTypes.func,
   incrementPlayerTurn: PropTypes.func,
   updatePlayerHand: PropTypes.func,
-  updateInstructions: PropTypes.func
+  updateInstructions: PropTypes.func,
+  placePersonInSquare: PropTypes.func
 };
 
 MainContainer.defaultProps = {
@@ -190,7 +201,8 @@ MainContainer.defaultProps = {
   discardCard: () => {},
   incrementPlayerTurn: () => {},
   updatePlayerHand: () => {},
-  updateInstructions: () => {}
+  updateInstructions: () => {},
+  placePersonInSquare: () => {}
 };
 
 export const MainContainerTest = MainContainer;
