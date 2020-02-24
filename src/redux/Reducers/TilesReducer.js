@@ -15,6 +15,7 @@ const tileState = (
   action
 ) => {
   const { type, payload } = action;
+  const newPile = [...state.pile];
   switch (type) {
     case actions.ADD_TILES:
       return {
@@ -27,9 +28,10 @@ const tileState = (
         pile: payload
       };
     case actions.TAKE_TILE:
+      newPile.pop();
       return {
         ...state,
-        pile: state.pile.slice(0, -1)
+        pile: newPile
       };
     default:
       return state;

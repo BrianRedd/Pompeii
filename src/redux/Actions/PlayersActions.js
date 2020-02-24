@@ -92,7 +92,10 @@ export const setPlayerturn = player => ({
 });
 
 export const incrementPlayerTurn = () => (dispatch, getState) => {
-  const { playersState } = getState();
+  const {
+    playersState,
+    messageState: { stage }
+  } = getState();
   let nextPlayer = playersState.turn + 1;
   if (nextPlayer >= playersState.players.length) {
     nextPlayer = 0;
@@ -103,7 +106,7 @@ export const incrementPlayerTurn = () => (dispatch, getState) => {
       text: `${_.get(
         playersState,
         `details.${playersState.players[nextPlayer]}.name`
-      )}: ${constant.PLAY}`,
+      )}: ${stage < 2 ? constant.PLAY : constant.LAVA_TILE}`,
       color: _.get(
         playersState,
         `details.${playersState.players[nextPlayer]}.color`

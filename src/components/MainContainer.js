@@ -17,7 +17,8 @@ const mapStateToProps = state => {
     cardsState: state.cardsState,
     gridState: state.gridState,
     messageState: state.messageState,
-    playersState: state.playersState
+    playersState: state.playersState,
+    tileState: state.tileState
   };
 };
 
@@ -31,7 +32,8 @@ const mapDispatchToProps = {
   placePeopleInSquare: actions.placePeopleInSquare,
   incrementStage: actions.incrementStage,
   incrementPlayerPopulation: actions.incrementPlayerPopulation,
-  incrementPlayerCasualties: actions.incrementPlayerCasualties
+  incrementPlayerCasualties: actions.incrementPlayerCasualties,
+  takeTile: actions.takeTile
 };
 
 /**
@@ -45,9 +47,11 @@ const MainContainer = props => {
     gridState,
     messageState,
     playersState,
+    tileState,
     gameSetup,
     takeCard,
     discardCard,
+    takeTile,
     incrementPlayerTurn,
     updatePlayerHand,
     updateInstructions,
@@ -82,6 +86,9 @@ const MainContainer = props => {
   const [omenFlag, setOmenFlag] = useState(false);
   const [ad79Flag, setAD79Flag] = useState(false);
   const [sacrificeMessage, setSacrificeMessage] = useState("");
+
+  const [lavaFlag, setLavaFlag] = useState(false);
+  const [lavaTile, setLavaTile] = useState();
 
   /**
    * @function placeRelatives
@@ -237,6 +244,14 @@ const MainContainer = props => {
    */
   const resolveAd79 = () => {
     setAD79Flag(true);
+    if (messageState.stage === 1) {
+      updateInstructions({
+        text: `${_.get(playersState, `details[${activePlayer}].name`)}: ${
+          constant.LAVA_TILE
+        }`,
+        color: _.get(playersState, `details[${activePlayer}].color`)
+      });
+    }
     incrementStage();
   };
 
@@ -319,6 +334,25 @@ const MainContainer = props => {
     incrementPlayerTurn();
   };
 
+  /**
+   * @function drawTile
+   * @description drawing a tile during stage 3
+   */
+  const drawTile = () => {
+    const tilePile = [...tileState.pile];
+
+    // draw tile
+    const takenTile = tilePile.pop();
+    setLavaTile(takenTile);
+    console.log("takenTile:", takenTile);
+    takeTile();
+
+    setLavaFlag(true);
+
+    // next player's turn
+    // incrementPlayerTurn();
+  };
+
   return (
     <div data-test="container-main">
       <Main
@@ -334,17 +368,24 @@ const MainContainer = props => {
           !placingPersonFlag &&
           !omenFlag
         }
+        pileEnabled={messageState.stage === 2}
         playPompCard={playPompCard}
         cardGrid={cardGrid}
         placePerson={placePerson}
         vacancy={vacancy}
         performSacrifice={performSacrifice}
-        omenFlag={omenFlag}
-        setOmenFlag={setOmenFlag}
-        ad79Flag={ad79Flag}
-        setAD79Flag={setAD79Flag}
         sacrificeMessage={sacrificeMessage}
         setSacrificeMessage={setSacrificeMessage}
+        drawTile={drawTile}
+        flags={{
+          omenFlag,
+          setOmenFlag,
+          ad79Flag,
+          setAD79Flag,
+          lavaFlag,
+          setLavaFlag
+        }}
+        lavaTile={lavaTile}
       />
     </div>
   );
@@ -355,9 +396,11 @@ MainContainer.propTypes = {
   gridState: types.gridState.types,
   messageState: types.messageState.types,
   playersState: types.playersState.types,
+  tileState: types.tileState.types,
   gameSetup: PropTypes.func,
   takeCard: PropTypes.func,
   discardCard: PropTypes.func,
+  takeTile: PropTypes.func,
   incrementPlayerTurn: PropTypes.func,
   updatePlayerHand: PropTypes.func,
   updateInstructions: PropTypes.func,
@@ -372,9 +415,11 @@ MainContainer.defaultProps = {
   gridState: types.gridState.defaults,
   messageState: types.messageState.defaults,
   playersState: types.playersState.defaults,
+  tileState: types.tileState.defaults,
   gameSetup: () => {},
   takeCard: () => {},
   discardCard: () => {},
+  takeTile: () => {},
   incrementPlayerTurn: () => {},
   updatePlayerHand: () => {},
   updateInstructions: () => {},

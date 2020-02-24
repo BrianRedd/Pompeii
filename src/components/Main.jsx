@@ -35,12 +35,12 @@ const Main = props => {
     placePerson,
     vacancy,
     performSacrifice,
-    omenFlag,
-    setOmenFlag,
-    ad79Flag,
-    setAD79Flag,
+    flags,
     sacrificeMessage,
-    setSacrificeMessage
+    setSacrificeMessage,
+    pileEnabled,
+    drawTile,
+    lavaTile
   } = props;
 
   return (
@@ -53,32 +53,38 @@ const Main = props => {
           performSacrifice={performSacrifice}
         />
         <div className="off-board">
-          {omenFlag && (
+          {flags.omenFlag && (
             <OmenSidebar
               name={_.get(
                 playersState,
                 `details.${playersState.players[playersState.turn]}.name`
               )}
-              setOmenFlag={setOmenFlag}
+              setOmenFlag={flags.setOmenFlag}
               sacrificeMessage={sacrificeMessage}
               setSacrificeMessage={setSacrificeMessage}
             />
           )}
-          {ad79Flag && <AD79Sidebar setAD79Flag={setAD79Flag} />}
-          {!omenFlag && !ad79Flag && (
+          {flags.ad79Flag && <AD79Sidebar setAD79Flag={flags.setAD79Flag} />}
+          {!flags.omenFlag && !flags.ad79Flag && (
             <DeckContainer
               cardsState={cardsState}
               drawCard={drawCard}
+              drawTile={drawTile}
               deckEnabled={deckEnabled}
+              pileEnabled={pileEnabled}
             />
           )}
-          <PlayersContainer
-            playersState={playersState}
-            discardCard={discardCard}
-            updatePlayerHand={updatePlayerHand}
-            playPompCard={playPompCard}
-            stage={messageState.stage}
-          />
+          {flags.lavaFlag ? (
+            <div>LAVA! {lavaTile}</div>
+          ) : (
+            <PlayersContainer
+              playersState={playersState}
+              discardCard={discardCard}
+              updatePlayerHand={updatePlayerHand}
+              playPompCard={playPompCard}
+              stage={messageState.stage}
+            />
+          )}
         </div>
       </Row>
       {cardGrid.length > 0 && (
@@ -98,19 +104,26 @@ Main.propTypes = {
   messageState: types.messageState.types,
   playersState: types.playersState.types,
   cardGrid: PropTypes.arrayOf(PropTypes.string),
+  flags: PropTypes.shape({
+    omenFlag: PropTypes.bool,
+    setOmenFlag: PropTypes.func,
+    ad79Flag: PropTypes.bool,
+    setAD79Flag: PropTypes.func,
+    lavaFlag: PropTypes.bool,
+    setLavaFlag: PropTypes.func
+  }),
   sacrificeMessage: PropTypes.string,
+  lavaTile: PropTypes.string,
   deckEnabled: PropTypes.bool,
-  omenFlag: PropTypes.bool,
-  ad79Flag: PropTypes.bool,
+  pileEnabled: PropTypes.bool,
   drawCard: PropTypes.func,
   discardCard: PropTypes.func,
+  drawTile: PropTypes.func,
   updatePlayerHand: PropTypes.func,
   playPompCard: PropTypes.func,
   placePerson: PropTypes.func,
   vacancy: PropTypes.func,
   performSacrifice: PropTypes.func,
-  setOmenFlag: PropTypes.func,
-  setAD79Flag: PropTypes.func,
   setSacrificeMessage: PropTypes.func
 };
 
@@ -120,19 +133,26 @@ Main.defaultProps = {
   messageState: types.messageState.defaults,
   playersState: types.playersState.defaults,
   cardGrid: [],
+  flags: {
+    omenFlag: false,
+    setOmenFlag: () => {},
+    ad79Flag: false,
+    setAD79Flag: () => {},
+    lavaFlag: false,
+    setLavaFlag: () => {}
+  },
   sacrificeMessage: "",
+  lavaTile: "",
   deckEnabled: false,
-  omenFlag: false,
-  ad79Flag: false,
+  pileEnabled: false,
   drawCard: () => {},
   discardCard: () => {},
+  drawTile: () => {},
   updatePlayerHand: () => {},
   playPompCard: () => {},
   placePerson: () => {},
   vacancy: () => {},
   performSacrifice: () => {},
-  setOmenFlag: () => {},
-  setAD79Flag: () => {},
   setSacrificeMessage: () => {}
 };
 

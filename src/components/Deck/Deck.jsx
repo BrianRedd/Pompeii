@@ -13,7 +13,14 @@ import Card, { CardBack } from "../Helpers/Card";
  * @returns {React.Component} - Rendered component.
  */
 const Deck = props => {
-  const { topDiscard, drawCard, deckSizes, deckEnabled } = props;
+  const {
+    topDiscard,
+    drawCard,
+    deckSizes,
+    deckEnabled,
+    pileEnabled,
+    drawTile
+  } = props;
 
   return (
     <Row data-test="presentation-deck">
@@ -52,7 +59,11 @@ const Deck = props => {
       </Col>
       <Col xs={4}>
         <div data-test="tile-pile" className="text-center tile-pile">
-          <ButtonBase focusRipple disabled>
+          <ButtonBase
+            focusRipple
+            disabled={!pileEnabled}
+            onClick={() => drawTile()}
+          >
             <img alt="Tiles" src="/assets/tiles/back.png" />
           </ButtonBase>
         </div>
@@ -69,7 +80,9 @@ Deck.propTypes = {
   }),
   topDiscard: PropTypes.string,
   deckEnabled: PropTypes.bool,
-  drawCard: PropTypes.func
+  pileEnabled: PropTypes.bool,
+  drawCard: PropTypes.func,
+  drawTile: PropTypes.func
 };
 
 Deck.defaultProps = {
@@ -79,6 +92,8 @@ Deck.defaultProps = {
   },
   topDiscard: "",
   deckEnabled: false,
-  drawCard: () => {}
+  pileEnabled: false,
+  drawCard: () => {},
+  drawTile: () => {}
 };
 export default Deck;

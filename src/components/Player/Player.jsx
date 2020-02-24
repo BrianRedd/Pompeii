@@ -13,7 +13,7 @@ const PeopleIcons = ({ number, color }) => {
   const peopleIcons = [];
   for (let i = 0; i < number; i += 1) {
     peopleIcons.push(
-      <div className="person">
+      <div key={i} className="person">
         <span
           className={`fas fa-${
             Math.round(Math.random()) ? "male" : "female"
@@ -100,7 +100,7 @@ const Player = props => {
       {stage < 2 ? (
         <HandCards hand={details.hand} myTurn={myTurn} playCard={playCard} />
       ) : (
-        <div style={{ color: `rgb(${details.color})` }} className="p-2 pt-4">
+        <div style={{ color: `rgb(${details.color})` }} className="p-2">
           <Row>
             <Col xs={3}>Saved:</Col>
             <Col xs={8}>

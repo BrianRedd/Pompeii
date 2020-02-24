@@ -11,6 +11,8 @@ export const PLACE = "PLACE a Person";
 export const DRAW = "DRAW a Card";
 export const RELATIVE = "PLACE a Relative";
 export const SACRIFICE = "Choose a SACRIFICE";
+export const LAVA_TILE = "Take and Place a Lava Tile";
+export const RUN = "RUN!!!";
 
 // card types
 export const POMP = "Pomp";
