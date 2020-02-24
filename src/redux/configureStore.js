@@ -8,6 +8,7 @@ import cardsState from "./Reducers/CardsReducer";
 import gridState from "./Reducers/GridReducer";
 import messageState from "./Reducers/MessageReducer";
 import playersState from "./Reducers/PlayersReducer";
+import tilesState from "./Reducers/TilesReducer";
 
 const logger = createLogger({ collapsed: true, diff: true });
 
@@ -17,7 +18,8 @@ const ConfigureStore = () => {
       cardsState,
       gridState,
       messageState,
-      playersState
+      playersState,
+      tilesState
     }),
     /* eslint-disable no-underscore-dangle */
     window.__REDUX_DEVTOOLS_EXTENSION__ &&

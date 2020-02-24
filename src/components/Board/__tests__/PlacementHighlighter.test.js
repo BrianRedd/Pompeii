@@ -24,25 +24,25 @@ describe("highlighted tiles", () => {
   });
   test("one square", () => {
     wrapper = commonSetup(TestedComponent, {
-      vacancy: mockVacancy,
-      cardGrid: ["0_0"]
+      validation: mockVacancy,
+      gridArray: ["0_0"]
     });
     squares = findByTestAttr(wrapper, "square-highlighted");
     expect(squares.length).toBe(1);
   });
   test("two squares", () => {
     wrapper = commonSetup(TestedComponent, {
-      vacancy: mockVacancy,
-      cardGrid: ["0_0", "0_1"]
+      validation: mockVacancy,
+      gridArray: ["0_0", "0_1"]
     });
     squares = findByTestAttr(wrapper, "square-highlighted");
     expect(squares.length).toBe(2);
   });
   test("clicking one places person", () => {
     wrapper = commonSetup(TestedComponent, {
-      placePerson: mockGridSelect,
-      vacancy: mockVacancy,
-      cardGrid: ["0_0"]
+      selectSquare: mockGridSelect,
+      validation: mockVacancy,
+      gridArray: ["0_0"]
     });
     squares = findByTestAttr(wrapper, "square-highlighted", true);
     squares.simulate("click");

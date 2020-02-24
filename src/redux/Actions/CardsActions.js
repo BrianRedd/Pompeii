@@ -4,6 +4,7 @@ import * as actionTypes from "../ActionTypes";
 import { cardDictionary } from "../../data/cardData";
 import { updatePlayerHand } from "./PlayersActions";
 import * as constant from "../../data/constants";
+import { shuffle } from "../../utils/utilsCommon";
 
 /**
  * @function addCards
@@ -45,27 +46,6 @@ export const discardCard = card => ({
 });
 
 /**
- * @function shuffleCards
- * @description shuffles any array of cards provided and returns randomized (using Fisher-Yates shuffle)
- * @param {Array} cards
- * @returns {Array}
- */
-export const shuffleCards = cards => {
-  const shuffledCards = [...cards];
-  const numberOfShuffles = 5;
-  for (let s = 0; s < numberOfShuffles; s += 1) {
-    for (let i = shuffledCards.length - 1; i > 0; i -= 1) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffledCards[i], shuffledCards[j]] = [
-        shuffledCards[j],
-        shuffledCards[i]
-      ];
-    }
-  }
-  return shuffledCards;
-};
-
-/**
  * @function generateDeck
  * @description generates deck for game
  */
@@ -95,7 +75,7 @@ export const generateDeck = () => (dispatch, getState) => {
       }
     }
   });
-  deck = shuffleCards(deck);
+  deck = shuffle(deck);
 
   // 7 hands of 4 cards each
   const hands = [];
@@ -108,7 +88,7 @@ export const generateDeck = () => (dispatch, getState) => {
   }
 
   // add omens
-  deck = shuffleCards([...deck, ...omens]);
+  deck = shuffle([...deck, ...omens]);
 
   // add AD79 to first 10 (4 players) or 15 (2-3 players) cards
   const numberOfCards = players.length > 3 ? 10 : 15;

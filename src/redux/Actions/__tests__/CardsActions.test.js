@@ -33,11 +33,6 @@ test("takeCard", () => {
   expect(actions.takeCard()).toEqual(expectedAction);
 });
 
-test("shuffleCards", () => {
-  const originalDeck = ["A", "B", "C", "D", "E"];
-  expect(actions.shuffleCards(originalDeck)).not.toEqual(originalDeck);
-});
-
 test("generateDeck", async () => {
   // tested in StartupActions
 });

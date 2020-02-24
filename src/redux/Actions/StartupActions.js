@@ -4,6 +4,7 @@ import { generateDeck } from "./CardsActions";
 import { addGrid } from "./GridActions";
 import { updateInstructions } from "./MessageActions";
 import { setPlayerArray, addPlayers } from "./PlayersActions";
+import { generatePile } from "./TilesActions";
 import { playerColors } from "../../data/playerData";
 import { gridSquares } from "../../data/gridData";
 import * as constant from "../../data/constants";
@@ -32,6 +33,7 @@ export const gameSetup = numberOfPlayers => async dispatch => {
   await dispatch(addGrid(gridSquares));
   await dispatch(addPlayers(details));
   await dispatch(generateDeck());
+  await dispatch(generatePile());
   await dispatch(
     updateInstructions({
       text: `Player 1: ${constant.PLAY}`,

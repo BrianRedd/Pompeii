@@ -23,3 +23,8 @@ export const PLACE_PEOPLE = "PLACE_PEOPLE";
 // message actions
 export const INCREMENT_STAGE = "INCREMENT_STAGE";
 export const UPDATE_INSTRUCTIONS = "UPDATE_INSTRUCTIONS";
+
+// tiles actions
+export const ADD_TILES = "ADD_TILES";
+export const ADD_TILE_PILE = "ADD_TILE_PILE";
+export const TAKE_TILE = "TAKE_TILE";

@@ -15,3 +15,24 @@ export const compareCards = (a, b) => {
   }
   return cardA < cardB ? -1 : 1;
 };
+
+/**
+ * @function shuffle
+ * @description shuffles any array of tiles provided and returns randomized (using Fisher-Yates shuffle)
+ * @param {Array} tiles
+ * @returns {Array}
+ */
+export const shuffle = tiles => {
+  const shuffledCards = [...tiles];
+  const numberOfShuffles = 5;
+  for (let s = 0; s < numberOfShuffles; s += 1) {
+    for (let i = shuffledCards.length - 1; i > 0; i -= 1) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffledCards[i], shuffledCards[j]] = [
+        shuffledCards[j],
+        shuffledCards[i]
+      ];
+    }
+  }
+  return shuffledCards;
+};

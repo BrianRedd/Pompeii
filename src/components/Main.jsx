@@ -83,9 +83,9 @@ const Main = props => {
       </Row>
       {cardGrid.length > 0 && (
         <PlacementHighlighter
-          cardGrid={cardGrid}
-          placePerson={placePerson}
-          vacancy={vacancy}
+          gridArray={cardGrid}
+          selectSquare={placePerson}
+          validation={vacancy}
         />
       )}
     </Col>

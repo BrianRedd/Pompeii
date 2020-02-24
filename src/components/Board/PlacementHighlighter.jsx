@@ -13,10 +13,10 @@ import * as constant from "../../data/constants";
  * @returns {React.Component} - Rendered component.
  */
 const PlacementHighlighter = props => {
-  const { cardGrid, vacancy, placePerson } = props;
+  const { gridArray, validation, selectSquare } = props;
 
-  const placementHighlighter = cardGrid.map(square => {
-    if (vacancy(square)) {
+  const placementHighlighter = gridArray.map(square => {
+    if (validation(square)) {
       const coords = square.split("_");
       const row = parseFloat(coords[0]);
       const col = parseFloat(coords[1]);
@@ -24,7 +24,7 @@ const PlacementHighlighter = props => {
         <ButtonBase
           data-test="square-highlighted"
           key={square}
-          onClick={() => placePerson(square)}
+          onClick={() => selectSquare(square)}
           className="highlighter"
           style={{
             top: `${row * 110 + constant.Y_OFFSET}px`,
@@ -44,15 +44,15 @@ const PlacementHighlighter = props => {
 };
 
 PlacementHighlighter.propTypes = {
-  cardGrid: PropTypes.arrayOf(PropTypes.string),
-  placePerson: PropTypes.func,
-  vacancy: PropTypes.func
+  gridArray: PropTypes.arrayOf(PropTypes.string),
+  selectSquare: PropTypes.func,
+  validation: PropTypes.func
 };
 
 PlacementHighlighter.defaultProps = {
-  cardGrid: [],
-  placePerson: () => {},
-  vacancy: () => {}
+  gridArray: [],
+  selectSquare: () => {},
+  validation: () => {}
 };
 
 export default PlacementHighlighter;

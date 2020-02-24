@@ -14,6 +14,8 @@ test("gameSetup", async () => {
     actionTypes.ADD_CARDS,
     actionTypes.ADD_DECK,
     actionTypes.UPDATE_PLAYER_HAND,
+    actionTypes.ADD_TILES,
+    actionTypes.ADD_TILE_PILE,
     actionTypes.UPDATE_INSTRUCTIONS
   ];
   const store = configureMockStore([thunk])({

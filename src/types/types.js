@@ -120,3 +120,29 @@ export const messageState = {
     }
   }
 };
+
+// tile types
+export const tiles = {
+  types: shape({
+    key: object
+  }),
+  defaults: {
+    key: {}
+  }
+};
+
+export const pile = {
+  types: arrayOf(string),
+  defaults: []
+};
+
+export const tileState = {
+  types: shape({
+    tiles: tiles.types,
+    pile: pile.types
+  }),
+  defaults: {
+    tiles: tiles.defaults,
+    pile: pile.defaults
+  }
+};
