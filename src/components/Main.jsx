@@ -94,11 +94,21 @@ const Main = props => {
           />
         </div>
       </Row>
-      {cardGrid.length > 0 && (
+      {messageState.stage < 2 ? (
         <PlacementHighlighter
           gridArray={cardGrid}
           selectSquare={placePerson}
           validation={vacancy}
+        />
+      ) : (
+        <PlacementHighlighter
+          gridArray={["0_7"]}
+          selectSquare={val => {
+            console.log("Lava placed", val);
+          }}
+          validation={() => {
+            return true;
+          }}
         />
       )}
     </Col>
