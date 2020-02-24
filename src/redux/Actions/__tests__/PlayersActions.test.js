@@ -91,6 +91,19 @@ test("incrementPlayerCasualties", () => {
   );
 });
 
+test("incrementPlayerSaved", () => {
+  const playerId = "player1";
+  const saved = 1;
+  const expectedAction = {
+    type: actionTypes.INCREMENT_PLAYER_SAVED,
+    payload: {
+      playerId,
+      saved
+    }
+  };
+  expect(actions.incrementPlayerSaved(playerId, saved)).toEqual(expectedAction);
+});
+
 test("setPlayerturn", () => {
   const payload = 1;
   const expectedAction = {

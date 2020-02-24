@@ -37,8 +37,9 @@ export const playerDetails = {
       name: string,
       hand: arrayOf(string),
       color: string,
+      casualties: number,
       population: number,
-      casualties: number
+      saved: number
     })
   }),
   defaults: {
@@ -46,8 +47,9 @@ export const playerDetails = {
       name: "Player 1",
       hand: [],
       color: "#FFFFFF",
+      casualties: 0,
       population: 0,
-      casualties: 0
+      saved: 0
     }
   }
 };

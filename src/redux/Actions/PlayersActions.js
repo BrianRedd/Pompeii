@@ -71,6 +71,17 @@ export const incrementPlayerCasualties = (playerId, casualties) => ({
 });
 
 /**
+ * @function incrementPlayerSaved
+ * @description adds/updates single player saved to PlayersState store
+ * @param {String} playerId
+ * @param {Object} saved - player saved increase
+ */
+export const incrementPlayerSaved = (playerId, saved) => ({
+  type: actionTypes.INCREMENT_PLAYER_SAVED,
+  payload: { playerId, saved }
+});
+
+/**
  * @function setPlayerTurn
  * @description sets player turn in PlayersState store
  * @param {Number} player - whose turn it is

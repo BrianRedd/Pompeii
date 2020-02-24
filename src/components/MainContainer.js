@@ -80,6 +80,8 @@ const MainContainer = props => {
   const [wildCardFlag, setWildCardFlag] = useState(false);
 
   const [omenFlag, setOmenFlag] = useState(false);
+  const [ad79Flag, setAD79Flag] = useState(false);
+  const [sacrificeMessage, setSacrificeMessage] = useState("");
 
   /**
    * @function placeRelatives
@@ -234,6 +236,7 @@ const MainContainer = props => {
    * @description resolve AD 79 card when drawn
    */
   const resolveAd79 = () => {
+    setAD79Flag(true);
     incrementStage();
   };
 
@@ -247,11 +250,18 @@ const MainContainer = props => {
       gender: idArray[1]
     });
     currentOccupants.splice(idx, 1);
-    alert(`${activePlayer} sacrifices ${id}`);
+    setSacrificeMessage(
+      `${_.get(
+        playersState,
+        `details[${activePlayer}].name`
+      )} SACRIFICES one of ${_.get(
+        playersState,
+        `details[${idArray[0]}].name`
+      )}'s people! (click to continue)`
+    );
     placePeopleInSquare(square, currentOccupants);
     incrementPlayerCasualties(idArray[0], 1);
 
-    setOmenFlag(false);
     updateInstructions({
       text: `${_.get(playersState, `details[${activePlayer}].name`)}: ${
         constant.DRAW
@@ -329,6 +339,12 @@ const MainContainer = props => {
         placePerson={placePerson}
         vacancy={vacancy}
         performSacrifice={performSacrifice}
+        omenFlag={omenFlag}
+        setOmenFlag={setOmenFlag}
+        ad79Flag={ad79Flag}
+        setAD79Flag={setAD79Flag}
+        sacrificeMessage={sacrificeMessage}
+        setSacrificeMessage={setSacrificeMessage}
       />
     </div>
   );

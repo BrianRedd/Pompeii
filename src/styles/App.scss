@@ -45,6 +45,14 @@ $tile-size: 110px;
   .players-container {
     max-height: 740px;
     overflow-y: auto;
+    .person {
+      display: inline-block;
+      height: 23px;
+      width: 23px;
+      background-color: rgba(255, 255, 255, 0.5);
+      text-align: center;
+      border-radius: 50%;
+    }
   }
 }
 
@@ -53,6 +61,7 @@ fieldset {
   margin-left: -5px;
   padding-left: 5px;
   max-width: 100%;
+  height: 230px;
   background-color: rgba(255, 255, 255, 0.9);
   border-radius: 4px;
   //Material-UI 'Paper' effect

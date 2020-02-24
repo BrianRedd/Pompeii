@@ -14,7 +14,7 @@ import Player from "./Player";
  * @param {Object} props.playersState
  * @returns {React.Component}
  */
-const PlayerCards = ({ playersState, playCard }) => {
+const PlayerCards = ({ playersState, playCard, stage }) => {
   const playerCards = playersState.players.map((player, idx) => {
     return (
       <Player
@@ -22,6 +22,7 @@ const PlayerCards = ({ playersState, playCard }) => {
         details={playersState.details[player]}
         myTurn={playersState.turn === idx}
         playCard={cardIdx => playCard(player, cardIdx)}
+        stage={stage}
       />
     );
   });
@@ -34,7 +35,13 @@ const PlayerCards = ({ playersState, playCard }) => {
  * @returns {React.Component} - Rendered component.
  */
 const PlayersContainer = props => {
-  const { playersState, discardCard, updatePlayerHand, playPompCard } = props;
+  const {
+    playersState,
+    discardCard,
+    updatePlayerHand,
+    playPompCard,
+    stage
+  } = props;
 
   /**
    * @function playCard
@@ -54,7 +61,11 @@ const PlayersContainer = props => {
   return (
     <div data-test="container-players" className="players-container">
       {!_.isEmpty(playersState.details) && (
-        <PlayerCards playersState={playersState} playCard={playCard} />
+        <PlayerCards
+          playersState={playersState}
+          playCard={playCard}
+          stage={stage}
+        />
       )}
     </div>
   );
@@ -62,6 +73,7 @@ const PlayersContainer = props => {
 
 PlayersContainer.propTypes = {
   playersState: types.playersState.types,
+  stage: PropTypes.number,
   discardCard: PropTypes.func,
   updatePlayerHand: PropTypes.func,
   playPompCard: PropTypes.func
@@ -69,6 +81,7 @@ PlayersContainer.propTypes = {
 
 PlayersContainer.defaultProps = {
   playersState: types.playersState.defaults,
+  stage: 0,
   discardCard: () => {},
   updatePlayerHand: () => {},
   playPompCard: () => {}

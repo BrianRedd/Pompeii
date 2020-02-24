@@ -61,7 +61,8 @@ test("should handle UPDATE_PLAYER_HAND action", () => {
       color: "#FFFFFF",
       hand: ["card_1", "card_2"],
       casualties: 0,
-      population: 0
+      population: 0,
+      saved: 0
     }
   });
 });
@@ -100,6 +101,23 @@ test("should handle INCREMENT_PLAYER_CASUALTIES action", () => {
     player1: {
       casualties: 1,
       population: 1
+    }
+  });
+});
+
+test("should handle INCREMENT_PLAYER_SAVED action", () => {
+  const payload = {
+    playerId: "player1",
+    saved: 1
+  };
+  const action = {
+    type: actionTypes.INCREMENT_PLAYER_SAVED,
+    payload
+  };
+  const state = Reducer({ details: { player1: { saved: 0 } } }, action);
+  expect(state.details).toEqual({
+    player1: {
+      saved: 1
     }
   });
 });

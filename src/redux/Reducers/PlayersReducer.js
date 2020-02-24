@@ -67,6 +67,17 @@ const playersState = (state = types.playersState.defaults, action) => {
           }
         }
       };
+    case actions.INCREMENT_PLAYER_SAVED:
+      return {
+        ...state,
+        details: {
+          ...state.details,
+          [payload.playerId]: {
+            ...state.details[payload.playerId],
+            saved: state.details[payload.playerId].saved + payload.saved
+          }
+        }
+      };
     case actions.SET_PLAYER_TURN:
       return {
         ...state,
