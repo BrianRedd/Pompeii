@@ -67,7 +67,7 @@ const Deck = props => {
             <img alt="Tiles" src="/assets/tiles/back.png" />
           </ButtonBase>
         </div>
-        <div className="text-center">Lava Tiles</div>
+        <div className="text-center">Lava Tiles ({deckSizes.tiles})</div>
       </Col>
     </Row>
   );
@@ -76,7 +76,8 @@ const Deck = props => {
 Deck.propTypes = {
   deckSizes: PropTypes.shape({
     deck: PropTypes.number,
-    discard: PropTypes.number
+    discard: PropTypes.number,
+    tiles: PropTypes.number
   }),
   topDiscard: PropTypes.string,
   deckEnabled: PropTypes.bool,
@@ -88,7 +89,8 @@ Deck.propTypes = {
 Deck.defaultProps = {
   deckSizes: {
     deck: 0,
-    discard: 0
+    discard: 0,
+    tiles: 0
   },
   topDiscard: "",
   deckEnabled: false,

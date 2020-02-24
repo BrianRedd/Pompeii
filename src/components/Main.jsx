@@ -11,8 +11,9 @@ import BoardContainer from "./Board/BoardContainer";
 import DeckContainer from "./Deck/DeckContainer";
 import PlayersContainer from "./Player/PlayersContainer";
 import PlacementHighlighter from "./Board/PlacementHighlighter";
-import AD79Sidebar from "./Helpers/AD79Sidebar";
-import OmenSidebar from "./Helpers/OmenSidebar";
+import AD79Sidebar from "./Sidebars/AD79Sidebar";
+import OmenSidebar from "./Sidebars/OmenSidebar";
+import LavaTileSidebar from "./Sidebars/LavaTileSidebar";
 
 /**
  * @function Main
@@ -26,6 +27,7 @@ const Main = props => {
     gridState,
     messageState,
     playersState,
+    tileState,
     deckEnabled,
     drawCard,
     discardCard,
@@ -40,7 +42,8 @@ const Main = props => {
     setSacrificeMessage,
     pileEnabled,
     drawTile,
-    lavaTile
+    lavaTile,
+    placeLavaTile
   } = props;
 
   return (
@@ -65,26 +68,30 @@ const Main = props => {
             />
           )}
           {flags.ad79Flag && <AD79Sidebar setAD79Flag={flags.setAD79Flag} />}
-          {!flags.omenFlag && !flags.ad79Flag && (
+          {flags.lavaFlag && (
+            <LavaTileSidebar
+              lavaTile={lavaTile}
+              tileState={tileState}
+              placeLavaTile={placeLavaTile}
+            />
+          )}
+          {!flags.omenFlag && !flags.ad79Flag && !flags.lavaFlag && (
             <DeckContainer
               cardsState={cardsState}
+              tileState={tileState}
               drawCard={drawCard}
               drawTile={drawTile}
               deckEnabled={deckEnabled}
               pileEnabled={pileEnabled}
             />
           )}
-          {flags.lavaFlag ? (
-            <div>LAVA! {lavaTile}</div>
-          ) : (
-            <PlayersContainer
-              playersState={playersState}
-              discardCard={discardCard}
-              updatePlayerHand={updatePlayerHand}
-              playPompCard={playPompCard}
-              stage={messageState.stage}
-            />
-          )}
+          <PlayersContainer
+            playersState={playersState}
+            discardCard={discardCard}
+            updatePlayerHand={updatePlayerHand}
+            playPompCard={playPompCard}
+            stage={messageState.stage}
+          />
         </div>
       </Row>
       {cardGrid.length > 0 && (
@@ -103,6 +110,7 @@ Main.propTypes = {
   gridState: types.gridState.types,
   messageState: types.messageState.types,
   playersState: types.playersState.types,
+  tileState: types.tileState.types,
   cardGrid: PropTypes.arrayOf(PropTypes.string),
   flags: PropTypes.shape({
     omenFlag: PropTypes.bool,
@@ -124,7 +132,8 @@ Main.propTypes = {
   placePerson: PropTypes.func,
   vacancy: PropTypes.func,
   performSacrifice: PropTypes.func,
-  setSacrificeMessage: PropTypes.func
+  setSacrificeMessage: PropTypes.func,
+  placeLavaTile: PropTypes.func
 };
 
 Main.defaultProps = {
@@ -132,6 +141,7 @@ Main.defaultProps = {
   gridState: types.gridState.defaults,
   messageState: types.messageState.defaults,
   playersState: types.playersState.defaults,
+  tileState: types.tileState.defaults,
   cardGrid: [],
   flags: {
     omenFlag: false,
@@ -153,7 +163,8 @@ Main.defaultProps = {
   placePerson: () => {},
   vacancy: () => {},
   performSacrifice: () => {},
-  setSacrificeMessage: () => {}
+  setSacrificeMessage: () => {},
+  placeLavaTile: () => {}
 };
 
 export default Main;

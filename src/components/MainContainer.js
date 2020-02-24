@@ -344,13 +344,27 @@ const MainContainer = props => {
     // draw tile
     const takenTile = tilePile.pop();
     setLavaTile(takenTile);
-    console.log("takenTile:", takenTile);
     takeTile();
 
     setLavaFlag(true);
 
     // next player's turn
     // incrementPlayerTurn();
+  };
+
+  const placeLavaTile = tile => {
+    console.log("Lava!", tile);
+    setLavaFlag(false);
+
+    // TO DO: Highlight available placements
+    // Send to highlight function for selection
+    // Place tile
+    // Resolve any fatalities
+    // Move to running function
+    // (Six tiles placed before running begins)
+
+    // next player's turn
+    incrementPlayerTurn();
   };
 
   return (
@@ -360,6 +374,7 @@ const MainContainer = props => {
         gridState={gridState}
         messageState={messageState}
         playersState={playersState}
+        tileState={tileState}
         drawCard={drawCard}
         discardCard={discardCard}
         updatePlayerHand={updatePlayerHand}
@@ -386,6 +401,7 @@ const MainContainer = props => {
           setLavaFlag
         }}
         lavaTile={lavaTile}
+        placeLavaTile={placeLavaTile}
       />
     </div>
   );

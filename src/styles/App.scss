@@ -41,16 +41,19 @@ $tile-size: 110px;
         margin-bottom: 45px;
       }
     }
-  }
-  .players-container {
-    max-height: 740px;
-    .person {
-      display: inline-block;
-      height: 23px;
-      width: 23px;
-      background-color: rgba(255, 255, 255, 0.5);
-      text-align: center;
-      border-radius: 50%;
+    .deck-container {
+      min-height: 224px;
+    }
+    .players-container {
+      max-height: 740px;
+      .person {
+        display: inline-block;
+        height: 23px;
+        width: 23px;
+        background-color: rgba(255, 255, 255, 0.5);
+        text-align: center;
+        border-radius: 50%;
+      }
     }
   }
 }
