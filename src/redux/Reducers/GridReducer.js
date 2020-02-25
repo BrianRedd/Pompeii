@@ -27,6 +27,16 @@ const gridState = (state = { grid: types.gridState.defaults }, action) => {
           [payload.squareId]: newGrid
         }
       };
+    case actions.PLACE_LAVA:
+      newGrid = { ...state.grid[payload.squareId] };
+      newGrid.lava = payload.tile;
+      return {
+        ...state,
+        grid: {
+          ...state.grid,
+          [payload.squareId]: newGrid
+        }
+      };
     default:
       return state;
   }

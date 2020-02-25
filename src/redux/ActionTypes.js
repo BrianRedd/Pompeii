@@ -19,6 +19,7 @@ export const INCREMENT_PLAYER_SAVED = "INCREMENT_PLAYER_SAVED";
 // grid actions
 export const ADD_GRID = "ADD_GRID";
 export const PLACE_PEOPLE = "PLACE_PEOPLE";
+export const PLACE_LAVA = "PLACE_LAVA";
 
 // message actions
 export const INCREMENT_STAGE = "INCREMENT_STAGE";

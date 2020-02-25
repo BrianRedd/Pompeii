@@ -7,7 +7,7 @@ export const tileDictionary = {
   Scroll: {
     count: 8
   },
-  Helm: {
+  Helmet: {
     count: 7
   },
   Coin: {
@@ -21,7 +21,7 @@ export const tileDictionary = {
   },
   WildHM: {
     count: 1,
-    wilds: ["Helm", "Mask"]
+    wilds: ["Helmet", "Mask"]
   },
   WildUS: {
     count: 1,

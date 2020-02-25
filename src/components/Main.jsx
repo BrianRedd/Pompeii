@@ -40,6 +40,8 @@ const Main = props => {
     pileEnabled,
     drawTile,
     lavaTile,
+    highlightDangerZones,
+    dangerZone,
     placeLavaTile
   } = props;
 
@@ -58,7 +60,7 @@ const Main = props => {
             <LavaTileSidebar
               lavaTile={lavaTile}
               tileState={tileState}
-              placeLavaTile={placeLavaTile}
+              highlightDangerZones={highlightDangerZones}
             />
           )}
           {messageState.stage < 2 && !flags.ad79Flag && !flags.lavaFlag && (
@@ -93,9 +95,9 @@ const Main = props => {
         />
       ) : (
         <PlacementHighlighter
-          gridArray={["0_7"]}
+          gridArray={dangerZone}
           selectSquare={val => {
-            console.log("Lava placed", val);
+            placeLavaTile(val);
           }}
           validation={() => {
             return true;
@@ -113,6 +115,7 @@ Main.propTypes = {
   playersState: types.playersState.types,
   tileState: types.tileState.types,
   cardGrid: PropTypes.arrayOf(PropTypes.string),
+  dangerZone: PropTypes.arrayOf(PropTypes.string),
   flags: PropTypes.shape({
     ad79Flag: PropTypes.bool,
     setAD79Flag: PropTypes.func,
@@ -130,6 +133,7 @@ Main.propTypes = {
   placePerson: PropTypes.func,
   vacancy: PropTypes.func,
   performSacrifice: PropTypes.func,
+  highlightDangerZones: PropTypes.func,
   placeLavaTile: PropTypes.func
 };
 
@@ -140,6 +144,7 @@ Main.defaultProps = {
   playersState: types.playersState.defaults,
   tileState: types.tileState.defaults,
   cardGrid: [],
+  dangerZone: [],
   flags: {
     ad79Flag: false,
     setAD79Flag: () => {},
@@ -157,6 +162,7 @@ Main.defaultProps = {
   placePerson: () => {},
   vacancy: () => {},
   performSacrifice: () => {},
+  highlightDangerZones: () => {},
   placeLavaTile: () => {}
 };
 

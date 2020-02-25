@@ -33,7 +33,8 @@ const mapDispatchToProps = {
   incrementStage: actions.incrementStage,
   incrementPlayerPopulation: actions.incrementPlayerPopulation,
   incrementPlayerCasualties: actions.incrementPlayerCasualties,
-  takeTile: actions.takeTile
+  takeTile: actions.takeTile,
+  placeLavaTileOnSquare: actions.placeLavaTileOnSquare
 };
 
 /**
@@ -58,7 +59,8 @@ const MainContainer = props => {
     placePeopleInSquare,
     incrementStage,
     incrementPlayerPopulation,
-    incrementPlayerCasualties
+    incrementPlayerCasualties,
+    placeLavaTileOnSquare
   } = props;
 
   const numberOfPlayers = 3;
@@ -90,6 +92,8 @@ const MainContainer = props => {
 
   const [lavaFlag, setLavaFlag] = useState(false);
   const [lavaTile, setLavaTile] = useState();
+  const [dangerZone, setDangerZone] = useState([]);
+  const [placingLavaFlag, setPlacingLavaFlag] = useState(false);
 
   /**
    * @function placeRelatives
@@ -369,13 +373,49 @@ const MainContainer = props => {
     takeTile();
 
     setLavaFlag(true);
-
-    // next player's turn
-    // incrementPlayerTurn();
   };
 
-  const placeLavaTile = tile => {
-    console.log("Lava!", tile);
+  /**
+   * @function highlightDangerZones
+   * @description send list of available tiles to highlight component
+   * @param {String} tile - picked lava tile
+   */
+  const highlightDangerZones = tile => {
+    const hotZones = [];
+    let homeVent = "";
+    const gridKeys = Object.keys(gridState.grid);
+    gridKeys.forEach(key => {
+      if (_.get(gridState, `grid.${key}.lava`) === tile) {
+        hotZones.push(key);
+      }
+      if (_.get(gridState, `grid.${key}.ventName`) === tile) {
+        homeVent = key;
+      }
+    });
+
+    if (!hotZones.length) {
+      setDangerZone([homeVent]);
+    } else {
+      const warmZones = [];
+      hotZones.forEach(zone => {
+        const coord = zone.split("_");
+        warmZones.push(
+          `${Math.min(parseFloat(coord[0]) + 1, 6)}_${coord[1]}`,
+          `${Math.max(parseFloat(coord[0]) - 1, 0)}_${coord[1]}`,
+          `${coord[0]}_${Math.min(parseFloat(coord[1]) + 1, 10)}`,
+          `${coord[0]}_${Math.max(parseFloat(coord[1]) - 1, 0)}`
+        );
+      });
+      setDangerZone(
+        _.uniqBy(
+          warmZones.filter(zone => {
+            return !_.get(gridState, `grid.${zone}.lava`);
+          })
+        )
+      );
+    }
+
+    setPlacingLavaFlag(true);
     setLavaFlag(false);
 
     // TO DO: Highlight available placements
@@ -386,7 +426,16 @@ const MainContainer = props => {
     // (Six tiles placed before running begins)
 
     // next player's turn
-    incrementPlayerTurn();
+    // incrementPlayerTurn();
+  };
+
+  const placeLavaTile = square => {
+    console.log(`Lava placed on square ${square}`);
+    placeLavaTileOnSquare(square, lavaTile);
+
+    setPlacingLavaFlag(false);
+    setLavaTile();
+    setDangerZone([]);
   };
 
   return (
@@ -405,7 +454,7 @@ const MainContainer = props => {
           !placingPersonFlag &&
           !omenFlag
         }
-        pileEnabled={messageState.stage === 2}
+        pileEnabled={messageState.stage === 2 && !placingLavaFlag}
         playPompCard={playPompCard}
         cardGrid={cardGrid}
         placePerson={placePerson}
@@ -421,6 +470,8 @@ const MainContainer = props => {
           setLavaFlag
         }}
         lavaTile={lavaTile}
+        highlightDangerZones={highlightDangerZones}
+        dangerZone={dangerZone}
         placeLavaTile={placeLavaTile}
       />
     </div>
@@ -443,7 +494,8 @@ MainContainer.propTypes = {
   placePeopleInSquare: PropTypes.func,
   incrementStage: PropTypes.func,
   incrementPlayerPopulation: PropTypes.func,
-  incrementPlayerCasualties: PropTypes.func
+  incrementPlayerCasualties: PropTypes.func,
+  placeLavaTileOnSquare: PropTypes.func
 };
 
 MainContainer.defaultProps = {
@@ -462,7 +514,8 @@ MainContainer.defaultProps = {
   placePeopleInSquare: () => {},
   incrementStage: () => {},
   incrementPlayerPopulation: () => {},
-  incrementPlayerCasualties: () => {}
+  incrementPlayerCasualties: () => {},
+  placeLavaTileOnSquare: () => {}
 };
 
 export const MainContainerTest = MainContainer;

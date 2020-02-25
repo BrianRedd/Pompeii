@@ -14,7 +14,7 @@ import * as types from "../../types/types";
  * @returns {React.Component} - Rendered component.
  */
 const LavaTileSidebar = props => {
-  const { lavaTile, placeLavaTile, tileState } = props;
+  const { lavaTile, highlightDangerZones, tileState } = props;
 
   const wilds = _.get(tileState, `tiles.${lavaTile}.wilds`);
 
@@ -31,7 +31,7 @@ const LavaTileSidebar = props => {
               <figure>
                 <ButtonBase
                   data-test="button-lavatile"
-                  onClick={() => placeLavaTile(wilds[0])}
+                  onClick={() => highlightDangerZones(wilds[0])}
                 >
                   <img alt={wilds[0]} src={`/assets/tiles/${wilds[0]}.png`} />
                 </ButtonBase>
@@ -42,7 +42,7 @@ const LavaTileSidebar = props => {
               <figure>
                 <ButtonBase
                   data-test="button-lavatile"
-                  onClick={() => placeLavaTile(wilds[1])}
+                  onClick={() => highlightDangerZones(wilds[1])}
                 >
                   <img alt={wilds[1]} src={`/assets/tiles/${wilds[1]}.png`} />
                 </ButtonBase>
@@ -60,7 +60,7 @@ const LavaTileSidebar = props => {
           <figure>
             <ButtonBase
               data-test="button-lavatile"
-              onClick={() => placeLavaTile(lavaTile)}
+              onClick={() => highlightDangerZones(lavaTile)}
             >
               <img alt={lavaTile} src={`/assets/tiles/${lavaTile}.png`} />
             </ButtonBase>
@@ -75,13 +75,13 @@ const LavaTileSidebar = props => {
 LavaTileSidebar.propTypes = {
   tileState: types.tileState.types,
   lavaTile: PropTypes.string,
-  placeLavaTile: PropTypes.func
+  highlightDangerZones: PropTypes.func
 };
 
 LavaTileSidebar.defaultProps = {
   tileState: types.tileState.defaults,
   lavaTile: "",
-  placeLavaTile: () => {}
+  highlightDangerZones: () => {}
 };
 
 export default LavaTileSidebar;
