@@ -14,7 +14,7 @@ import Tiles from "./Tiles";
  * @returns {React.Component} - Rendered component.
  */
 const TilesContainer = props => {
-  const { pileEnabled, drawTile, tileState } = props;
+  const { pileEnabled, drawTile, tileState, lavaTile } = props;
 
   return (
     <div data-test="container-tiles" className="deck-container">
@@ -23,6 +23,7 @@ const TilesContainer = props => {
           tiles: _.get(tileState, "pile.length", 0)
         }}
         drawTile={drawTile}
+        lavaTile={lavaTile}
         pileEnabled={pileEnabled}
       />
     </div>
@@ -31,12 +32,14 @@ const TilesContainer = props => {
 
 TilesContainer.propTypes = {
   tileState: types.tileState.types,
+  lavaTile: PropTypes.string,
   pileEnabled: PropTypes.bool,
   drawTile: PropTypes.func
 };
 
 TilesContainer.defaultProps = {
   tileState: types.tileState.defaults,
+  lavaTile: null,
   pileEnabled: false,
   drawTile: () => {}
 };

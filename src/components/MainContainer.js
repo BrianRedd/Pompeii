@@ -92,6 +92,7 @@ const MainContainer = props => {
 
   const [lavaFlag, setLavaFlag] = useState(false);
   const [lavaTile, setLavaTile] = useState();
+  const [wildLavaFlag, setWildLavaFlag] = useState(false);
   const [dangerZone, setDangerZone] = useState([]);
   const [placingLavaFlag, setPlacingLavaFlag] = useState(false);
 
@@ -361,21 +362,6 @@ const MainContainer = props => {
   };
 
   /**
-   * @function drawTile
-   * @description drawing a tile during stage 3
-   */
-  const drawTile = () => {
-    const tilePile = [...tileState.pile];
-
-    // draw tile
-    const takenTile = tilePile.pop();
-    setLavaTile(takenTile);
-    takeTile();
-
-    setLavaFlag(true);
-  };
-
-  /**
    * @function highlightDangerZones
    * @description send list of available tiles to highlight component
    * @param {String} tile - picked lava tile
@@ -439,6 +425,27 @@ const MainContainer = props => {
     // incrementPlayerTurn();
   };
 
+  /**
+   * @function drawTile
+   * @description drawing a tile during stage 3
+   */
+  const drawTile = () => {
+    const tilePile = [...tileState.pile];
+
+    // draw tile
+    const takenTile = tilePile.pop();
+    setLavaTile(takenTile);
+    takeTile();
+
+    const wilds = _.get(tileState, `tiles.${lavaTile}.wilds`);
+    if (wilds) {
+      setWildLavaFlag(true);
+    } else {
+      highlightDangerZones(takenTile);
+    }
+    setLavaFlag(true);
+  };
+
   const placeLavaTile = square => {
     placeLavaTileOnSquare(square, lavaTile);
 
@@ -477,7 +484,9 @@ const MainContainer = props => {
           ad79Flag,
           setAD79Flag,
           lavaFlag,
-          setLavaFlag
+          setLavaFlag,
+          wildLavaFlag,
+          setWildLavaFlag
         }}
         lavaTile={lavaTile}
         highlightDangerZones={highlightDangerZones}

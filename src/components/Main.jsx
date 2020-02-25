@@ -56,11 +56,12 @@ const Main = props => {
         />
         <div className="off-board">
           {flags.ad79Flag && <AD79Sidebar setAD79Flag={flags.setAD79Flag} />}
-          {flags.lavaFlag && (
+          {flags.wildLavaFlag && (
             <LavaTileSidebar
               lavaTile={lavaTile}
               tileState={tileState}
               highlightDangerZones={highlightDangerZones}
+              setWildLavaFlag={flags.setWildLavaFlag}
             />
           )}
           {messageState.stage < 2 && !flags.ad79Flag && !flags.lavaFlag && (
@@ -71,13 +72,16 @@ const Main = props => {
               deckEnabled={deckEnabled}
             />
           )}
-          {messageState.stage === 2 && !flags.ad79Flag && !flags.lavaFlag && (
-            <TilesContainer
-              tileState={tileState}
-              drawTile={drawTile}
-              pileEnabled={pileEnabled}
-            />
-          )}
+          {messageState.stage === 2 &&
+            !flags.ad79Flag &&
+            !flags.wildLavaFlag && (
+              <TilesContainer
+                lavaTile={flags.lavaFlag ? lavaTile : null}
+                tileState={tileState}
+                drawTile={drawTile}
+                pileEnabled={pileEnabled}
+              />
+            )}
           <PlayersContainer
             playersState={playersState}
             discardCard={discardCard}
@@ -120,7 +124,9 @@ Main.propTypes = {
     ad79Flag: PropTypes.bool,
     setAD79Flag: PropTypes.func,
     lavaFlag: PropTypes.bool,
-    setLavaFlag: PropTypes.func
+    setLavaFlag: PropTypes.func,
+    wildLavaFlag: PropTypes.bool,
+    setWildLavaFlag: PropTypes.func
   }),
   lavaTile: PropTypes.string,
   deckEnabled: PropTypes.bool,
@@ -149,7 +155,9 @@ Main.defaultProps = {
     ad79Flag: false,
     setAD79Flag: () => {},
     lavaFlag: false,
-    setLavaFlag: () => {}
+    setLavaFlag: () => {},
+    wildLavaFlag: false,
+    setWildLavaFlag: () => {}
   },
   lavaTile: "",
   deckEnabled: false,

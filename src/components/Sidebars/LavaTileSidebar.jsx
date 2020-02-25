@@ -14,7 +14,7 @@ import * as types from "../../types/types";
  * @returns {React.Component} - Rendered component.
  */
 const LavaTileSidebar = props => {
-  const { lavaTile, highlightDangerZones, tileState } = props;
+  const { lavaTile, highlightDangerZones, tileState, setWildLavaFlag } = props;
 
   const wilds = _.get(tileState, `tiles.${lavaTile}.wilds`);
 
@@ -32,8 +32,8 @@ const LavaTileSidebar = props => {
                 <ButtonBase
                   data-test="button-lavatile"
                   onClick={() => {
-                    console.log(wilds[0]);
                     highlightDangerZones(wilds[0]);
+                    setWildLavaFlag(false);
                   }}
                 >
                   <img alt={wilds[0]} src={`/assets/tiles/${wilds[0]}.png`} />
@@ -46,8 +46,8 @@ const LavaTileSidebar = props => {
                 <ButtonBase
                   data-test="button-lavatile"
                   onClick={() => {
-                    console.log(wilds[1]);
                     highlightDangerZones(wilds[1]);
+                    setWildLavaFlag(false);
                   }}
                 >
                   <img alt={wilds[1]} src={`/assets/tiles/${wilds[1]}.png`} />
@@ -81,13 +81,15 @@ const LavaTileSidebar = props => {
 LavaTileSidebar.propTypes = {
   tileState: types.tileState.types,
   lavaTile: PropTypes.string,
-  highlightDangerZones: PropTypes.func
+  highlightDangerZones: PropTypes.func,
+  setWildLavaFlag: PropTypes.func
 };
 
 LavaTileSidebar.defaultProps = {
   tileState: types.tileState.defaults,
   lavaTile: "",
-  highlightDangerZones: () => {}
+  highlightDangerZones: () => {},
+  setWildLavaFlag: () => {}
 };
 
 export default LavaTileSidebar;
