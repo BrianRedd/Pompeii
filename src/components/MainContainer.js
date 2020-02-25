@@ -251,10 +251,17 @@ const MainContainer = props => {
         }`,
         color: _.get(playersState, `details[${activePlayer}].color`)
       });
+      incrementPlayerTurn();
     }
     incrementStage();
   };
 
+  /**
+   * @function performSacrifice
+   * @description upon selection of person, sacrifice if not your own
+   * @param {String} id
+   * @param {String} square
+   */
   const performSacrifice = (id, square) => {
     const idArray = id.split("-");
     if (!omenFlag || idArray[0] === activePlayer) return;

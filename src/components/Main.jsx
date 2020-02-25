@@ -9,6 +9,7 @@ import * as types from "../types/types";
 
 import BoardContainer from "./Board/BoardContainer";
 import DeckContainer from "./Deck/DeckContainer";
+import TilesContainer from "./Tiles/TilesContainer";
 import PlayersContainer from "./Player/PlayersContainer";
 import PlacementHighlighter from "./Board/PlacementHighlighter";
 import AD79Sidebar from "./Sidebars/AD79Sidebar";
@@ -75,16 +76,32 @@ const Main = props => {
               placeLavaTile={placeLavaTile}
             />
           )}
-          {!flags.omenFlag && !flags.ad79Flag && !flags.lavaFlag && (
-            <DeckContainer
-              cardsState={cardsState}
-              tileState={tileState}
-              drawCard={drawCard}
-              drawTile={drawTile}
-              deckEnabled={deckEnabled}
-              pileEnabled={pileEnabled}
-            />
-          )}
+          {messageState.stage < 2 &&
+            !flags.omenFlag &&
+            !flags.ad79Flag &&
+            !flags.lavaFlag && (
+              <DeckContainer
+                cardsState={cardsState}
+                tileState={tileState}
+                drawCard={drawCard}
+                drawTile={drawTile}
+                deckEnabled={deckEnabled}
+                pileEnabled={pileEnabled}
+              />
+            )}
+          {messageState.stage === 2 &&
+            !flags.omenFlag &&
+            !flags.ad79Flag &&
+            !flags.lavaFlag && (
+              <TilesContainer
+                cardsState={cardsState}
+                tileState={tileState}
+                drawCard={drawCard}
+                drawTile={drawTile}
+                deckEnabled={deckEnabled}
+                pileEnabled={pileEnabled}
+              />
+            )}
           <PlayersContainer
             playersState={playersState}
             discardCard={discardCard}

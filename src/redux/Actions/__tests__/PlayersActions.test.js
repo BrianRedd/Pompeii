@@ -127,7 +127,8 @@ describe("incrementPlayerTurn", () => {
           color: "#FFFFFF"
         }
       }
-    }
+    },
+    messageState: { stage: 0 }
   };
   test("0 -> 1", () => {
     const thisState = { ...initialState };

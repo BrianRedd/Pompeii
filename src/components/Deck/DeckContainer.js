@@ -14,14 +14,7 @@ import Deck from "./Deck";
  * @returns {React.Component} - Rendered component.
  */
 const DeckContainer = props => {
-  const {
-    cardsState,
-    drawCard,
-    deckEnabled,
-    pileEnabled,
-    drawTile,
-    tileState
-  } = props;
+  const { cardsState, drawCard, deckEnabled } = props;
 
   const [lastDrawnCard, setLastDrawnCard] = useState(null);
 
@@ -41,13 +34,10 @@ const DeckContainer = props => {
         topDiscard={lastDrawnCard}
         deckSizes={{
           deck: _.get(cardsState, "deck.length", 0),
-          discard: _.get(cardsState, "discard.length", 0),
-          tiles: _.get(tileState, "pile.length", 0)
+          discard: _.get(cardsState, "discard.length", 0)
         }}
         drawCard={drawCard}
-        drawTile={drawTile}
         deckEnabled={deckEnabled}
-        pileEnabled={pileEnabled}
       />
     </div>
   );
@@ -55,20 +45,14 @@ const DeckContainer = props => {
 
 DeckContainer.propTypes = {
   cardsState: types.cardsState.types,
-  tileState: types.tileState.types,
   deckEnabled: PropTypes.bool,
-  pileEnabled: PropTypes.bool,
-  drawCard: PropTypes.func,
-  drawTile: PropTypes.func
+  drawCard: PropTypes.func
 };
 
 DeckContainer.defaultProps = {
   cardsState: types.cardsState.defaults,
-  tileState: types.tileState.defaults,
   deckEnabled: false,
-  pileEnabled: false,
-  drawCard: () => {},
-  drawTile: () => {}
+  drawCard: () => {}
 };
 
 export default DeckContainer;
