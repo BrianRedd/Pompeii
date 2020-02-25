@@ -14,18 +14,41 @@ import * as types from "../../types/types";
  * @returns {React.Component} - Rendered component.
  */
 const LavaTileSidebar = props => {
-  const { lavaTile, highlightDangerZones, tileState, setWildLavaFlag } = props;
+  const {
+    lavaTile,
+    highlightDangerZones,
+    tileState,
+    setWildLavaFlag,
+    noPlaceToPlaceFlag,
+    resolveNoPlaceToPlace
+  } = props;
 
   const wilds = _.get(tileState, `tiles.${lavaTile}.wilds`);
 
   return (
     <React.Fragment>
-      {wilds ? (
+      {noPlaceToPlaceFlag ? (
         <div
           data-test="sidebar-lavatile"
           className="w-100 text-center deck-container"
         >
-          <h4 className="text-danger">Wild Lava Tile Drawn!</h4>
+          <h4 className="text-danger">{`No Place For ${lavaTile} To Be Placed!`}</h4>
+          <figure>
+            <ButtonBase
+              data-test="button-lavatile"
+              onClick={resolveNoPlaceToPlace}
+            >
+              <img alt={lavaTile} src={`/assets/tiles/${lavaTile}.png`} />
+            </ButtonBase>
+            <figcaption>(Click to Continue)</figcaption>
+          </figure>
+        </div>
+      ) : (
+        <div
+          data-test="sidebar-lavatile"
+          className="w-100 text-center deck-container"
+        >
+          <h4 className="text-danger">Wild Lava Tile Drawn (Pick Type)!</h4>
           <Row>
             <Col>
               <figure>
@@ -57,22 +80,6 @@ const LavaTileSidebar = props => {
             </Col>
           </Row>
         </div>
-      ) : (
-        <div
-          data-test="sidebar-lavatile"
-          className="w-100 text-center deck-container"
-        >
-          <h4 className="text-danger">{`Lava Tile for ${lavaTile} Drawn!`}</h4>
-          <figure>
-            <ButtonBase
-              data-test="button-lavatile"
-              onClick={() => highlightDangerZones(lavaTile)}
-            >
-              <img alt={lavaTile} src={`/assets/tiles/${lavaTile}.png`} />
-            </ButtonBase>
-            <figcaption>(Click to Place)</figcaption>
-          </figure>
-        </div>
       )}
     </React.Fragment>
   );
@@ -81,6 +88,8 @@ const LavaTileSidebar = props => {
 LavaTileSidebar.propTypes = {
   tileState: types.tileState.types,
   lavaTile: PropTypes.string,
+  noPlaceToPlaceFlag: PropTypes.bool,
+  resolveNoPlaceToPlace: PropTypes.func,
   highlightDangerZones: PropTypes.func,
   setWildLavaFlag: PropTypes.func
 };
@@ -88,6 +97,8 @@ LavaTileSidebar.propTypes = {
 LavaTileSidebar.defaultProps = {
   tileState: types.tileState.defaults,
   lavaTile: "",
+  noPlaceToPlaceFlag: false,
+  resolveNoPlaceToPlace: () => {},
   highlightDangerZones: () => {},
   setWildLavaFlag: () => {}
 };

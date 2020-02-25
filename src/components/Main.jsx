@@ -56,12 +56,14 @@ const Main = props => {
         />
         <div className="off-board">
           {flags.ad79Flag && <AD79Sidebar setAD79Flag={flags.setAD79Flag} />}
-          {flags.wildLavaFlag && (
+          {(flags.wildLavaFlag || flags.noPlaceToPlaceFlag) && (
             <LavaTileSidebar
               lavaTile={lavaTile}
               tileState={tileState}
               highlightDangerZones={highlightDangerZones}
               setWildLavaFlag={flags.setWildLavaFlag}
+              noPlaceToPlaceFlag={flags.noPlaceToPlaceFlag}
+              resolveNoPlaceToPlace={flags.resolveNoPlaceToPlace}
             />
           )}
           {messageState.stage < 2 && !flags.ad79Flag && !flags.lavaFlag && (
@@ -74,7 +76,8 @@ const Main = props => {
           )}
           {messageState.stage === 2 &&
             !flags.ad79Flag &&
-            !flags.wildLavaFlag && (
+            !flags.wildLavaFlag &&
+            !flags.noPlaceToPlaceFlag && (
               <TilesContainer
                 lavaTile={flags.lavaFlag ? lavaTile : null}
                 tileState={tileState}
@@ -126,7 +129,9 @@ Main.propTypes = {
     lavaFlag: PropTypes.bool,
     setLavaFlag: PropTypes.func,
     wildLavaFlag: PropTypes.bool,
-    setWildLavaFlag: PropTypes.func
+    setWildLavaFlag: PropTypes.func,
+    noPlaceToPlaceFlag: PropTypes.bool,
+    resolveNoPlaceToPlace: PropTypes.func
   }),
   lavaTile: PropTypes.string,
   deckEnabled: PropTypes.bool,
@@ -157,7 +162,9 @@ Main.defaultProps = {
     lavaFlag: false,
     setLavaFlag: () => {},
     wildLavaFlag: false,
-    setWildLavaFlag: () => {}
+    setWildLavaFlag: () => {},
+    noPlaceToPlaceFlag: false,
+    resolveNoPlaceToPlace: () => {}
   },
   lavaTile: "",
   deckEnabled: false,

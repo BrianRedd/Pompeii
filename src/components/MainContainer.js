@@ -95,6 +95,7 @@ const MainContainer = props => {
   const [wildLavaFlag, setWildLavaFlag] = useState(false);
   const [dangerZone, setDangerZone] = useState([]);
   const [placingLavaFlag, setPlacingLavaFlag] = useState(false);
+  const [noPlaceToPlaceFlag, setNoPlaceToPlaceFlag] = useState(false);
 
   /**
    * @function placeRelatives
@@ -407,10 +408,7 @@ const MainContainer = props => {
       if (filteredZones.length) {
         setDangerZone(filteredZones);
       } else {
-        setPlacingLavaFlag(false);
-        setLavaTile();
-        setDangerZone([]);
-        incrementPlayerTurn();
+        setNoPlaceToPlaceFlag(true);
       }
     }
 
@@ -426,6 +424,18 @@ const MainContainer = props => {
   };
 
   /**
+   * @function resolveNoPlaceToPlace
+   * @description continue from no place to place
+   */
+  const resolveNoPlaceToPlace = () => {
+    setNoPlaceToPlaceFlag(false);
+    setPlacingLavaFlag(false);
+    setLavaTile();
+    setDangerZone([]);
+    incrementPlayerTurn();
+  };
+
+  /**
    * @function drawTile
    * @description drawing a tile during stage 3
    */
@@ -437,7 +447,7 @@ const MainContainer = props => {
     setLavaTile(takenTile);
     takeTile();
 
-    const wilds = _.get(tileState, `tiles.${lavaTile}.wilds`);
+    const wilds = _.get(tileState, `tiles.${takenTile}.wilds`);
     if (wilds) {
       setWildLavaFlag(true);
     } else {
@@ -446,6 +456,11 @@ const MainContainer = props => {
     setLavaFlag(true);
   };
 
+  /**
+   * @function placeLavaTile
+   * @description placing tile in highlight area
+   * @param {String} square
+   */
   const placeLavaTile = square => {
     placeLavaTileOnSquare(square, lavaTile);
 
@@ -486,7 +501,9 @@ const MainContainer = props => {
           lavaFlag,
           setLavaFlag,
           wildLavaFlag,
-          setWildLavaFlag
+          setWildLavaFlag,
+          noPlaceToPlaceFlag,
+          resolveNoPlaceToPlace
         }}
         lavaTile={lavaTile}
         highlightDangerZones={highlightDangerZones}
