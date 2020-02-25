@@ -96,10 +96,7 @@ export const incrementPlayerTurn = () => (dispatch, getState) => {
     playersState,
     messageState: { stage }
   } = getState();
-  let nextPlayer = playersState.turn + 1;
-  if (nextPlayer >= playersState.players.length) {
-    nextPlayer = 0;
-  }
+  const nextPlayer = (playersState.turn + 1) % playersState.players.length;
   dispatch(setPlayerturn(nextPlayer));
   dispatch(
     updateInstructions({

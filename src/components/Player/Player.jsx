@@ -15,9 +15,7 @@ const PeopleIcons = ({ number, color }) => {
     peopleIcons.push(
       <div key={i} className="person">
         <span
-          className={`fas fa-${
-            Math.round(Math.random()) ? "male" : "female"
-          } fa-lg`}
+          className="fas fa-male fa-lg"
           style={{ color: `rgb(${color})` }}
         />
       </div>

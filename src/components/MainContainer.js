@@ -245,15 +245,24 @@ const MainContainer = props => {
    */
   const resolveAd79 = () => {
     setAD79Flag(true);
-    if (messageState.stage === 1) {
-      updateInstructions({
-        text: `${_.get(playersState, `details[${activePlayer}].name`)}: ${
-          constant.LAVA_TILE
-        }`,
-        color: _.get(playersState, `details[${activePlayer}].color`)
-      });
-      incrementPlayerTurn();
-    }
+    setTimeout(() => {
+      if (messageState.stage === 1) {
+        const nextPlayer =
+          (playersState.turn + 1) % playersState.players.length;
+        setActivePlayer(nextPlayer);
+        incrementPlayerTurn();
+        updateInstructions({
+          text: `${_.get(
+            playersState,
+            `details[${playersState.players[nextPlayer]}].name`
+          )}: ${constant.LAVA_TILE}`,
+          color: _.get(
+            playersState,
+            `details[${playersState.players[nextPlayer]}].color`
+          )
+        });
+      }
+    }, 100);
     incrementStage();
   };
 
@@ -264,22 +273,15 @@ const MainContainer = props => {
    * @param {String} square
    */
   const performSacrifice = (id, square) => {
-    console.log("id:", id, "square:", square);
     const idArray = id.split("-");
     if (!omenFlag || idArray[0] === activePlayer) return;
 
     const currentOccupants = _.get(gridState, `grid.${square}.occupants`, []);
 
-    const temp = [...currentOccupants];
-    console.log("currentOccupants:", temp);
-
     const idx = currentOccupants
       .map(person => person.player)
       .indexOf(idArray[0]);
     currentOccupants.splice(idx, 1);
-
-    const temp2 = [...currentOccupants];
-    console.log("currentOccupants (post splice):", idx, temp2);
 
     if (!readyForSacrifice) return;
     setSacrificeMessage(
