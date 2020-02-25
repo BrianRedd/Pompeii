@@ -86,6 +86,7 @@ const MainContainer = props => {
   const [omenFlag, setOmenFlag] = useState(false);
   const [ad79Flag, setAD79Flag] = useState(false);
   const [sacrificeMessage, setSacrificeMessage] = useState("");
+  const [readyForSacrifice, setReadyForSacrifice] = useState(false);
 
   const [lavaFlag, setLavaFlag] = useState(false);
   const [lavaTile, setLavaTile] = useState();
@@ -263,15 +264,24 @@ const MainContainer = props => {
    * @param {String} square
    */
   const performSacrifice = (id, square) => {
+    console.log("id:", id, "square:", square);
     const idArray = id.split("-");
     if (!omenFlag || idArray[0] === activePlayer) return;
 
     const currentOccupants = _.get(gridState, `grid.${square}.occupants`, []);
-    const idx = currentOccupants.indexOf({
-      player: idArray[0],
-      gender: idArray[1]
-    });
+
+    const temp = [...currentOccupants];
+    console.log("currentOccupants:", temp);
+
+    const idx = currentOccupants
+      .map(person => person.player)
+      .indexOf(idArray[0]);
     currentOccupants.splice(idx, 1);
+
+    const temp2 = [...currentOccupants];
+    console.log("currentOccupants (post splice):", idx, temp2);
+
+    if (!readyForSacrifice) return;
     setSacrificeMessage(
       `${_.get(
         playersState,
@@ -284,6 +294,8 @@ const MainContainer = props => {
     placePeopleInSquare(square, currentOccupants);
     incrementPlayerCasualties(idArray[0], 1);
 
+    setReadyForSacrifice(false);
+    setOmenFlag(false);
     updateInstructions({
       text: `${_.get(playersState, `details[${activePlayer}].name`)}: ${
         constant.DRAW
@@ -297,6 +309,7 @@ const MainContainer = props => {
    * @description resolve Omen card when drawn - sacrifice another player's person
    */
   const resolveOmen = () => {
+    setReadyForSacrifice(true);
     updateInstructions({
       text: `${_.get(playersState, `details[${activePlayer}].name`)}: ${
         constant.SACRIFICE
@@ -400,8 +413,6 @@ const MainContainer = props => {
         setSacrificeMessage={setSacrificeMessage}
         drawTile={drawTile}
         flags={{
-          omenFlag,
-          setOmenFlag,
           ad79Flag,
           setAD79Flag,
           lavaFlag,

@@ -3,7 +3,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Col, Row } from "reactstrap";
-import _ from "lodash";
 
 import * as types from "../types/types";
 
@@ -13,7 +12,6 @@ import TilesContainer from "./Tiles/TilesContainer";
 import PlayersContainer from "./Player/PlayersContainer";
 import PlacementHighlighter from "./Board/PlacementHighlighter";
 import AD79Sidebar from "./Sidebars/AD79Sidebar";
-import OmenSidebar from "./Sidebars/OmenSidebar";
 import LavaTileSidebar from "./Sidebars/LavaTileSidebar";
 
 /**
@@ -39,8 +37,6 @@ const Main = props => {
     vacancy,
     performSacrifice,
     flags,
-    sacrificeMessage,
-    setSacrificeMessage,
     pileEnabled,
     drawTile,
     lavaTile,
@@ -57,17 +53,6 @@ const Main = props => {
           performSacrifice={performSacrifice}
         />
         <div className="off-board">
-          {flags.omenFlag && (
-            <OmenSidebar
-              name={_.get(
-                playersState,
-                `details.${playersState.players[playersState.turn]}.name`
-              )}
-              setOmenFlag={flags.setOmenFlag}
-              sacrificeMessage={sacrificeMessage}
-              setSacrificeMessage={setSacrificeMessage}
-            />
-          )}
           {flags.ad79Flag && <AD79Sidebar setAD79Flag={flags.setAD79Flag} />}
           {flags.lavaFlag && (
             <LavaTileSidebar
@@ -76,32 +61,21 @@ const Main = props => {
               placeLavaTile={placeLavaTile}
             />
           )}
-          {messageState.stage < 2 &&
-            !flags.omenFlag &&
-            !flags.ad79Flag &&
-            !flags.lavaFlag && (
-              <DeckContainer
-                cardsState={cardsState}
-                tileState={tileState}
-                drawCard={drawCard}
-                drawTile={drawTile}
-                deckEnabled={deckEnabled}
-                pileEnabled={pileEnabled}
-              />
-            )}
-          {messageState.stage === 2 &&
-            !flags.omenFlag &&
-            !flags.ad79Flag &&
-            !flags.lavaFlag && (
-              <TilesContainer
-                cardsState={cardsState}
-                tileState={tileState}
-                drawCard={drawCard}
-                drawTile={drawTile}
-                deckEnabled={deckEnabled}
-                pileEnabled={pileEnabled}
-              />
-            )}
+          {messageState.stage < 2 && !flags.ad79Flag && !flags.lavaFlag && (
+            <DeckContainer
+              cardsState={cardsState}
+              playersState={playersState}
+              drawCard={drawCard}
+              deckEnabled={deckEnabled}
+            />
+          )}
+          {messageState.stage === 2 && !flags.ad79Flag && !flags.lavaFlag && (
+            <TilesContainer
+              tileState={tileState}
+              drawTile={drawTile}
+              pileEnabled={pileEnabled}
+            />
+          )}
           <PlayersContainer
             playersState={playersState}
             discardCard={discardCard}
@@ -140,14 +114,11 @@ Main.propTypes = {
   tileState: types.tileState.types,
   cardGrid: PropTypes.arrayOf(PropTypes.string),
   flags: PropTypes.shape({
-    omenFlag: PropTypes.bool,
-    setOmenFlag: PropTypes.func,
     ad79Flag: PropTypes.bool,
     setAD79Flag: PropTypes.func,
     lavaFlag: PropTypes.bool,
     setLavaFlag: PropTypes.func
   }),
-  sacrificeMessage: PropTypes.string,
   lavaTile: PropTypes.string,
   deckEnabled: PropTypes.bool,
   pileEnabled: PropTypes.bool,
@@ -159,7 +130,6 @@ Main.propTypes = {
   placePerson: PropTypes.func,
   vacancy: PropTypes.func,
   performSacrifice: PropTypes.func,
-  setSacrificeMessage: PropTypes.func,
   placeLavaTile: PropTypes.func
 };
 
@@ -171,14 +141,11 @@ Main.defaultProps = {
   tileState: types.tileState.defaults,
   cardGrid: [],
   flags: {
-    omenFlag: false,
-    setOmenFlag: () => {},
     ad79Flag: false,
     setAD79Flag: () => {},
     lavaFlag: false,
     setLavaFlag: () => {}
   },
-  sacrificeMessage: "",
   lavaTile: "",
   deckEnabled: false,
   pileEnabled: false,
@@ -190,7 +157,6 @@ Main.defaultProps = {
   placePerson: () => {},
   vacancy: () => {},
   performSacrifice: () => {},
-  setSacrificeMessage: () => {},
   placeLavaTile: () => {}
 };
 

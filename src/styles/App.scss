@@ -43,6 +43,9 @@ $tile-size: 110px;
     }
     .deck-container {
       min-height: 224px;
+      .deck {
+        border: 2px solid transparent;
+      }
     }
     .players-container {
       max-height: 740px;

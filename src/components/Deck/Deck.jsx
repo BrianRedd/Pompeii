@@ -13,7 +13,7 @@ import Card, { CardBack } from "../Helpers/Card";
  * @returns {React.Component} - Rendered component.
  */
 const Deck = props => {
-  const { topDiscard, drawCard, deckSizes, deckEnabled } = props;
+  const { playerColor, topDiscard, drawCard, deckSizes, deckEnabled } = props;
 
   return (
     <Row data-test="presentation-deck">
@@ -25,6 +25,8 @@ const Deck = props => {
               disabled={!deckEnabled}
               onClick={() => drawCard()}
               data-test="card-deck"
+              className="deck"
+              style={deckEnabled ? { borderColor: `rgb(${playerColor})` } : {}}
             >
               <CardBack />
             </ButtonBase>
@@ -60,6 +62,7 @@ Deck.propTypes = {
     discard: PropTypes.number,
     tiles: PropTypes.number
   }),
+  playerColor: PropTypes.string,
   topDiscard: PropTypes.string,
   deckEnabled: PropTypes.bool,
   drawCard: PropTypes.func
@@ -71,6 +74,7 @@ Deck.defaultProps = {
     discard: 0,
     tiles: 0
   },
+  playerColor: "",
   topDiscard: "",
   deckEnabled: false,
   drawCard: () => {}

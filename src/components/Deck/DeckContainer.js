@@ -14,7 +14,7 @@ import Deck from "./Deck";
  * @returns {React.Component} - Rendered component.
  */
 const DeckContainer = props => {
-  const { cardsState, drawCard, deckEnabled } = props;
+  const { cardsState, playersState, drawCard, deckEnabled } = props;
 
   const [lastDrawnCard, setLastDrawnCard] = useState(null);
 
@@ -38,6 +38,10 @@ const DeckContainer = props => {
         }}
         drawCard={drawCard}
         deckEnabled={deckEnabled}
+        playerColor={_.get(
+          playersState,
+          `details.${playersState.players[playersState.turn]}.color`
+        )}
       />
     </div>
   );
@@ -45,12 +49,14 @@ const DeckContainer = props => {
 
 DeckContainer.propTypes = {
   cardsState: types.cardsState.types,
+  playersState: types.playersState.types,
   deckEnabled: PropTypes.bool,
   drawCard: PropTypes.func
 };
 
 DeckContainer.defaultProps = {
   cardsState: types.cardsState.defaults,
+  playersState: types.playersState.defaults,
   deckEnabled: false,
   drawCard: () => {}
 };

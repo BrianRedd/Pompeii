@@ -1,7 +1,7 @@
-/** @module OmenSidebar.test */
+/** @module LavaTileSideBar.test */
 
 import { findByTestAttr, commonSetup } from "../../../utils/utilsTest";
-import TestedComponent from "../OmenSidebar";
+import TestedComponent from "../LavaTileSideBar";
 
 const mockSetFlag = jest.fn();
 const mockSetMessage = jest.fn();
