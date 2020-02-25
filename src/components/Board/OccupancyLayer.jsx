@@ -82,6 +82,9 @@ const OccupancyLayer = props => {
           left: `${col * 110 + constant.X_OFFSET}px`
         }}
       >
+        {_.get(grid, `${square}.lava`) && (
+          <img alt="Lava" src={`/assets/tiles/${grid[square].lava}.png`} />
+        )}
         {_.get(grid, `${square}.occupants.length`) > 0 && (
           <OccupancySquare
             occupants={_.get(grid, `${square}.occupants`, [])}

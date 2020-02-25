@@ -8,7 +8,7 @@ import _ from "lodash";
 import actions from "../redux/Actions";
 import * as types from "../types/types";
 import * as constant from "../data/constants";
-import { gridByColor } from "../data/gridData";
+import { gridByColor, voidSquares } from "../data/gridData";
 
 import Main from "./Main";
 
@@ -381,6 +381,10 @@ const MainContainer = props => {
    * @param {String} tile - picked lava tile
    */
   const highlightDangerZones = tile => {
+    setLavaTile(tile);
+    setPlacingLavaFlag(true);
+    setLavaFlag(false);
+
     const hotZones = [];
     let homeVent = "";
     const gridKeys = Object.keys(gridState.grid);
@@ -406,17 +410,23 @@ const MainContainer = props => {
           `${coord[0]}_${Math.max(parseFloat(coord[1]) - 1, 0)}`
         );
       });
-      setDangerZone(
-        _.uniqBy(
-          warmZones.filter(zone => {
-            return !_.get(gridState, `grid.${zone}.lava`);
-          })
-        )
+      const filteredZones = _.uniqBy(
+        warmZones.filter(zone => {
+          return (
+            !_.get(gridState, `grid.${zone}.lava`) &&
+            !voidSquares.includes(zone)
+          );
+        })
       );
+      if (filteredZones.length) {
+        setDangerZone(filteredZones);
+      } else {
+        setPlacingLavaFlag(false);
+        setLavaTile();
+        setDangerZone([]);
+        incrementPlayerTurn();
+      }
     }
-
-    setPlacingLavaFlag(true);
-    setLavaFlag(false);
 
     // TO DO: Highlight available placements
     // Send to highlight function for selection
@@ -430,12 +440,12 @@ const MainContainer = props => {
   };
 
   const placeLavaTile = square => {
-    console.log(`Lava placed on square ${square}`);
     placeLavaTileOnSquare(square, lavaTile);
 
     setPlacingLavaFlag(false);
     setLavaTile();
     setDangerZone([]);
+    incrementPlayerTurn();
   };
 
   return (

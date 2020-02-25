@@ -31,7 +31,10 @@ const LavaTileSidebar = props => {
               <figure>
                 <ButtonBase
                   data-test="button-lavatile"
-                  onClick={() => highlightDangerZones(wilds[0])}
+                  onClick={() => {
+                    console.log(wilds[0]);
+                    highlightDangerZones(wilds[0]);
+                  }}
                 >
                   <img alt={wilds[0]} src={`/assets/tiles/${wilds[0]}.png`} />
                 </ButtonBase>
@@ -42,7 +45,10 @@ const LavaTileSidebar = props => {
               <figure>
                 <ButtonBase
                   data-test="button-lavatile"
-                  onClick={() => highlightDangerZones(wilds[1])}
+                  onClick={() => {
+                    console.log(wilds[1]);
+                    highlightDangerZones(wilds[1]);
+                  }}
                 >
                   <img alt={wilds[1]} src={`/assets/tiles/${wilds[1]}.png`} />
                 </ButtonBase>
