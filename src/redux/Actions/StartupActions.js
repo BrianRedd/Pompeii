@@ -1,5 +1,7 @@
 /** @module StartupActions */
 
+import _ from "lodash";
+
 import { generateDeck } from "./CardsActions";
 import { addGrid } from "./GridActions";
 import { updateInstructions } from "./MessageActions";
@@ -30,6 +32,26 @@ export const gameSetup = numberOfPlayers => async dispatch => {
       saved: 0
     };
   });
+
+  // START PRE-POPULATION (TEST)
+  const playersArray = ["player1", "player2", "player3"];
+  const gridKeys = Object.keys(gridSquares);
+  gridKeys.forEach(grid => {
+    const potentialPop = _.get(gridSquares, `${grid}.buildingCapacity`, 0);
+    const actualPop = Math.round(Math.random() * potentialPop);
+    const occupants = [];
+    for (let i = 0; i < actualPop; i += 1) {
+      const player = playersArray[Math.floor(Math.random() * 3)];
+      occupants.push({
+        player,
+        gender: "male"
+      });
+      details[player].population += 1;
+    }
+    gridSquares[grid].occupants = occupants;
+  });
+  // END PRE-POPULATION (TEST)
+
   await dispatch(addGrid(gridSquares));
   await dispatch(addPlayers(details));
   await dispatch(generateDeck());

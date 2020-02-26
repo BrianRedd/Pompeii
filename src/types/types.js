@@ -113,7 +113,7 @@ export const messageState = {
     })
   }),
   defaults: {
-    stage: 0,
+    stage: 2,
     instruction: {
       text: "",
       color: ""
