@@ -464,6 +464,11 @@ const MainContainer = props => {
   const placeLavaTile = square => {
     placeLavaTileOnSquare(square, lavaTile);
 
+    _.get(gridState, `grid.${square}.occupants`, []).forEach(person => {
+      incrementPlayerCasualties(person.player, 1);
+    });
+    placePeopleInSquare(square, []);
+
     setPlacingLavaFlag(false);
     setLavaTile();
     setDangerZone([]);
