@@ -12,7 +12,9 @@ const OccupancySquare = ({
   occupants,
   square,
   playersState,
-  performSacrifice
+  performSacrifice,
+  runFlag,
+  selectRunner
 }) => {
   const occupancySquare = occupants.map((person, idx) => {
     const key = `${person.player}-${person.gender}-${idx}`;
@@ -27,11 +29,24 @@ const OccupancySquare = ({
     return (
       <Tooltip key={key} title={`${playerName}`} placement="top" arrow>
         <ButtonBase
-          className="person"
+          className={`person${
+            (playersState.players[playersState.turn] === person.player &&
+              runFlag) ||
+            (playersState.players[playersState.turn] !== person.player &&
+              !runFlag)
+              ? " highlight"
+              : ""
+          }`}
           style={{
             backgroundColor: color
           }}
-          onClick={() => performSacrifice(key, square)}
+          onClick={() => {
+            if (runFlag) {
+              selectRunner(key, square);
+            } else {
+              performSacrifice(key, square);
+            }
+          }}
         >
           <span className={`fas fa-${person.gender} fa-lg`} />
         </ButtonBase>
@@ -45,6 +60,8 @@ OccupancySquare.propTypes = {
   playersState: types.playersState.types,
   occupants: PropTypes.arrayOf(PropTypes.object),
   square: PropTypes.string,
+  runFlag: PropTypes.number,
+  selectRunner: PropTypes.func,
   performSacrifice: PropTypes.func
 };
 
@@ -52,6 +69,8 @@ OccupancySquare.defaultProps = {
   playersState: types.playersState.defaults,
   occupants: [],
   square: "",
+  runFlag: 0,
+  selectRunner: () => {},
   performSacrifice: () => {}
 };
 
@@ -65,7 +84,9 @@ const OccupancyLayer = props => {
   const {
     gridState: { grid },
     playersState,
-    performSacrifice
+    performSacrifice,
+    runFlag,
+    selectRunner
   } = props;
 
   const occupancy = Object.keys(grid).map(square => {
@@ -91,6 +112,8 @@ const OccupancyLayer = props => {
             square={square}
             playersState={playersState}
             performSacrifice={performSacrifice}
+            runFlag={runFlag}
+            selectRunner={selectRunner}
           />
         )}
       </div>
@@ -107,13 +130,17 @@ const OccupancyLayer = props => {
 OccupancyLayer.propTypes = {
   gridState: types.gridState.types,
   playersState: types.playersState.types,
-  performSacrifice: PropTypes.func
+  runFlag: PropTypes.number,
+  performSacrifice: PropTypes.func,
+  selectRunner: PropTypes.func
 };
 
 OccupancyLayer.defaultProps = {
   gridState: types.gridState.defaults,
   playersState: types.playersState.defaults,
-  performSacrifice: () => {}
+  runFlag: 0,
+  performSacrifice: () => {},
+  selectRunner: () => {}
 };
 
 export default OccupancyLayer;

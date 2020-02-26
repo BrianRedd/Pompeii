@@ -14,7 +14,14 @@ import OccupancyLayer from "./OccupancyLayer";
  * @returns {React.Component} - Rendered component.
  */
 const BoardContainer = props => {
-  const { messageState, gridState, playersState, performSacrifice } = props;
+  const {
+    messageState,
+    gridState,
+    playersState,
+    performSacrifice,
+    runFlag,
+    selectRunner
+  } = props;
   return (
     <div data-test="container-board" className="board-container">
       <Board messageState={messageState} />
@@ -22,6 +29,8 @@ const BoardContainer = props => {
         gridState={gridState}
         playersState={playersState}
         performSacrifice={performSacrifice}
+        runFlag={runFlag}
+        selectRunner={selectRunner}
       />
     </div>
   );
@@ -31,14 +40,18 @@ BoardContainer.propTypes = {
   gridState: types.gridState.types,
   messageState: types.messageState.types,
   playersState: types.playersState.types,
-  performSacrifice: PropTypes.func
+  runFlag: PropTypes.number,
+  performSacrifice: PropTypes.func,
+  selectRunner: PropTypes.func
 };
 
 BoardContainer.defaultProps = {
   gridState: types.gridState.defaults,
   messageState: types.messageState.defaults,
   playersState: types.playersState.defaults,
-  performSacrifice: () => {}
+  runFlag: 0,
+  performSacrifice: () => {},
+  selectRunner: () => {}
 };
 
 export default BoardContainer;

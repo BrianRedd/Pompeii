@@ -42,7 +42,9 @@ const Main = props => {
     lavaTile,
     highlightDangerZones,
     dangerZone,
-    placeLavaTile
+    placeLavaTile,
+    selectRunner,
+    runZone
   } = props;
 
   return (
@@ -53,6 +55,8 @@ const Main = props => {
           gridState={gridState}
           playersState={playersState}
           performSacrifice={performSacrifice}
+          runFlag={flags.runFlag}
+          selectRunner={selectRunner}
         />
         <div className="off-board">
           {flags.ad79Flag && <AD79Sidebar setAD79Flag={flags.setAD79Flag} />}
@@ -94,23 +98,42 @@ const Main = props => {
           />
         </div>
       </Row>
-      {messageState.stage < 2 ? (
-        <PlacementHighlighter
-          gridArray={cardGrid}
-          selectSquare={placePerson}
-          validation={vacancy}
-        />
-      ) : (
-        <PlacementHighlighter
-          gridArray={dangerZone}
-          selectSquare={val => {
-            placeLavaTile(val);
-          }}
-          validation={() => {
-            return true;
-          }}
-        />
-      )}
+      {(() => {
+        if (messageState.stage < 2) {
+          return (
+            <PlacementHighlighter
+              gridArray={cardGrid}
+              selectSquare={placePerson}
+              validation={vacancy}
+            />
+          );
+        }
+        if (flags.runFlag) {
+          return (
+            <PlacementHighlighter
+              gridArray={runZone}
+              selectSquare={val => {
+                console.log("Run to", val);
+                // placeLavaTile(val);
+              }}
+              validation={() => {
+                return true;
+              }}
+            />
+          );
+        }
+        return (
+          <PlacementHighlighter
+            gridArray={dangerZone}
+            selectSquare={val => {
+              placeLavaTile(val);
+            }}
+            validation={() => {
+              return true;
+            }}
+          />
+        );
+      })()}
     </Col>
   );
 };
@@ -123,6 +146,7 @@ Main.propTypes = {
   tileState: types.tileState.types,
   cardGrid: PropTypes.arrayOf(PropTypes.string),
   dangerZone: PropTypes.arrayOf(PropTypes.string),
+  runZone: PropTypes.arrayOf(PropTypes.string),
   flags: PropTypes.shape({
     ad79Flag: PropTypes.bool,
     setAD79Flag: PropTypes.func,
@@ -131,7 +155,8 @@ Main.propTypes = {
     wildLavaFlag: PropTypes.bool,
     setWildLavaFlag: PropTypes.func,
     noPlaceToPlaceFlag: PropTypes.bool,
-    resolveNoPlaceToPlace: PropTypes.func
+    resolveNoPlaceToPlace: PropTypes.func,
+    runFlag: PropTypes.number
   }),
   lavaTile: PropTypes.string,
   deckEnabled: PropTypes.bool,
@@ -145,7 +170,8 @@ Main.propTypes = {
   vacancy: PropTypes.func,
   performSacrifice: PropTypes.func,
   highlightDangerZones: PropTypes.func,
-  placeLavaTile: PropTypes.func
+  placeLavaTile: PropTypes.func,
+  selectRunner: PropTypes.func
 };
 
 Main.defaultProps = {
@@ -156,6 +182,7 @@ Main.defaultProps = {
   tileState: types.tileState.defaults,
   cardGrid: [],
   dangerZone: [],
+  runZone: [],
   flags: {
     ad79Flag: false,
     setAD79Flag: () => {},
@@ -164,7 +191,8 @@ Main.defaultProps = {
     wildLavaFlag: false,
     setWildLavaFlag: () => {},
     noPlaceToPlaceFlag: false,
-    resolveNoPlaceToPlace: () => {}
+    resolveNoPlaceToPlace: () => {},
+    runFlag: 0
   },
   lavaTile: "",
   deckEnabled: false,
@@ -178,7 +206,8 @@ Main.defaultProps = {
   vacancy: () => {},
   performSacrifice: () => {},
   highlightDangerZones: () => {},
-  placeLavaTile: () => {}
+  placeLavaTile: () => {},
+  selectRunner: () => {}
 };
 
 export default Main;

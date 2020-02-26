@@ -64,6 +64,7 @@ const MainContainer = props => {
   } = props;
 
   const numberOfPlayers = 3;
+  const numberOfEruptionTurns = 0; // 6
 
   useEffect(() => {
     if (!_.get(cardsState.cards)) {
@@ -96,6 +97,13 @@ const MainContainer = props => {
   const [dangerZone, setDangerZone] = useState([]);
   const [placingLavaFlag, setPlacingLavaFlag] = useState(false);
   const [noPlaceToPlaceFlag, setNoPlaceToPlaceFlag] = useState(false);
+
+  const [initialEruptionCounter, setInitialEruptionCounter] = useState(
+    numberOfEruptionTurns
+  );
+
+  const [runFlag, setRunFlag] = useState(0);
+  const [runZone, setRunZone] = useState([]);
 
   /**
    * @function placeRelatives
@@ -411,16 +419,6 @@ const MainContainer = props => {
         setNoPlaceToPlaceFlag(true);
       }
     }
-
-    // TO DO: Highlight available placements
-    // Send to highlight function for selection
-    // Place tile
-    // Resolve any fatalities
-    // Move to running function
-    // (Six tiles placed before running begins)
-
-    // next player's turn
-    // incrementPlayerTurn();
   };
 
   /**
@@ -457,6 +455,54 @@ const MainContainer = props => {
   };
 
   /**
+   * @function runForYourLives
+   * @description player can now run two of their people
+   */
+  const runForYourLives = async () => {
+    console.log("Run!");
+    await updateInstructions({
+      text: `${_.get(playersState, `details[${activePlayer}].name`)}: ${
+        constant.RUN
+      }`,
+      color: _.get(playersState, `details[${activePlayer}].color`)
+    });
+
+    // alert("Run!");
+    // incrementPlayerTurn();
+  };
+
+  /**
+   * @function selectRunner
+   * @description select person to run
+   * @param {String} key - person
+   * @param {String} square - square
+   */
+  const selectRunner = (key, square) => {
+    console.log("key:", key);
+
+    const player = key.split("-")[0];
+    if (player !== activePlayer) {
+      console.log("Not your person!");
+      return;
+    }
+
+    const neighbors = _.get(gridState, `grid.${square}.occupants.length`);
+    console.log(`Square ${square} has ${neighbors} people in it`);
+
+    const coord = square.split("_");
+    const targetZones = [];
+    for (let x = 1; x <= neighbors; x += 1) {
+      targetZones.push(
+        `${Math.min(parseFloat(coord[0]) + x, 6)}_${coord[1]}`,
+        `${Math.max(parseFloat(coord[0]) - x, 0)}_${coord[1]}`,
+        `${coord[0]}_${Math.min(parseFloat(coord[1]) + x, 10)}`,
+        `${coord[0]}_${Math.max(parseFloat(coord[1]) - x, 0)}`
+      );
+    }
+    setRunZone(_.uniqBy(targetZones));
+  };
+
+  /**
    * @function placeLavaTile
    * @description placing tile in highlight area
    * @param {String} square
@@ -472,7 +518,15 @@ const MainContainer = props => {
     setPlacingLavaFlag(false);
     setLavaTile();
     setDangerZone([]);
-    incrementPlayerTurn();
+
+    console.log(numberOfEruptionTurns - initialEruptionCounter + 1);
+    if (initialEruptionCounter) {
+      setInitialEruptionCounter(initialEruptionCounter - 1);
+      incrementPlayerTurn();
+    } else {
+      setRunFlag(2);
+      runForYourLives();
+    }
   };
 
   return (
@@ -508,12 +562,15 @@ const MainContainer = props => {
           wildLavaFlag,
           setWildLavaFlag,
           noPlaceToPlaceFlag,
-          resolveNoPlaceToPlace
+          resolveNoPlaceToPlace,
+          runFlag
         }}
         lavaTile={lavaTile}
         highlightDangerZones={highlightDangerZones}
         dangerZone={dangerZone}
         placeLavaTile={placeLavaTile}
+        selectRunner={selectRunner}
+        runZone={runZone}
       />
     </div>
   );

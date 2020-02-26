@@ -126,9 +126,19 @@ fieldset {
         width: $people-size;
         text-align: center;
         border-radius: 50%;
-        border: 1px solid #000000;
+        border-style: solid;
+        border-width: 1px;
+        border-color: #000000;
         span {
           color: #ffffff;
+        }
+        &:hover {
+          opacity: 1;
+        }
+        &.highlight:hover {
+          -moz-box-shadow: 0px 0px 3px 3px yellow;
+          -webkit-box-shadow: 0px 0px 3px 3px yellow;
+          box-shadow: 0px 0px 3px 3px yellow;
         }
       }
     }
