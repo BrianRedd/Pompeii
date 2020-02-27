@@ -8,7 +8,7 @@ import _ from "lodash";
 import actions from "../redux/Actions";
 import * as types from "../types/types";
 import * as constant from "../data/constants";
-import { gridByColor, voidSquares } from "../data/gridData";
+import { gridByColor, voidLavaSquares, voidRunSquares } from "../data/gridData";
 
 import Main from "./Main";
 
@@ -409,7 +409,7 @@ const MainContainer = props => {
         warmZones.filter(zone => {
           return (
             !_.get(gridState, `grid.${zone}.lava`) &&
-            !voidSquares.includes(zone)
+            !voidLavaSquares.includes(zone)
           );
         })
       );
@@ -486,20 +486,55 @@ const MainContainer = props => {
       return;
     }
 
-    const neighbors = _.get(gridState, `grid.${square}.occupants.length`);
-    console.log(`Square ${square} has ${neighbors} people in it`);
+    const pop = _.get(gridState, `grid.${square}.occupants.length`);
+    console.log(`Square ${square} has ${pop} people in it`);
 
     const coord = square.split("_");
+    const coord0 = parseFloat(coord[0]);
+    const coord1 = parseFloat(coord[1]);
     const targetZones = [];
-    for (let x = 1; x <= neighbors; x += 1) {
-      targetZones.push(
-        `${Math.min(parseFloat(coord[0]) + x, 6)}_${coord[1]}`,
-        `${Math.max(parseFloat(coord[0]) - x, 0)}_${coord[1]}`,
-        `${coord[0]}_${Math.min(parseFloat(coord[1]) + x, 10)}`,
-        `${coord[0]}_${Math.max(parseFloat(coord[1]) - x, 0)}`
-      );
+
+    for (let xx = pop; xx >= 0; xx -= 1) {
+      for (let yy = 0; yy <= pop - xx; yy += 1) {
+        targetZones.push(
+          `${Math.min(coord0 + xx, 7)}_${Math.min(
+            coord1 + Math.abs(pop - xx - yy),
+            11
+          )}`
+        );
+        targetZones.push(
+          `${Math.max(coord0 - xx, -1)}_${Math.min(
+            coord1 + Math.abs(pop - xx - yy),
+            11
+          )}`
+        );
+        targetZones.push(
+          `${Math.min(coord0 + xx, 7)}_${Math.max(
+            coord1 - Math.abs(pop - xx - yy),
+            -1
+          )}`
+        );
+        targetZones.push(
+          `${Math.max(coord0 - xx, -1)}_${Math.max(
+            coord1 - Math.abs(pop - xx - yy),
+            -1
+          )}`
+        );
+      }
     }
-    setRunZone(_.uniqBy(targetZones));
+
+    setRunZone(
+      _.uniqBy(
+        targetZones.filter(zone => {
+          return (
+            zone !== square &&
+            !_.get(gridState, `grid.${zone}.ventName`) &&
+            !_.get(gridState, `grid.${zone}.lava`) &&
+            !voidRunSquares.includes(zone)
+          );
+        })
+      )
+    );
   };
 
   /**
