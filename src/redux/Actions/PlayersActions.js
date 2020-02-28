@@ -94,8 +94,19 @@ export const setPlayerturn = player => ({
 export const incrementPlayerTurn = () => (dispatch, getState) => {
   const {
     playersState,
-    messageState: { stage }
+    messageState: { stage },
+    tileState: { pile }
   } = getState();
+
+  // game over?
+  if (
+    pile.length === 0 ||
+    Object.values(playersState.details).map(arr => arr.population) === 0
+  ) {
+    alert("Game Over!");
+  }
+
+  // get next player
   const nextPlayer = (playersState.turn + 1) % playersState.players.length;
   dispatch(setPlayerturn(nextPlayer));
   dispatch(

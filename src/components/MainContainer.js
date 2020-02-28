@@ -467,16 +467,12 @@ const MainContainer = props => {
    * @description player can now run two of their people
    */
   const runForYourLives = async () => {
-    console.log("Run!");
     await updateInstructions({
       text: `${_.get(playersState, `details[${activePlayer}].name`)}: ${
         constant.RUN
       }`,
       color: _.get(playersState, `details[${activePlayer}].color`)
     });
-
-    // alert("Run!");
-    // incrementPlayerTurn();
   };
 
   /**
@@ -569,6 +565,8 @@ const MainContainer = props => {
 
     if (initialEruptionCounter) {
       setInitialEruptionCounter(initialEruptionCounter - 1);
+      incrementPlayerTurn();
+    } else if (_.get(playersState, `details[${activePlayer}].population`) < 1) {
       incrementPlayerTurn();
     } else {
       setRunFlag(2);
