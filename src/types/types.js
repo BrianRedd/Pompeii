@@ -58,12 +58,14 @@ export const playersState = {
   types: shape({
     players: arrayOf(string),
     details: playerDetails.types,
-    turn: number
+    turn: number,
+    totalTurns: number
   }),
   defaults: {
     players: ["player1"],
     details: playerDetails.defaults,
-    turn: 0
+    turn: 0,
+    totalTurns: 0
   }
 };
 
@@ -72,7 +74,8 @@ export const playersState = {
 export const occupant = {
   types: shape({
     player: string,
-    gender: string
+    gender: string,
+    lastMoved: number
   })
 };
 

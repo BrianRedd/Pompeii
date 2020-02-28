@@ -11,6 +11,7 @@ import { compareCards } from "../../utils/utilsCommon";
  */
 const playersState = (state = types.playersState.defaults, action) => {
   const { type, payload } = action;
+  let totalTurns;
   switch (type) {
     case actions.SET_PLAYERS_ARRAY:
       return {
@@ -74,14 +75,18 @@ const playersState = (state = types.playersState.defaults, action) => {
           ...state.details,
           [payload.playerId]: {
             ...state.details[payload.playerId],
-            saved: state.details[payload.playerId].saved + payload.saved
+            saved: state.details[payload.playerId].saved + payload.saved,
+            population:
+              state.details[payload.playerId].population - payload.saved
           }
         }
       };
     case actions.SET_PLAYER_TURN:
+      totalTurns = state.totalTurns + 1;
       return {
         ...state,
-        turn: payload
+        turn: payload,
+        totalTurns
       };
     default:
       return state;

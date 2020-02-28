@@ -11,7 +11,7 @@ import { ButtonBase } from "@material-ui/core";
  * @returns {React.Component} - Rendered component.
  */
 const Tiles = props => {
-  const { deckSizes, pileEnabled, drawTile, lavaTile } = props;
+  const { deckSizes, pileEnabled, drawTile, lavaTile, playerColor } = props;
 
   return (
     <Row data-test="presentation-tiles">
@@ -22,6 +22,7 @@ const Tiles = props => {
             focusRipple
             disabled={!pileEnabled}
             onClick={() => drawTile()}
+            style={pileEnabled ? { borderColor: `rgb(${playerColor})` } : {}}
           >
             {lavaTile ? (
               <img alt={lavaTile} src={`/assets/tiles/${lavaTile}.png`} />
@@ -42,6 +43,7 @@ Tiles.propTypes = {
     discard: PropTypes.number,
     tiles: PropTypes.number
   }),
+  playerColor: PropTypes.string,
   lavaTile: PropTypes.string,
   pileEnabled: PropTypes.bool,
   drawTile: PropTypes.func
@@ -53,6 +55,7 @@ Tiles.defaultProps = {
     discard: 0,
     tiles: 0
   },
+  playerColor: "",
   lavaTile: null,
   pileEnabled: false,
   drawTile: () => {}

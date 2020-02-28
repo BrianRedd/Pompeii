@@ -42,9 +42,9 @@ const OccupancySquare = ({
           }}
           onClick={() => {
             if (runFlag) {
-              selectRunner(key, square);
+              selectRunner(person, square);
             } else {
-              performSacrifice(key, square);
+              performSacrifice(person, square);
             }
           }}
         >

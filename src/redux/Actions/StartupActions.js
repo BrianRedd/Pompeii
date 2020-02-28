@@ -33,24 +33,27 @@ export const gameSetup = numberOfPlayers => async dispatch => {
     };
   });
 
-  // START PRE-POPULATION (TEST)
-  const playersArray = ["player1", "player2", "player3"];
-  const gridKeys = Object.keys(gridSquares);
-  gridKeys.forEach(grid => {
-    const potentialPop = _.get(gridSquares, `${grid}.buildingCapacity`, 0);
-    const actualPop = Math.round(Math.random() * potentialPop);
-    const occupants = [];
-    for (let i = 0; i < actualPop; i += 1) {
-      const player = playersArray[Math.floor(Math.random() * 3)];
-      occupants.push({
-        player,
-        gender: "male"
-      });
-      details[player].population += 1;
-    }
-    gridSquares[grid].occupants = occupants;
-  });
-  // END PRE-POPULATION (TEST)
+  const testMode = true;
+  if (testMode) {
+    // START PRE-POPULATION (TEST)
+    const playersArray = ["player1", "player2", "player3"];
+    const gridKeys = Object.keys(gridSquares);
+    gridKeys.forEach(grid => {
+      const potentialPop = _.get(gridSquares, `${grid}.buildingCapacity`, 0);
+      const actualPop = Math.round(Math.random() * potentialPop);
+      const occupants = [];
+      for (let i = 0; i < actualPop; i += 1) {
+        const player = playersArray[Math.floor(Math.random() * 3)];
+        occupants.push({
+          player,
+          gender: Math.floor(Math.random() * 2) === 1 ? "male" : "female"
+        });
+        details[player].population += 1;
+      }
+      gridSquares[grid].occupants = occupants;
+    });
+    // END PRE-POPULATION (TEST)
+  }
 
   await dispatch(addGrid(gridSquares));
   await dispatch(addPlayers(details));

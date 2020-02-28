@@ -8,7 +8,12 @@ import _ from "lodash";
 import actions from "../redux/Actions";
 import * as types from "../types/types";
 import * as constant from "../data/constants";
-import { gridByColor, voidLavaSquares, voidRunSquares } from "../data/gridData";
+import {
+  gridByColor,
+  voidLavaSquares,
+  voidRunSquares,
+  escapeSquares
+} from "../data/gridData";
 
 import Main from "./Main";
 
@@ -33,6 +38,7 @@ const mapDispatchToProps = {
   incrementStage: actions.incrementStage,
   incrementPlayerPopulation: actions.incrementPlayerPopulation,
   incrementPlayerCasualties: actions.incrementPlayerCasualties,
+  incrementPlayerSaved: actions.incrementPlayerSaved,
   takeTile: actions.takeTile,
   placeLavaTileOnSquare: actions.placeLavaTileOnSquare
 };
@@ -54,6 +60,7 @@ const MainContainer = props => {
     discardCard,
     takeTile,
     incrementPlayerTurn,
+    incrementPlayerSaved,
     updatePlayerHand,
     updateInstructions,
     placePeopleInSquare,
@@ -104,6 +111,8 @@ const MainContainer = props => {
 
   const [runFlag, setRunFlag] = useState(0);
   const [runZone, setRunZone] = useState([]);
+  const [runFromSquare, setRunFromSquare] = useState();
+  const [runner, setRunner] = useState();
 
   /**
    * @function placeRelatives
@@ -283,18 +292,17 @@ const MainContainer = props => {
   /**
    * @function performSacrifice
    * @description upon selection of person, sacrifice if not your own
-   * @param {String} id
+   * @param {Object} personObj
    * @param {String} square
    */
-  const performSacrifice = (id, square) => {
-    const idArray = id.split("-");
-    if (!omenFlag || idArray[0] === activePlayer) return;
+  const performSacrifice = (personObj, square) => {
+    if (!omenFlag || personObj.player === activePlayer) return;
 
     const currentOccupants = _.get(gridState, `grid.${square}.occupants`, []);
 
     const idx = currentOccupants
       .map(person => person.player)
-      .indexOf(idArray[0]);
+      .indexOf(personObj.player);
     currentOccupants.splice(idx, 1);
 
     if (!readyForSacrifice) return;
@@ -304,11 +312,11 @@ const MainContainer = props => {
         `details[${activePlayer}].name`
       )} SACRIFICES one of ${_.get(
         playersState,
-        `details[${idArray[0]}].name`
+        `details[${personObj.player}].name`
       )}'s people! (click to continue)`
     );
     placePeopleInSquare(square, currentOccupants);
-    incrementPlayerCasualties(idArray[0], 1);
+    incrementPlayerCasualties(personObj.player, 1);
 
     setReadyForSacrifice(false);
     setOmenFlag(false);
@@ -474,15 +482,20 @@ const MainContainer = props => {
   /**
    * @function selectRunner
    * @description select person to run
-   * @param {String} key - person
+   * @param {Object} person - person object
    * @param {String} square - square
    */
-  const selectRunner = (key, square) => {
-    console.log("key:", key);
+  const selectRunner = (person, square) => {
+    setRunner(person);
+    console.log("key:", person);
 
-    const player = key.split("-")[0];
-    if (player !== activePlayer) {
+    setRunFromSquare(square);
+    if (person.player !== activePlayer) {
       console.log("Not your person!");
+      return;
+    }
+    if (person.lastMoved === playersState.totalTurns) {
+      console.log("Already ran this person this turn!");
       return;
     }
 
@@ -554,13 +567,53 @@ const MainContainer = props => {
     setLavaTile();
     setDangerZone([]);
 
-    console.log(numberOfEruptionTurns - initialEruptionCounter + 1);
     if (initialEruptionCounter) {
       setInitialEruptionCounter(initialEruptionCounter - 1);
       incrementPlayerTurn();
     } else {
       setRunFlag(2);
       runForYourLives();
+    }
+  };
+
+  /**
+   * @function runToSquare
+   * @description handle person running from one square to another
+   * @param {String} player
+   * @param {String} fromSquare
+   * @param {String} toSquare
+   */
+  const runToSquare = toSquare => {
+    let numberOfRuns = runFlag;
+
+    const oldSquareOccupants = _.get(
+      gridState,
+      `grid.${runFromSquare}.occupants`
+    );
+    const oldSquareIdx = oldSquareOccupants
+      .map(person => person.player)
+      .indexOf(activePlayer);
+    oldSquareOccupants.splice(oldSquareIdx, 1);
+    placePeopleInSquare(runFromSquare, oldSquareOccupants);
+
+    if (escapeSquares.includes(toSquare)) {
+      incrementPlayerSaved(activePlayer, 1);
+    } else {
+      const newSquareOccupants = _.get(gridState, `grid.${toSquare}.occupants`);
+      newSquareOccupants.push({
+        player: activePlayer,
+        gender: runner.gender,
+        lastMoved:
+          oldSquareOccupants.length > 0 ? playersState.totalTurns : undefined
+      });
+    }
+
+    numberOfRuns -= 1;
+    setRunFlag(numberOfRuns);
+    setRunZone([]);
+    setRunner();
+    if (!numberOfRuns) {
+      incrementPlayerTurn();
     }
   };
 
@@ -580,7 +633,7 @@ const MainContainer = props => {
           !placingPersonFlag &&
           !omenFlag
         }
-        pileEnabled={messageState.stage === 2 && !placingLavaFlag}
+        pileEnabled={messageState.stage === 2 && !placingLavaFlag && !runFlag}
         playPompCard={playPompCard}
         cardGrid={cardGrid}
         placePerson={placePerson}
@@ -606,6 +659,7 @@ const MainContainer = props => {
         placeLavaTile={placeLavaTile}
         selectRunner={selectRunner}
         runZone={runZone}
+        runToSquare={runToSquare}
       />
     </div>
   );
@@ -628,6 +682,7 @@ MainContainer.propTypes = {
   incrementStage: PropTypes.func,
   incrementPlayerPopulation: PropTypes.func,
   incrementPlayerCasualties: PropTypes.func,
+  incrementPlayerSaved: PropTypes.func,
   placeLavaTileOnSquare: PropTypes.func
 };
 
@@ -648,6 +703,7 @@ MainContainer.defaultProps = {
   incrementStage: () => {},
   incrementPlayerPopulation: () => {},
   incrementPlayerCasualties: () => {},
+  incrementPlayerSaved: () => {},
   placeLavaTileOnSquare: () => {}
 };
 

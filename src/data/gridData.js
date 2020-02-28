@@ -375,3 +375,13 @@ export const voidRunSquares = [
   "6_11",
   "7_11"
 ];
+
+export const escapeSquares = [
+  "-1_5",
+  "0_9",
+  "0_-1",
+  "4_-1",
+  "4_11",
+  "7_6",
+  "7_8"
+];

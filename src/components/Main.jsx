@@ -44,7 +44,8 @@ const Main = props => {
     dangerZone,
     placeLavaTile,
     selectRunner,
-    runZone
+    runZone,
+    runToSquare
   } = props;
 
   return (
@@ -87,6 +88,7 @@ const Main = props => {
                 tileState={tileState}
                 drawTile={drawTile}
                 pileEnabled={pileEnabled}
+                playersState={playersState}
               />
             )}
           <PlayersContainer
@@ -112,10 +114,7 @@ const Main = props => {
           return (
             <PlacementHighlighter
               gridArray={runZone}
-              selectSquare={val => {
-                console.log("Run to", val);
-                // placeLavaTile(val);
-              }}
+              selectSquare={runToSquare}
               validation={() => {
                 return true;
               }}
@@ -171,7 +170,8 @@ Main.propTypes = {
   performSacrifice: PropTypes.func,
   highlightDangerZones: PropTypes.func,
   placeLavaTile: PropTypes.func,
-  selectRunner: PropTypes.func
+  selectRunner: PropTypes.func,
+  runToSquare: PropTypes.func
 };
 
 Main.defaultProps = {
@@ -207,7 +207,8 @@ Main.defaultProps = {
   performSacrifice: () => {},
   highlightDangerZones: () => {},
   placeLavaTile: () => {},
-  selectRunner: () => {}
+  selectRunner: () => {},
+  runToSquare: () => {}
 };
 
 export default Main;
