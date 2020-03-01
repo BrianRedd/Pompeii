@@ -19,31 +19,12 @@ import Main from "./Main";
 
 const mapStateToProps = state => {
   return {
-    cardsState: state.cardsState,
-    flagsState: state.flagsState,
-    gridState: state.gridState,
-    messageState: state.messageState,
-    playersState: state.playersState,
-    tileState: state.tileState
+    ...state
   };
 };
 
 const mapDispatchToProps = {
-  gameSetup: actions.gameSetup,
-  takeCard: actions.takeCard,
-  discardCard: actions.discardCard,
-  incrementPlayerTurn: actions.incrementPlayerTurn,
-  updatePlayerHand: actions.updatePlayerHand,
-  updateInstructions: actions.updateInstructions,
-  placePeopleInSquare: actions.placePeopleInSquare,
-  incrementStage: actions.incrementStage,
-  incrementPlayerPopulation: actions.incrementPlayerPopulation,
-  incrementPlayerCasualties: actions.incrementPlayerCasualties,
-  incrementPlayerSaved: actions.incrementPlayerSaved,
-  takeTile: actions.takeTile,
-  placeLavaTileOnSquare: actions.placeLavaTileOnSquare,
-  toggleFlags: actions.toggleFlags,
-  setRunCounter: actions.setRunCounter
+  ...actions
 };
 
 /**
@@ -620,15 +601,10 @@ const MainContainer = props => {
   return (
     <div data-test="container-main">
       <Main
-        cardsState={cardsState}
         flagsState={flagsState}
-        gridState={gridState}
         messageState={messageState}
-        playersState={playersState}
         tileState={tileState}
         drawCard={drawCard}
-        discardCard={discardCard}
-        updatePlayerHand={updatePlayerHand}
         deckEnabled={
           _.get(playersState, `details[${activePlayer}].hand.length`) < 4 &&
           !placingPersonFlag &&

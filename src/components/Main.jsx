@@ -22,16 +22,11 @@ import LavaTileSidebar from "./Sidebars/LavaTileSidebar";
  */
 const Main = props => {
   const {
-    cardsState,
     flagsState,
-    gridState,
     messageState,
-    playersState,
     tileState,
     deckEnabled,
     drawCard,
-    discardCard,
-    updatePlayerHand,
     playPompCard,
     cardGrid,
     placePerson,
@@ -53,9 +48,6 @@ const Main = props => {
     <Col data-test="presentation-main" className="main-container">
       <Row>
         <BoardContainer
-          messageState={messageState}
-          gridState={gridState}
-          playersState={playersState}
           performSacrifice={performSacrifice}
           runFlag={flagsState.runCounter}
           selectRunner={selectRunner}
@@ -73,12 +65,7 @@ const Main = props => {
             />
           )}
           {messageState.stage < 2 && !flags.ad79Flag && !flags.lavaFlag && (
-            <DeckContainer
-              cardsState={cardsState}
-              playersState={playersState}
-              drawCard={drawCard}
-              deckEnabled={deckEnabled}
-            />
+            <DeckContainer drawCard={drawCard} deckEnabled={deckEnabled} />
           )}
           {messageState.stage === 2 &&
             !flags.ad79Flag &&
@@ -86,16 +73,11 @@ const Main = props => {
             !flags.noPlaceToPlaceFlag && (
               <TilesContainer
                 lavaTile={flags.lavaFlag ? lavaTile : null}
-                tileState={tileState}
                 drawTile={drawTile}
                 pileEnabled={pileEnabled}
-                playersState={playersState}
               />
             )}
           <PlayersContainer
-            playersState={playersState}
-            discardCard={discardCard}
-            updatePlayerHand={updatePlayerHand}
             playPompCard={playPompCard}
             stage={messageState.stage}
           />
@@ -139,11 +121,8 @@ const Main = props => {
 };
 
 Main.propTypes = {
-  cardsState: types.cardsState.types,
   flagsState: types.flagsState.types,
-  gridState: types.gridState.types,
   messageState: types.messageState.types,
-  playersState: types.playersState.types,
   tileState: types.tileState.types,
   cardGrid: PropTypes.arrayOf(PropTypes.string),
   dangerZone: PropTypes.arrayOf(PropTypes.string),
@@ -162,9 +141,7 @@ Main.propTypes = {
   deckEnabled: PropTypes.bool,
   pileEnabled: PropTypes.bool,
   drawCard: PropTypes.func,
-  discardCard: PropTypes.func,
   drawTile: PropTypes.func,
-  updatePlayerHand: PropTypes.func,
   playPompCard: PropTypes.func,
   placePerson: PropTypes.func,
   vacancy: PropTypes.func,
@@ -176,11 +153,8 @@ Main.propTypes = {
 };
 
 Main.defaultProps = {
-  cardsState: types.cardsState.defaults,
   flagsState: types.flagsState.defaults,
-  gridState: types.gridState.defaults,
   messageState: types.messageState.defaults,
-  playersState: types.playersState.defaults,
   tileState: types.tileState.defaults,
   cardGrid: [],
   dangerZone: [],
@@ -199,9 +173,7 @@ Main.defaultProps = {
   deckEnabled: false,
   pileEnabled: false,
   drawCard: () => {},
-  discardCard: () => {},
   drawTile: () => {},
-  updatePlayerHand: () => {},
   playPompCard: () => {},
   placePerson: () => {},
   vacancy: () => {},

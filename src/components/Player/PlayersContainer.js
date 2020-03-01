@@ -1,12 +1,26 @@
 /** @module PlayersContainer */
 
 import React from "react";
+import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import _ from "lodash";
 
+import actions from "../../redux/Actions";
 import * as types from "../../types/types";
 
 import Player from "./Player";
+
+const mapStateToProps = state => {
+  return {
+    flagsState: state.flagsState,
+    playersState: state.playersState
+  };
+};
+
+const mapDispatchToProps = {
+  discardCard: actions.discardCard,
+  updatePlayerHand: actions.updatePlayerHand
+};
 
 /**
  * @function PlayerCards
@@ -87,4 +101,5 @@ PlayersContainer.defaultProps = {
   playPompCard: () => {}
 };
 
-export default PlayersContainer;
+export const PlayersContainerTest = PlayersContainer;
+export default connect(mapStateToProps, mapDispatchToProps)(PlayersContainer);

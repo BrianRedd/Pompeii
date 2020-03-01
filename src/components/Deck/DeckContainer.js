@@ -1,12 +1,21 @@
 /** @module DeckContainer */
 
 import React, { useState, useEffect } from "react";
+import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import _ from "lodash";
 
 import * as types from "../../types/types";
 
 import Deck from "./Deck";
+
+const mapStateToProps = state => {
+  return {
+    cardsState: state.cardsState,
+    flagsState: state.flagsState,
+    playersState: state.playersState
+  };
+};
 
 /**
  * @function DeckContainer
@@ -61,4 +70,5 @@ DeckContainer.defaultProps = {
   drawCard: () => {}
 };
 
-export default DeckContainer;
+export const DeckContainerTest = DeckContainer;
+export default connect(mapStateToProps)(DeckContainer);

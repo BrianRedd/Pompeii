@@ -1,12 +1,22 @@
 /** @module BoardContainer */
 
 import React from "react";
+import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
 import * as types from "../../types/types";
 
 import Board from "./Board";
 import OccupancyLayer from "./OccupancyLayer";
+
+const mapStateToProps = state => {
+  return {
+    flagsState: state.flagsState,
+    gridState: state.gridState,
+    messageState: state.messageState,
+    playersState: state.playersState
+  };
+};
 
 /**
  * @function BoardContainer
@@ -16,10 +26,10 @@ import OccupancyLayer from "./OccupancyLayer";
 const BoardContainer = props => {
   const {
     messageState,
+    flagsState: { runCounter },
     gridState,
     playersState,
     performSacrifice,
-    runFlag,
     selectRunner
   } = props;
   return (
@@ -29,7 +39,7 @@ const BoardContainer = props => {
         gridState={gridState}
         playersState={playersState}
         performSacrifice={performSacrifice}
-        runFlag={runFlag}
+        runCounter={runCounter}
         selectRunner={selectRunner}
       />
     </div>
@@ -37,21 +47,22 @@ const BoardContainer = props => {
 };
 
 BoardContainer.propTypes = {
+  flagsState: types.flagsState.types,
   gridState: types.gridState.types,
   messageState: types.messageState.types,
   playersState: types.playersState.types,
-  runFlag: PropTypes.number,
   performSacrifice: PropTypes.func,
   selectRunner: PropTypes.func
 };
 
 BoardContainer.defaultProps = {
+  flagsState: types.flagsState.defaults,
   gridState: types.gridState.defaults,
   messageState: types.messageState.defaults,
   playersState: types.playersState.defaults,
-  runFlag: 0,
   performSacrifice: () => {},
   selectRunner: () => {}
 };
 
-export default BoardContainer;
+export const BoardContainerTest = BoardContainer;
+export default connect(mapStateToProps)(BoardContainer);

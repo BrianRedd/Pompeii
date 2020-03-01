@@ -1,6 +1,7 @@
 /** @module TilesContainer */
 
 import React from "react";
+import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import _ from "lodash";
 
@@ -8,13 +9,21 @@ import * as types from "../../types/types";
 
 import Tiles from "./Tiles";
 
+const mapStateToProps = state => {
+  return {
+    flagsState: state.flagsState,
+    playersState: state.playersState,
+    tileState: state.tileState
+  };
+};
+
 /**
  * @function TilesContainer
  * @description Functional Container component for Tiles
  * @returns {React.Component} - Rendered component.
  */
 const TilesContainer = props => {
-  const { playersState, pileEnabled, drawTile, tileState, lavaTile } = props;
+  const { playersState, tileState, pileEnabled, drawTile, lavaTile } = props;
 
   return (
     <div data-test="container-tiles" className="deck-container">
@@ -50,4 +59,5 @@ TilesContainer.defaultProps = {
   drawTile: () => {}
 };
 
-export default TilesContainer;
+export const TilesContainerTest = TilesContainer;
+export default connect(mapStateToProps)(TilesContainer);
