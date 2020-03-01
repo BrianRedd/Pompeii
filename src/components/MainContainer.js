@@ -20,6 +20,7 @@ import Main from "./Main";
 const mapStateToProps = state => {
   return {
     cardsState: state.cardsState,
+    flagsState: state.flagsState,
     gridState: state.gridState,
     messageState: state.messageState,
     playersState: state.playersState,
@@ -40,7 +41,9 @@ const mapDispatchToProps = {
   incrementPlayerCasualties: actions.incrementPlayerCasualties,
   incrementPlayerSaved: actions.incrementPlayerSaved,
   takeTile: actions.takeTile,
-  placeLavaTileOnSquare: actions.placeLavaTileOnSquare
+  placeLavaTileOnSquare: actions.placeLavaTileOnSquare,
+  toggleFlags: actions.toggleFlags,
+  setRunCounter: actions.setRunCounter
 };
 
 /**
@@ -51,6 +54,7 @@ const mapDispatchToProps = {
 const MainContainer = props => {
   const {
     cardsState,
+    flagsState,
     gridState,
     messageState,
     playersState,
@@ -67,7 +71,8 @@ const MainContainer = props => {
     incrementStage,
     incrementPlayerPopulation,
     incrementPlayerCasualties,
-    placeLavaTileOnSquare
+    placeLavaTileOnSquare,
+    setRunCounter
   } = props;
 
   const numberOfPlayers = 3;
@@ -109,7 +114,6 @@ const MainContainer = props => {
     numberOfEruptionTurns
   );
 
-  const [runFlag, setRunFlag] = useState(0);
   const [runZone, setRunZone] = useState([]);
   const [runFromSquare, setRunFromSquare] = useState();
   const [runner, setRunner] = useState();
@@ -483,7 +487,6 @@ const MainContainer = props => {
    */
   const selectRunner = (person, square) => {
     setRunner(person);
-    console.log("key:", person);
 
     setRunFromSquare(square);
     if (person.player !== activePlayer) {
@@ -496,7 +499,6 @@ const MainContainer = props => {
     }
 
     const pop = _.get(gridState, `grid.${square}.occupants.length`);
-    console.log(`Square ${square} has ${pop} people in it`);
 
     const coord = square.split("_");
     const coord0 = parseFloat(coord[0]);
@@ -569,7 +571,7 @@ const MainContainer = props => {
     } else if (_.get(playersState, `details[${activePlayer}].population`) < 1) {
       incrementPlayerTurn();
     } else {
-      setRunFlag(2);
+      setRunCounter(2);
       runForYourLives();
     }
   };
@@ -582,7 +584,7 @@ const MainContainer = props => {
    * @param {String} toSquare
    */
   const runToSquare = toSquare => {
-    let numberOfRuns = runFlag;
+    let numberOfRuns = flagsState.runCounter;
 
     const oldSquareOccupants = _.get(
       gridState,
@@ -607,7 +609,7 @@ const MainContainer = props => {
     }
 
     numberOfRuns -= 1;
-    setRunFlag(numberOfRuns);
+    setRunCounter(numberOfRuns);
     setRunZone([]);
     setRunner();
     if (!numberOfRuns) {
@@ -619,6 +621,7 @@ const MainContainer = props => {
     <div data-test="container-main">
       <Main
         cardsState={cardsState}
+        flagsState={flagsState}
         gridState={gridState}
         messageState={messageState}
         playersState={playersState}
@@ -631,7 +634,9 @@ const MainContainer = props => {
           !placingPersonFlag &&
           !omenFlag
         }
-        pileEnabled={messageState.stage === 2 && !placingLavaFlag && !runFlag}
+        pileEnabled={
+          messageState.stage === 2 && !placingLavaFlag && !flagsState.runCounter
+        }
         playPompCard={playPompCard}
         cardGrid={cardGrid}
         placePerson={placePerson}
@@ -648,8 +653,7 @@ const MainContainer = props => {
           wildLavaFlag,
           setWildLavaFlag,
           noPlaceToPlaceFlag,
-          resolveNoPlaceToPlace,
-          runFlag
+          resolveNoPlaceToPlace
         }}
         lavaTile={lavaTile}
         highlightDangerZones={highlightDangerZones}
@@ -665,6 +669,7 @@ const MainContainer = props => {
 
 MainContainer.propTypes = {
   cardsState: types.cardsState.types,
+  flagsState: types.flagsState.types,
   gridState: types.gridState.types,
   messageState: types.messageState.types,
   playersState: types.playersState.types,
@@ -681,11 +686,13 @@ MainContainer.propTypes = {
   incrementPlayerPopulation: PropTypes.func,
   incrementPlayerCasualties: PropTypes.func,
   incrementPlayerSaved: PropTypes.func,
-  placeLavaTileOnSquare: PropTypes.func
+  placeLavaTileOnSquare: PropTypes.func,
+  setRunCounter: PropTypes.func
 };
 
 MainContainer.defaultProps = {
   cardsState: types.cardsState.defaults,
+  flagsState: types.flagsState.defaults,
   gridState: types.gridState.defaults,
   messageState: types.messageState.defaults,
   playersState: types.playersState.defaults,
@@ -702,7 +709,8 @@ MainContainer.defaultProps = {
   incrementPlayerPopulation: () => {},
   incrementPlayerCasualties: () => {},
   incrementPlayerSaved: () => {},
-  placeLavaTileOnSquare: () => {}
+  placeLavaTileOnSquare: () => {},
+  setRunCounter: () => {}
 };
 
 export const MainContainerTest = MainContainer;

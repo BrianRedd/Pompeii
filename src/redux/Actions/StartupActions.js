@@ -33,7 +33,7 @@ export const gameSetup = numberOfPlayers => async dispatch => {
     };
   });
 
-  const testMode = false;
+  const testMode = true;
   if (testMode) {
     // START PRE-POPULATION (TEST)
     const playersArray = ["player1", "player2", "player3"];

@@ -23,6 +23,7 @@ import LavaTileSidebar from "./Sidebars/LavaTileSidebar";
 const Main = props => {
   const {
     cardsState,
+    flagsState,
     gridState,
     messageState,
     playersState,
@@ -56,7 +57,7 @@ const Main = props => {
           gridState={gridState}
           playersState={playersState}
           performSacrifice={performSacrifice}
-          runFlag={flags.runFlag}
+          runFlag={flagsState.runCounter}
           selectRunner={selectRunner}
         />
         <div className="off-board">
@@ -110,7 +111,7 @@ const Main = props => {
             />
           );
         }
-        if (flags.runFlag) {
+        if (flagsState.runCounter) {
           return (
             <PlacementHighlighter
               gridArray={runZone}
@@ -139,6 +140,7 @@ const Main = props => {
 
 Main.propTypes = {
   cardsState: types.cardsState.types,
+  flagsState: types.flagsState.types,
   gridState: types.gridState.types,
   messageState: types.messageState.types,
   playersState: types.playersState.types,
@@ -154,8 +156,7 @@ Main.propTypes = {
     wildLavaFlag: PropTypes.bool,
     setWildLavaFlag: PropTypes.func,
     noPlaceToPlaceFlag: PropTypes.bool,
-    resolveNoPlaceToPlace: PropTypes.func,
-    runFlag: PropTypes.number
+    resolveNoPlaceToPlace: PropTypes.func
   }),
   lavaTile: PropTypes.string,
   deckEnabled: PropTypes.bool,
@@ -176,6 +177,7 @@ Main.propTypes = {
 
 Main.defaultProps = {
   cardsState: types.cardsState.defaults,
+  flagsState: types.flagsState.defaults,
   gridState: types.gridState.defaults,
   messageState: types.messageState.defaults,
   playersState: types.playersState.defaults,
@@ -191,8 +193,7 @@ Main.defaultProps = {
     wildLavaFlag: false,
     setWildLavaFlag: () => {},
     noPlaceToPlaceFlag: false,
-    resolveNoPlaceToPlace: () => {},
-    runFlag: 0
+    resolveNoPlaceToPlace: () => {}
   },
   lavaTile: "",
   deckEnabled: false,
