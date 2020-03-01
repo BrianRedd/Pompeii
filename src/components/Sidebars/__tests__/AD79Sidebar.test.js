@@ -11,7 +11,7 @@ const defaultProps = {
 };
 
 test("renders without error", () => {
-  const wrapper = commonSetup(TestedComponent);
+  const wrapper = commonSetup(TestedComponent, defaultProps);
   const component = findByTestAttr(wrapper, "sidebar-ad79");
   expect(component.length).toBe(1);
 });

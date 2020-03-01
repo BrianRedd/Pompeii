@@ -116,7 +116,7 @@ export const messageState = {
     })
   }),
   defaults: {
-    stage: 2,
+    stage: 0,
     instruction: {
       text: "",
       color: ""
@@ -147,5 +147,18 @@ export const tileState = {
   defaults: {
     tiles: tiles.defaults,
     pile: pile.defaults
+  }
+};
+
+// flags types
+
+export const flagsState = {
+  types: shape({
+    flags: arrayOf(string),
+    runCounter: number
+  }),
+  defaults: {
+    flags: [],
+    runCounter: 0
   }
 };

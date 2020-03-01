@@ -1,4 +1,4 @@
-/** MessageReducer.test */
+/** @module MessageReducer.test */
 
 import * as actionTypes from "../../ActionTypes";
 import Reducer from "../MessageReducer";

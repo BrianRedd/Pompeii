@@ -35,7 +35,7 @@ const LavaTileSidebar = props => {
           <h4 className="text-danger">{`No Place For ${lavaTile} To Be Placed!`}</h4>
           <figure>
             <ButtonBase
-              data-test="button-lavatile"
+              data-test="button-continue"
               onClick={resolveNoPlaceToPlace}
             >
               <img alt={lavaTile} src={`/assets/tiles/${lavaTile}.png`} />

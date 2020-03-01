@@ -29,3 +29,7 @@ export const UPDATE_INSTRUCTIONS = "UPDATE_INSTRUCTIONS";
 export const ADD_TILES = "ADD_TILES";
 export const ADD_TILE_PILE = "ADD_TILE_PILE";
 export const TAKE_TILE = "TAKE_TILE";
+
+// flag actions
+export const TOGGLE_FLAGS = "TOGGLE_FLAGS";
+export const SET_RUN_COUNTER = "SET_RUN_COUNTER";

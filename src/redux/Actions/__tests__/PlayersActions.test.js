@@ -128,7 +128,8 @@ describe("incrementPlayerTurn", () => {
         }
       }
     },
-    messageState: { stage: 0 }
+    messageState: { stage: 0 },
+    tileState: { pile: [] }
   };
   test("0 -> 1", () => {
     const thisState = { ...initialState };

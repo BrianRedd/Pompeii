@@ -114,9 +114,13 @@ test("should handle INCREMENT_PLAYER_SAVED action", () => {
     type: actionTypes.INCREMENT_PLAYER_SAVED,
     payload
   };
-  const state = Reducer({ details: { player1: { saved: 0 } } }, action);
+  const state = Reducer(
+    { details: { player1: { population: 2, saved: 0 } } },
+    action
+  );
   expect(state.details).toEqual({
     player1: {
+      population: 1,
       saved: 1
     }
   });
