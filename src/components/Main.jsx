@@ -53,7 +53,7 @@ const Main = props => {
           selectRunner={selectRunner}
         />
         <div className="off-board">
-          {flags.ad79Flag && <AD79Sidebar setAD79Flag={flags.setAD79Flag} />}
+          {flagsState.flags.includes("card-ad79") && <AD79Sidebar />}
           {(flags.wildLavaFlag || flags.noPlaceToPlaceFlag) && (
             <LavaTileSidebar
               lavaTile={lavaTile}
@@ -64,11 +64,13 @@ const Main = props => {
               resolveNoPlaceToPlace={flags.resolveNoPlaceToPlace}
             />
           )}
-          {messageState.stage < 2 && !flags.ad79Flag && !flags.lavaFlag && (
-            <DeckContainer drawCard={drawCard} deckEnabled={deckEnabled} />
-          )}
+          {messageState.stage < 2 &&
+            !flagsState.flags.includes("card-ad79") &&
+            !flags.lavaFlag && (
+              <DeckContainer drawCard={drawCard} deckEnabled={deckEnabled} />
+            )}
           {messageState.stage === 2 &&
-            !flags.ad79Flag &&
+            !flagsState.flags.includes("card-ad79") &&
             !flags.wildLavaFlag &&
             !flags.noPlaceToPlaceFlag && (
               <TilesContainer
@@ -128,8 +130,6 @@ Main.propTypes = {
   dangerZone: PropTypes.arrayOf(PropTypes.string),
   runZone: PropTypes.arrayOf(PropTypes.string),
   flags: PropTypes.shape({
-    ad79Flag: PropTypes.bool,
-    setAD79Flag: PropTypes.func,
     lavaFlag: PropTypes.bool,
     setLavaFlag: PropTypes.func,
     wildLavaFlag: PropTypes.bool,
@@ -160,8 +160,6 @@ Main.defaultProps = {
   dangerZone: [],
   runZone: [],
   flags: {
-    ad79Flag: false,
-    setAD79Flag: () => {},
     lavaFlag: false,
     setLavaFlag: () => {},
     wildLavaFlag: false,

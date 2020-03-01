@@ -1,7 +1,9 @@
 /** @module AD79Sidebar.test */
 
 import { findByTestAttr, commonSetup } from "../../../utils/utilsTest";
-import TestedComponent from "../AD79Sidebar";
+import { AD79SidebarTest } from "../AD79Sidebar";
+
+const TestedComponent = AD79SidebarTest;
 
 const mockSetFlag = jest.fn();
 

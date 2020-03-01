@@ -40,6 +40,7 @@ const MainContainer = props => {
     messageState,
     playersState,
     tileState,
+    toggleFlags,
     gameSetup,
     takeCard,
     discardCard,
@@ -73,14 +74,10 @@ const MainContainer = props => {
 
   const [cardGrid, setCardGrid] = useState([]);
 
-  const [placingPersonFlag, setPlacingPersonFlag] = useState(false);
-
   const [numberOfRelatives, setNumberOfRelatives] = useState(0);
   const [placedRelatives, setPlacedRelatives] = useState([]);
-  const [wildCardFlag, setWildCardFlag] = useState(false);
 
-  const [omenFlag, setOmenFlag] = useState(false);
-  const [ad79Flag, setAD79Flag] = useState(false);
+  // const [ad79Flag, setAD79Flag] = useState(false);
   const [sacrificeMessage, setSacrificeMessage] = useState("");
   const [readyForSacrifice, setReadyForSacrifice] = useState(false);
 
@@ -127,7 +124,9 @@ const MainContainer = props => {
       setNumberOfRelatives(0);
       setPlacedRelatives([]);
       setCardGrid([]);
-      setPlacingPersonFlag(false);
+      if (flagsState.flags.includes("placing-person")) {
+        toggleFlags("placing-person");
+      }
       updateInstructions({
         text: `${_.get(playersState, `details[${activePlayer}].name`)}: ${
           constant.DRAW
@@ -167,7 +166,7 @@ const MainContainer = props => {
       messageState.stage === 1 &&
       currentOccupants.length > 0 &&
       numberOfRelatives === 0 &&
-      !wildCardFlag
+      !flagsState.flags.includes("card-wild")
     ) {
       setNumberOfRelatives(currentOccupants.length);
       setPlacedRelatives([]);
@@ -188,8 +187,12 @@ const MainContainer = props => {
     } else {
       // else complete placement
       setCardGrid([]);
-      setPlacingPersonFlag(false);
-      setWildCardFlag(false);
+      if (flagsState.flags.includes("placing-person")) {
+        toggleFlags("placing-person");
+      }
+      if (flagsState.flags.includes("card-wild")) {
+        toggleFlags("card-wild");
+      }
       updateInstructions({
         text: `${_.get(playersState, `details[${activePlayer}].name`)}: ${
           constant.DRAW
@@ -233,10 +236,14 @@ const MainContainer = props => {
         ...gridByColor.Turquoise,
         ...gridByColor.Brown
       ]).filter(val => vacancy(val));
-      setWildCardFlag(true);
+      if (!flagsState.flags.includes("card-wild")) {
+        toggleFlags("card-wild");
+      }
     }
 
-    setPlacingPersonFlag(true);
+    if (!flagsState.flags.includes("placing-person")) {
+      toggleFlags("placing-person");
+    }
 
     setCardGrid(gridHighlights);
     updateInstructions({
@@ -252,7 +259,9 @@ const MainContainer = props => {
    * @description resolve AD 79 card when drawn
    */
   const resolveAd79 = () => {
-    setAD79Flag(true);
+    if (!flagsState.flags.includes("card-ad79")) {
+      toggleFlags("card-ad79");
+    }
     setTimeout(() => {
       if (messageState.stage === 1) {
         const nextPlayer =
@@ -281,7 +290,11 @@ const MainContainer = props => {
    * @param {String} square
    */
   const performSacrifice = (personObj, square) => {
-    if (!omenFlag || personObj.player === activePlayer) return;
+    if (
+      !flagsState.flags.includes("card-omen") ||
+      personObj.player === activePlayer
+    )
+      return;
 
     const currentOccupants = _.get(gridState, `grid.${square}.occupants`, []);
 
@@ -304,7 +317,9 @@ const MainContainer = props => {
     incrementPlayerCasualties(personObj.player, 1);
 
     setReadyForSacrifice(false);
-    setOmenFlag(false);
+    if (flagsState.flags.includes("card-omen")) {
+      toggleFlags("card-omen");
+    }
     updateInstructions({
       text: `${_.get(playersState, `details[${activePlayer}].name`)}: ${
         constant.DRAW
@@ -325,7 +340,9 @@ const MainContainer = props => {
       }`,
       color: _.get(playersState, `details[${activePlayer}].color`)
     });
-    setOmenFlag(true);
+    if (!flagsState.flags.includes("card-omen")) {
+      toggleFlags("card-omen");
+    }
   };
 
   /**
@@ -607,8 +624,8 @@ const MainContainer = props => {
         drawCard={drawCard}
         deckEnabled={
           _.get(playersState, `details[${activePlayer}].hand.length`) < 4 &&
-          !placingPersonFlag &&
-          !omenFlag
+          !flagsState.flags.includes("placing-person") &&
+          !flagsState.flags.includes("card-omen")
         }
         pileEnabled={
           messageState.stage === 2 && !placingLavaFlag && !flagsState.runCounter
@@ -622,8 +639,8 @@ const MainContainer = props => {
         setSacrificeMessage={setSacrificeMessage}
         drawTile={drawTile}
         flags={{
-          ad79Flag,
-          setAD79Flag,
+          // ad79Flag,
+          // setAD79Flag,
           lavaFlag,
           setLavaFlag,
           wildLavaFlag,
@@ -638,6 +655,7 @@ const MainContainer = props => {
         selectRunner={selectRunner}
         runZone={runZone}
         runToSquare={runToSquare}
+        toggleFlags={toggleFlags}
       />
     </div>
   );
@@ -650,6 +668,7 @@ MainContainer.propTypes = {
   messageState: types.messageState.types,
   playersState: types.playersState.types,
   tileState: types.tileState.types,
+  toggleFlags: PropTypes.func,
   gameSetup: PropTypes.func,
   takeCard: PropTypes.func,
   discardCard: PropTypes.func,
@@ -673,6 +692,7 @@ MainContainer.defaultProps = {
   messageState: types.messageState.defaults,
   playersState: types.playersState.defaults,
   tileState: types.tileState.defaults,
+  toggleFlags: () => {},
   gameSetup: () => {},
   takeCard: () => {},
   discardCard: () => {},
