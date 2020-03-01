@@ -7,15 +7,15 @@ const TestedComponent = LavaTileSideBarTest;
 
 const mockNoPlace = jest.fn();
 const mockHighlight = jest.fn();
-const mockSetTile = jest.fn();
+const mockToggle = jest.fn();
 
 const defaultProps = {
   tileState: { tiles: { TEST: { wilds: ["w1", "w2"] } } },
   lavaTile: "TEST",
-  noPlaceToPlaceFlag: false,
+  flagsState: { flags: ["wild-lava-tile"] },
   resolveNoPlaceToPlace: mockNoPlace,
   highlightDangerZones: mockHighlight,
-  setWildLavaFlag: mockSetTile
+  toggleFlags: mockToggle
 };
 
 test("renders without error", () => {
@@ -37,7 +37,7 @@ describe("wilds tiles", () => {
   test("clicking tile selected appropriate highlight and updates flag", () => {
     button.at(0).simulate("click");
     expect(mockHighlight).toHaveBeenCalledWith("w1");
-    expect(mockSetTile).toHaveBeenCalled();
+    expect(mockToggle).toHaveBeenCalled();
   });
 });
 
@@ -47,7 +47,7 @@ describe("no place to place tile", () => {
   beforeEach(() => {
     wrapper = commonSetup(TestedComponent, {
       ...defaultProps,
-      noPlaceToPlaceFlag: true
+      flagsState: { flags: ["no-place-to-place"] }
     });
     button = findByTestAttr(wrapper, "button-continue");
   });

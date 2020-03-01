@@ -1,6 +1,6 @@
 /** @module types */
 
-import { arrayOf, number, object, string, shape } from "prop-types";
+import { arrayOf, number, object, oneOf, string, shape } from "prop-types";
 
 // card types
 export const cards = {
@@ -116,7 +116,7 @@ export const messageState = {
     })
   }),
   defaults: {
-    stage: 2,
+    stage: 0,
     instruction: {
       text: "",
       color: ""
@@ -160,5 +160,20 @@ export const flagsState = {
   defaults: {
     flags: [],
     runCounter: 0
+  }
+};
+
+/**
+ * @const snackbarState
+ * @description Types for snackbarState Redux store
+ */
+export const snackbarState = {
+  types: shape({
+    message: string,
+    type: oneOf(["info", "warning", "default", "error", "success"])
+  }),
+  defaults: {
+    message: null,
+    type: "default"
   }
 };

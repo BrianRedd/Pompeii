@@ -5,11 +5,12 @@ import { AD79SidebarTest } from "../AD79Sidebar";
 
 const TestedComponent = AD79SidebarTest;
 
-const mockSetFlag = jest.fn();
+const mockToggle = jest.fn();
 
 const defaultProps = {
   messageState: { stage: 0 },
-  setAD79Flag: mockSetFlag
+  flagsState: { flags: ["card-ad79"] },
+  toggleFlags: mockToggle
 };
 
 test("renders without error", () => {
@@ -30,6 +31,6 @@ describe("button", () => {
   });
   test("clicking closes sidebar", () => {
     button.simulate("click");
-    expect(mockSetFlag).toHaveBeenCalled();
+    expect(mockToggle).toHaveBeenCalled();
   });
 });

@@ -145,3 +145,24 @@ fieldset {
     }
   }
 }
+
+/* 
+ Snackbar
+---------- */
+
+.custom-snackbar {
+  color: #ffffff;
+  &.success > div {
+    color: #cccccc;
+    background-color: rgb(180, 201, 83);
+  }
+  &.info > div {
+    background-color: #153a4a;
+  }
+  &.warning > div {
+    background-color: rgb(217, 174, 65);
+  }
+  &.error > div {
+    background-color: #ce3426;
+  }
+}

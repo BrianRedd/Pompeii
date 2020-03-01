@@ -145,6 +145,13 @@ describe("incrementPlayerTurn", () => {
           text: `Player 2: ${constant.PLAY}`,
           color: "#FFFFFF"
         }
+      },
+      {
+        type: actionTypes.ADD_SNACKBAR,
+        payload: {
+          message: "It is now Player 2's turn",
+          type: "info"
+        }
       }
     ];
     const store = configureMockStore([thunk])(thisState);
@@ -165,6 +172,13 @@ describe("incrementPlayerTurn", () => {
         payload: {
           text: `Player 1: ${constant.PLAY}`,
           color: "#000000"
+        }
+      },
+      {
+        type: actionTypes.ADD_SNACKBAR,
+        payload: {
+          message: "It is now Player 1's turn",
+          type: "info"
         }
       }
     ];

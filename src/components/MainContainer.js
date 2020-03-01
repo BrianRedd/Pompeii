@@ -54,7 +54,8 @@ const MainContainer = props => {
     incrementPlayerPopulation,
     incrementPlayerCasualties,
     placeLavaTileOnSquare,
-    setRunCounter
+    setRunCounter,
+    addSnackbar
   } = props;
 
   const numberOfPlayers = 3;
@@ -494,11 +495,17 @@ const MainContainer = props => {
 
     setRunFromSquare(square);
     if (person.player !== activePlayer) {
-      console.log("Not your person!"); // should be snackbar
+      addSnackbar({
+        message: "Not your person!",
+        type: "warning"
+      });
       return;
     }
     if (person.lastMoved === playersState.totalTurns) {
-      console.log("Already ran this person this turn!"); // should be snackbar
+      addSnackbar({
+        message: "Already ran this person this turn!",
+        type: "warning"
+      });
       return;
     }
 
@@ -686,7 +693,8 @@ MainContainer.propTypes = {
   incrementPlayerCasualties: PropTypes.func,
   incrementPlayerSaved: PropTypes.func,
   placeLavaTileOnSquare: PropTypes.func,
-  setRunCounter: PropTypes.func
+  setRunCounter: PropTypes.func,
+  addSnackbar: PropTypes.func
 };
 
 MainContainer.defaultProps = {
@@ -710,7 +718,8 @@ MainContainer.defaultProps = {
   incrementPlayerCasualties: () => {},
   incrementPlayerSaved: () => {},
   placeLavaTileOnSquare: () => {},
-  setRunCounter: () => {}
+  setRunCounter: () => {},
+  addSnackbar: () => {}
 };
 
 export const MainContainerTest = MainContainer;

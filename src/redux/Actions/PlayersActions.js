@@ -5,6 +5,7 @@ import _ from "lodash";
 import * as actionTypes from "../ActionTypes";
 import * as constant from "../../data/constants";
 import { updateInstructions } from "./MessageActions";
+import { addSnackbar } from "./SnackbarActions";
 
 /**
  * @function setPlayerArray
@@ -119,6 +120,15 @@ export const incrementPlayerTurn = () => (dispatch, getState) => {
         playersState,
         `details.${playersState.players[nextPlayer]}.color`
       )
+    })
+  );
+  dispatch(
+    addSnackbar({
+      message: `It is now ${_.get(
+        playersState,
+        `details.${playersState.players[nextPlayer]}.name`
+      )}'s turn`,
+      type: "info"
     })
   );
 };

@@ -2,6 +2,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
+import { SnackbarProvider } from "notistack";
 import { Col, Row } from "reactstrap";
 
 import * as types from "../types/types";
@@ -13,6 +14,7 @@ import PlayersContainer from "./Player/PlayersContainer";
 import PlacementHighlighter from "./Board/PlacementHighlighter";
 import AD79Sidebar from "./Sidebars/AD79Sidebar";
 import LavaTileSidebar from "./Sidebars/LavaTileSidebar";
+import SnackbarNotifier from "./Helpers/SnackbarNotifier";
 
 /**
  * @function Main
@@ -45,79 +47,82 @@ const Main = props => {
   } = props;
 
   return (
-    <Col data-test="presentation-main" className="main-container">
-      <Row>
-        <BoardContainer
-          performSacrifice={performSacrifice}
-          runFlag={flagsState.runCounter}
-          selectRunner={selectRunner}
-        />
-        <div className="off-board">
-          {flagsState.flags.includes("card-ad79") && <AD79Sidebar />}
-          {(flagsState.flags.includes("wild-lava-tile") ||
-            flagsState.flags.includes("no-place-to-place")) && (
-            <LavaTileSidebar
-              lavaTile={lavaTile}
-              tileState={tileState}
-              highlightDangerZones={highlightDangerZones}
-              resolveNoPlaceToPlace={resolveNoPlaceToPlace}
-            />
-          )}
-          {messageState.stage < 2 &&
-            !flagsState.flags.includes("card-ad79") &&
-            !flagsState.flags.includes("lava-tile") && (
-              <DeckContainer drawCard={drawCard} deckEnabled={deckEnabled} />
-            )}
-          {messageState.stage === 2 &&
-            !flagsState.flags.includes("card-ad79") &&
-            !flagsState.flags.includes("wild-lava-tile") &&
-            !flagsState.flags.includes("no-place-to-place") && (
-              <TilesContainer
+    <SnackbarProvider maxSnack={3}>
+      <SnackbarNotifier />
+      <Col data-test="presentation-main" className="main-container">
+        <Row>
+          <BoardContainer
+            performSacrifice={performSacrifice}
+            runFlag={flagsState.runCounter}
+            selectRunner={selectRunner}
+          />
+          <div className="off-board">
+            {flagsState.flags.includes("card-ad79") && <AD79Sidebar />}
+            {(flagsState.flags.includes("wild-lava-tile") ||
+              flagsState.flags.includes("no-place-to-place")) && (
+              <LavaTileSidebar
                 lavaTile={lavaTile}
-                drawTile={drawTile}
-                pileEnabled={pileEnabled}
+                tileState={tileState}
+                highlightDangerZones={highlightDangerZones}
+                resolveNoPlaceToPlace={resolveNoPlaceToPlace}
               />
             )}
-          <PlayersContainer
-            playPompCard={playPompCard}
-            stage={messageState.stage}
-          />
-        </div>
-      </Row>
-      {(() => {
-        if (messageState.stage < 2) {
-          return (
-            <PlacementHighlighter
-              gridArray={cardGrid}
-              selectSquare={placePerson}
-              validation={vacancy}
+            {messageState.stage < 2 &&
+              !flagsState.flags.includes("card-ad79") &&
+              !flagsState.flags.includes("lava-tile") && (
+                <DeckContainer drawCard={drawCard} deckEnabled={deckEnabled} />
+              )}
+            {messageState.stage === 2 &&
+              !flagsState.flags.includes("card-ad79") &&
+              !flagsState.flags.includes("wild-lava-tile") &&
+              !flagsState.flags.includes("no-place-to-place") && (
+                <TilesContainer
+                  lavaTile={lavaTile}
+                  drawTile={drawTile}
+                  pileEnabled={pileEnabled}
+                />
+              )}
+            <PlayersContainer
+              playPompCard={playPompCard}
+              stage={messageState.stage}
             />
-          );
-        }
-        if (flagsState.runCounter) {
+          </div>
+        </Row>
+        {(() => {
+          if (messageState.stage < 2) {
+            return (
+              <PlacementHighlighter
+                gridArray={cardGrid}
+                selectSquare={placePerson}
+                validation={vacancy}
+              />
+            );
+          }
+          if (flagsState.runCounter) {
+            return (
+              <PlacementHighlighter
+                gridArray={runZone}
+                selectSquare={runToSquare}
+                validation={() => {
+                  return true;
+                }}
+              />
+            );
+          }
           return (
             <PlacementHighlighter
-              gridArray={runZone}
-              selectSquare={runToSquare}
+              gridArray={dangerZone}
+              selectSquare={val => {
+                placeLavaTile(val);
+              }}
               validation={() => {
                 return true;
               }}
             />
           );
-        }
-        return (
-          <PlacementHighlighter
-            gridArray={dangerZone}
-            selectSquare={val => {
-              placeLavaTile(val);
-            }}
-            validation={() => {
-              return true;
-            }}
-          />
-        );
-      })()}
-    </Col>
+        })()}
+      </Col>
+    </SnackbarProvider>
   );
 };
 

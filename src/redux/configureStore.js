@@ -9,6 +9,7 @@ import flagsState from "./Reducers/FlagsReducer";
 import gridState from "./Reducers/GridReducer";
 import messageState from "./Reducers/MessageReducer";
 import playersState from "./Reducers/PlayersReducer";
+import snackbarState from "./Reducers/SnackbarReducer";
 import tileState from "./Reducers/TilesReducer";
 
 const logger = createLogger({ collapsed: true, diff: true });
@@ -21,6 +22,7 @@ const ConfigureStore = () => {
       gridState,
       messageState,
       playersState,
+      snackbarState,
       tileState
     }),
     /* eslint-disable no-underscore-dangle */

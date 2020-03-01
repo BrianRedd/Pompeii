@@ -32,7 +32,6 @@ const LavaTileSidebar = props => {
     tileState,
     lavaTile,
     highlightDangerZones,
-    // noPlaceToPlaceFlag,
     resolveNoPlaceToPlace,
     toggleFlags
   } = props;
@@ -107,7 +106,6 @@ LavaTileSidebar.propTypes = {
   flagsState: types.flagsState.types,
   tileState: types.tileState.types,
   lavaTile: PropTypes.string,
-  // noPlaceToPlaceFlag: PropTypes.bool,
   resolveNoPlaceToPlace: PropTypes.func,
   highlightDangerZones: PropTypes.func,
   toggleFlags: PropTypes.func
@@ -117,7 +115,6 @@ LavaTileSidebar.defaultProps = {
   tileState: types.tileState.defaults,
   flagsState: types.flagsState.defaults,
   lavaTile: "",
-  // noPlaceToPlaceFlag: false,
   resolveNoPlaceToPlace: () => {},
   highlightDangerZones: () => {},
   toggleFlags: () => {}
