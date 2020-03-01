@@ -1,7 +1,9 @@
 /** @module LavaTileSideBar.test */
 
 import { findByTestAttr, commonSetup } from "../../../utils/utilsTest";
-import TestedComponent from "../LavaTileSideBar";
+import { LavaTileSideBarTest } from "../LavaTileSidebar";
+
+const TestedComponent = LavaTileSideBarTest;
 
 const mockNoPlace = jest.fn();
 const mockHighlight = jest.fn();

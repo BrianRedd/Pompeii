@@ -1,12 +1,25 @@
 /** @module LavaTileSidebar */
 
 import React from "react";
+import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { ButtonBase } from "@material-ui/core";
 import { Col, Row } from "reactstrap";
 import _ from "lodash";
 
+import actions from "../../redux/Actions";
 import * as types from "../../types/types";
+
+const mapStateToProps = state => {
+  return {
+    flagsState: state.flagsState,
+    tilesState: state.tilesState
+  };
+};
+
+const mapDispatchToProps = {
+  toggleFlags: actions.toggleFlags
+};
 
 /**
  * @function LavaTileSidebar
@@ -15,19 +28,20 @@ import * as types from "../../types/types";
  */
 const LavaTileSidebar = props => {
   const {
+    flagsState,
+    tileState,
     lavaTile,
     highlightDangerZones,
-    tileState,
-    setWildLavaFlag,
-    noPlaceToPlaceFlag,
-    resolveNoPlaceToPlace
+    // noPlaceToPlaceFlag,
+    resolveNoPlaceToPlace,
+    toggleFlags
   } = props;
 
   const wilds = _.get(tileState, `tiles.${lavaTile}.wilds`);
 
   return (
     <React.Fragment>
-      {noPlaceToPlaceFlag ? (
+      {flagsState.flags.includes("no-place-to-place") ? (
         <div
           data-test="sidebar-lavatile"
           className="w-100 text-center deck-container"
@@ -56,7 +70,9 @@ const LavaTileSidebar = props => {
                   data-test="button-lavatile"
                   onClick={() => {
                     highlightDangerZones(wilds[0]);
-                    setWildLavaFlag(false);
+                    if (flagsState.flags.includes("wild-lava-tile")) {
+                      toggleFlags("wild-lava-tile");
+                    }
                   }}
                 >
                   <img alt={wilds[0]} src={`/assets/tiles/${wilds[0]}.png`} />
@@ -70,7 +86,9 @@ const LavaTileSidebar = props => {
                   data-test="button-lavatile"
                   onClick={() => {
                     highlightDangerZones(wilds[1]);
-                    setWildLavaFlag(false);
+                    if (flagsState.flags.includes("wild-lava-tile")) {
+                      toggleFlags("wild-lava-tile");
+                    }
                   }}
                 >
                   <img alt={wilds[1]} src={`/assets/tiles/${wilds[1]}.png`} />
@@ -86,21 +104,24 @@ const LavaTileSidebar = props => {
 };
 
 LavaTileSidebar.propTypes = {
+  flagsState: types.flagsState.types,
   tileState: types.tileState.types,
   lavaTile: PropTypes.string,
-  noPlaceToPlaceFlag: PropTypes.bool,
+  // noPlaceToPlaceFlag: PropTypes.bool,
   resolveNoPlaceToPlace: PropTypes.func,
   highlightDangerZones: PropTypes.func,
-  setWildLavaFlag: PropTypes.func
+  toggleFlags: PropTypes.func
 };
 
 LavaTileSidebar.defaultProps = {
   tileState: types.tileState.defaults,
+  flagsState: types.flagsState.defaults,
   lavaTile: "",
-  noPlaceToPlaceFlag: false,
+  // noPlaceToPlaceFlag: false,
   resolveNoPlaceToPlace: () => {},
   highlightDangerZones: () => {},
-  setWildLavaFlag: () => {}
+  toggleFlags: () => {}
 };
 
-export default LavaTileSidebar;
+export const LavaTileSideBarTest = LavaTileSidebar;
+export default connect(mapStateToProps, mapDispatchToProps)(LavaTileSidebar);

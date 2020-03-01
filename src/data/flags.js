@@ -25,6 +25,26 @@ const flagsList = [
     name: "card-ad79",
     description: "Has AD79 card been drawn",
     defaultState: false
+  },
+  {
+    name: "lava-tile",
+    description: "Placing lava tile", // ?
+    defaultState: false
+  },
+  {
+    name: "wild-lava-tile",
+    description: "Wild lava tile drawn",
+    defaultState: false
+  },
+  {
+    name: "placing-lava-tile",
+    description: "Placing Lava tile", // ?
+    defaultState: false
+  },
+  {
+    name: "no-place-to-place",
+    description: "Placing Lava tile",
+    defaultState: false
   }
 ];
 

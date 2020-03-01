@@ -58,7 +58,7 @@ const MainContainer = props => {
   } = props;
 
   const numberOfPlayers = 3;
-  const numberOfEruptionTurns = 0; // 6
+  const numberOfEruptionTurns = 15; // 6;
 
   useEffect(() => {
     if (!_.get(cardsState.cards)) {
@@ -77,16 +77,11 @@ const MainContainer = props => {
   const [numberOfRelatives, setNumberOfRelatives] = useState(0);
   const [placedRelatives, setPlacedRelatives] = useState([]);
 
-  // const [ad79Flag, setAD79Flag] = useState(false);
   const [sacrificeMessage, setSacrificeMessage] = useState("");
   const [readyForSacrifice, setReadyForSacrifice] = useState(false);
 
-  const [lavaFlag, setLavaFlag] = useState(false);
   const [lavaTile, setLavaTile] = useState();
-  const [wildLavaFlag, setWildLavaFlag] = useState(false);
   const [dangerZone, setDangerZone] = useState([]);
-  const [placingLavaFlag, setPlacingLavaFlag] = useState(false);
-  const [noPlaceToPlaceFlag, setNoPlaceToPlaceFlag] = useState(false);
 
   const [initialEruptionCounter, setInitialEruptionCounter] = useState(
     numberOfEruptionTurns
@@ -387,8 +382,13 @@ const MainContainer = props => {
    */
   const highlightDangerZones = tile => {
     setLavaTile(tile);
-    setPlacingLavaFlag(true);
-    setLavaFlag(false);
+
+    if (flagsState.flags.includes("placing-lava-tile")) {
+      toggleFlags("placing-lava-tile");
+    }
+    if (flagsState.flags.includes("lava-tile")) {
+      toggleFlags("lava-tile");
+    }
 
     const hotZones = [];
     let homeVent = "";
@@ -425,8 +425,8 @@ const MainContainer = props => {
       );
       if (filteredZones.length) {
         setDangerZone(filteredZones);
-      } else {
-        setNoPlaceToPlaceFlag(true);
+      } else if (!flagsState.flags.includes("no-place-to-place")) {
+        toggleFlags("no-place-to-place");
       }
     }
   };
@@ -436,8 +436,12 @@ const MainContainer = props => {
    * @description continue from no place to place
    */
   const resolveNoPlaceToPlace = () => {
-    setNoPlaceToPlaceFlag(false);
-    setPlacingLavaFlag(false);
+    if (flagsState.flags.includes("no-place-to-place")) {
+      toggleFlags("no-place-to-place");
+    }
+    if (flagsState.flags.includes("placing-lava-tile")) {
+      toggleFlags("placing-lava-tile");
+    }
     setLavaTile();
     setDangerZone([]);
     incrementPlayerTurn();
@@ -457,11 +461,13 @@ const MainContainer = props => {
 
     const wilds = _.get(tileState, `tiles.${takenTile}.wilds`);
     if (wilds) {
-      setWildLavaFlag(true);
+      toggleFlags("wild-lava-tile");
     } else {
       highlightDangerZones(takenTile);
     }
-    setLavaFlag(true);
+    if (!flagsState.flags.includes("lava-tile")) {
+      toggleFlags("lava-tile");
+    }
   };
 
   /**
@@ -488,11 +494,11 @@ const MainContainer = props => {
 
     setRunFromSquare(square);
     if (person.player !== activePlayer) {
-      console.log("Not your person!");
+      console.log("Not your person!"); // should be snackbar
       return;
     }
     if (person.lastMoved === playersState.totalTurns) {
-      console.log("Already ran this person this turn!");
+      console.log("Already ran this person this turn!"); // should be snackbar
       return;
     }
 
@@ -559,7 +565,9 @@ const MainContainer = props => {
     });
     placePeopleInSquare(square, []);
 
-    setPlacingLavaFlag(false);
+    if (flagsState.flags.includes("placing-lava-tile")) {
+      toggleFlags("placing-lava-tile");
+    }
     setLavaTile();
     setDangerZone([]);
 
@@ -607,6 +615,9 @@ const MainContainer = props => {
     }
 
     numberOfRuns -= 1;
+    if (_.get(playersState, `details[${activePlayer}].population`) < 1) {
+      numberOfRuns = 0;
+    }
     setRunCounter(numberOfRuns);
     setRunZone([]);
     setRunner();
@@ -628,7 +639,9 @@ const MainContainer = props => {
           !flagsState.flags.includes("card-omen")
         }
         pileEnabled={
-          messageState.stage === 2 && !placingLavaFlag && !flagsState.runCounter
+          messageState.stage === 2 &&
+          !flagsState.flags.includes("placing-lava-tile") &&
+          !flagsState.runCounter
         }
         playPompCard={playPompCard}
         cardGrid={cardGrid}
@@ -638,16 +651,7 @@ const MainContainer = props => {
         sacrificeMessage={sacrificeMessage}
         setSacrificeMessage={setSacrificeMessage}
         drawTile={drawTile}
-        flags={{
-          // ad79Flag,
-          // setAD79Flag,
-          lavaFlag,
-          setLavaFlag,
-          wildLavaFlag,
-          setWildLavaFlag,
-          noPlaceToPlaceFlag,
-          resolveNoPlaceToPlace
-        }}
+        resolveNoPlaceToPlace={resolveNoPlaceToPlace}
         lavaTile={lavaTile}
         highlightDangerZones={highlightDangerZones}
         dangerZone={dangerZone}

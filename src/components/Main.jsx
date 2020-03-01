@@ -32,7 +32,7 @@ const Main = props => {
     placePerson,
     vacancy,
     performSacrifice,
-    flags,
+    resolveNoPlaceToPlace,
     pileEnabled,
     drawTile,
     lavaTile,
@@ -54,27 +54,26 @@ const Main = props => {
         />
         <div className="off-board">
           {flagsState.flags.includes("card-ad79") && <AD79Sidebar />}
-          {(flags.wildLavaFlag || flags.noPlaceToPlaceFlag) && (
+          {(flagsState.flags.includes("wild-lava-tile") ||
+            flagsState.flags.includes("no-place-to-place")) && (
             <LavaTileSidebar
               lavaTile={lavaTile}
               tileState={tileState}
               highlightDangerZones={highlightDangerZones}
-              setWildLavaFlag={flags.setWildLavaFlag}
-              noPlaceToPlaceFlag={flags.noPlaceToPlaceFlag}
-              resolveNoPlaceToPlace={flags.resolveNoPlaceToPlace}
+              resolveNoPlaceToPlace={resolveNoPlaceToPlace}
             />
           )}
           {messageState.stage < 2 &&
             !flagsState.flags.includes("card-ad79") &&
-            !flags.lavaFlag && (
+            !flagsState.flags.includes("lava-tile") && (
               <DeckContainer drawCard={drawCard} deckEnabled={deckEnabled} />
             )}
           {messageState.stage === 2 &&
             !flagsState.flags.includes("card-ad79") &&
-            !flags.wildLavaFlag &&
-            !flags.noPlaceToPlaceFlag && (
+            !flagsState.flags.includes("wild-lava-tile") &&
+            !flagsState.flags.includes("no-place-to-place") && (
               <TilesContainer
-                lavaTile={flags.lavaFlag ? lavaTile : null}
+                lavaTile={lavaTile}
                 drawTile={drawTile}
                 pileEnabled={pileEnabled}
               />
@@ -129,17 +128,10 @@ Main.propTypes = {
   cardGrid: PropTypes.arrayOf(PropTypes.string),
   dangerZone: PropTypes.arrayOf(PropTypes.string),
   runZone: PropTypes.arrayOf(PropTypes.string),
-  flags: PropTypes.shape({
-    lavaFlag: PropTypes.bool,
-    setLavaFlag: PropTypes.func,
-    wildLavaFlag: PropTypes.bool,
-    setWildLavaFlag: PropTypes.func,
-    noPlaceToPlaceFlag: PropTypes.bool,
-    resolveNoPlaceToPlace: PropTypes.func
-  }),
   lavaTile: PropTypes.string,
   deckEnabled: PropTypes.bool,
   pileEnabled: PropTypes.bool,
+  resolveNoPlaceToPlace: PropTypes.func,
   drawCard: PropTypes.func,
   drawTile: PropTypes.func,
   playPompCard: PropTypes.func,
@@ -159,17 +151,10 @@ Main.defaultProps = {
   cardGrid: [],
   dangerZone: [],
   runZone: [],
-  flags: {
-    lavaFlag: false,
-    setLavaFlag: () => {},
-    wildLavaFlag: false,
-    setWildLavaFlag: () => {},
-    noPlaceToPlaceFlag: false,
-    resolveNoPlaceToPlace: () => {}
-  },
   lavaTile: "",
   deckEnabled: false,
   pileEnabled: false,
+  resolveNoPlaceToPlace: () => {},
   drawCard: () => {},
   drawTile: () => {},
   playPompCard: () => {},
