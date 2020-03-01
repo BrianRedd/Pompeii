@@ -1,7 +1,9 @@
 /** @module TilesContainer.test */
 
 import { findByTestAttr, commonSetup } from "../../../utils/utilsTest";
-import TestedComponent from "../TilesContainer";
+import { TilesContainerTest } from "../TilesContainer";
+
+const TestedComponent = TilesContainerTest;
 
 test("renders without error", () => {
   const wrapper = commonSetup(TestedComponent);

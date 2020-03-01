@@ -1,7 +1,9 @@
 /** @module PlayersContainer.test */
 
 import { findByTestAttr, commonSetup } from "../../../utils/utilsTest";
-import TestedComponent from "../PlayersContainer";
+import { PlayersContainerTest } from "../PlayersContainer";
+
+const TestedComponent = PlayersContainerTest;
 
 const defaultProps = {
   playersState: {

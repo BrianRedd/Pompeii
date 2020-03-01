@@ -1,7 +1,9 @@
 /** @module DeckContainer.test */
 
 import { findByTestAttr, commonSetup } from "../../../utils/utilsTest";
-import TestedComponent from "../DeckContainer";
+import { DeckContainerTest } from "../DeckContainer";
+
+const TestedComponent = DeckContainerTest;
 
 test("renders without error", () => {
   const wrapper = commonSetup(TestedComponent);
