@@ -61,12 +61,12 @@ export const incrementPlayerPopulation = (playerId, population) => ({
 });
 
 /**
- * @function incrementPlayerCasualties
+ * @function incrementPlayerCasualtiesInStore
  * @description adds/updates single player casualties to PlayersState store
  * @param {String} playerId
- * @param {Object} casualties - player casualties increase
+ * @param {Number} casualties - player casualties increase
  */
-export const incrementPlayerCasualties = (playerId, casualties) => ({
+export const incrementPlayerCasualtiesInStore = (playerId, casualties) => ({
   type: actionTypes.INCREMENT_PLAYER_CASUALTIES,
   payload: { playerId, casualties }
 });
@@ -83,6 +83,26 @@ export const incrementPlayerSaved = (playerId, saved) => ({
 });
 
 /**
+ * @function incrementPlayerCasualties
+ * @description adds/updates single player casualties with snackbar
+ * @param {String} playerId
+ * @param {Number} casualties - player casualties increase
+ */
+export const incrementPlayerCasualties = (playerId, casualties) => (
+  dispatch,
+  getState
+) => {
+  const { playersState } = getState();
+  dispatch(
+    addSnackbar({
+      message: `${casualties} of ${playersState.details[playerId].name}'s people have been killed!`,
+      type: "info"
+    })
+  );
+  dispatch(incrementPlayerCasualtiesInStore(playerId, casualties));
+};
+
+/**
  * @function setPlayerTurn
  * @description sets player turn in PlayersState store
  * @param {Number} player - whose turn it is
@@ -92,6 +112,10 @@ export const setPlayerturn = player => ({
   payload: player
 });
 
+/**
+ * @function incrementPlayerTurn
+ * @description update player turn to next player (and check for end of game)
+ */
 export const incrementPlayerTurn = () => (dispatch, getState) => {
   const {
     playersState,

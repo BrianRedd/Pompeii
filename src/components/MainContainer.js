@@ -58,12 +58,16 @@ const MainContainer = props => {
     addSnackbar
   } = props;
 
-  const numberOfPlayers = 3;
-  const numberOfEruptionTurns = 15; // 6;
+  const numberOfPlayers = null; // 3;
+  const numberOfEruptionTurns = 6;
 
   useEffect(() => {
     if (!_.get(cardsState.cards)) {
-      gameSetup(numberOfPlayers);
+      if (numberOfPlayers) {
+        gameSetup(numberOfPlayers);
+      } else {
+        gameSetup();
+      }
     }
   }, [cardsState.cards, gameSetup]);
 
@@ -78,7 +82,6 @@ const MainContainer = props => {
   const [numberOfRelatives, setNumberOfRelatives] = useState(0);
   const [placedRelatives, setPlacedRelatives] = useState([]);
 
-  const [sacrificeMessage, setSacrificeMessage] = useState("");
   const [readyForSacrifice, setReadyForSacrifice] = useState(false);
 
   const [lavaTile, setLavaTile] = useState();
@@ -300,15 +303,6 @@ const MainContainer = props => {
     currentOccupants.splice(idx, 1);
 
     if (!readyForSacrifice) return;
-    setSacrificeMessage(
-      `${_.get(
-        playersState,
-        `details[${activePlayer}].name`
-      )} SACRIFICES one of ${_.get(
-        playersState,
-        `details[${personObj.player}].name`
-      )}'s people! (click to continue)`
-    );
     placePeopleInSquare(square, currentOccupants);
     incrementPlayerCasualties(personObj.player, 1);
 
@@ -655,8 +649,6 @@ const MainContainer = props => {
         placePerson={placePerson}
         vacancy={vacancy}
         performSacrifice={performSacrifice}
-        sacrificeMessage={sacrificeMessage}
-        setSacrificeMessage={setSacrificeMessage}
         drawTile={drawTile}
         resolveNoPlaceToPlace={resolveNoPlaceToPlace}
         lavaTile={lavaTile}
