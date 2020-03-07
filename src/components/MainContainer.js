@@ -101,25 +101,28 @@ const MainContainer = props => {
    * @param {String} grid - grid where "parent" was placed
    */
   const placeRelatives = grid => {
+    console.log("placeRelatives");
     // current other occupants
     const currentOccupants = _.get(gridState, `grid.${grid}.occupants`, []);
     let thisPlacedRelatives = placedRelatives;
 
-    // place relative in square
-    placePeopleInSquare(grid, [
-      ...currentOccupants,
-      {
-        player: activePlayer,
-        gender: Math.round(Math.random()) ? "male" : "female"
-      }
-    ]);
-    incrementPlayerPopulation(activePlayer, 1);
-    thisPlacedRelatives = [...placedRelatives, grid];
-    setPlacedRelatives(thisPlacedRelatives);
-    setCardGrid([...cardGrid].filter(val => val !== grid));
+    if (grid) {
+      // place relative in square
+      placePeopleInSquare(grid, [
+        ...currentOccupants,
+        {
+          player: activePlayer,
+          gender: Math.round(Math.random()) ? "male" : "female"
+        }
+      ]);
+      incrementPlayerPopulation(activePlayer, 1);
+      thisPlacedRelatives = [...placedRelatives, grid];
+      setPlacedRelatives(thisPlacedRelatives);
+      setCardGrid([...cardGrid].filter(val => val !== grid));
+    }
 
     // if enough relatives have been placed, end relative placement
-    if (thisPlacedRelatives.length === numberOfRelatives) {
+    if (thisPlacedRelatives.length === numberOfRelatives || !grid) {
       setNumberOfRelatives(0);
       setPlacedRelatives([]);
       setCardGrid([]);
@@ -141,6 +144,7 @@ const MainContainer = props => {
    * @param {String} grid
    */
   const placePerson = grid => {
+    console.log("placePerson");
     // if number of relatives is set, place relative instead
     if (numberOfRelatives > 0) {
       placeRelatives(grid);
@@ -208,6 +212,7 @@ const MainContainer = props => {
    * @return {Boolean}
    */
   const vacancy = square => {
+    console.log("vacancy");
     if (
       _.get(gridState, `grid.${square}.occupants.length`, 0) <
       _.get(gridState, `grid.${square}.buildingCapacity`, 0)
@@ -223,6 +228,7 @@ const MainContainer = props => {
    * @param {String} card
    */
   const playPompCard = card => {
+    console.log("playPompCard");
     let gridHighlights = cardsState.cards[card].grid.filter(val =>
       vacancy(val)
     );
@@ -258,6 +264,7 @@ const MainContainer = props => {
    * @description resolve AD 79 card when drawn
    */
   const resolveAd79 = () => {
+    console.log("resolveAd79");
     if (!flagsState.flags.includes("card-ad79")) {
       toggleFlags("card-ad79");
     }
@@ -289,6 +296,7 @@ const MainContainer = props => {
    * @param {String} square
    */
   const performSacrifice = (personObj, square) => {
+    console.log("performSacrifice");
     if (
       !flagsState.flags.includes("card-omen") ||
       personObj.player === activePlayer
@@ -323,6 +331,7 @@ const MainContainer = props => {
    * @description resolve Omen card when drawn - sacrifice another player's person
    */
   const resolveOmen = () => {
+    console.log("resolveOmen");
     setReadyForSacrifice(true);
     updateInstructions({
       text: `${_.get(playersState, `details[${activePlayer}].name`)}: ${
@@ -340,6 +349,7 @@ const MainContainer = props => {
    * @description draw card from deck
    */
   const drawCard = () => {
+    console.log("drawCard");
     // draw card
     const takenCard = cardsState.deck[cardsState.deck.length - 1];
     takeCard();
@@ -376,6 +386,7 @@ const MainContainer = props => {
    * @param {String} tile - picked lava tile
    */
   const highlightDangerZones = tile => {
+    console.log("highlightDangerZones");
     setLavaTile(tile);
 
     if (flagsState.flags.includes("placing-lava-tile")) {
@@ -431,6 +442,7 @@ const MainContainer = props => {
    * @description continue from no place to place
    */
   const resolveNoPlaceToPlace = () => {
+    console.log("resolveNoPlaceToPlace");
     if (flagsState.flags.includes("no-place-to-place")) {
       toggleFlags("no-place-to-place");
     }
@@ -485,6 +497,7 @@ const MainContainer = props => {
    * @param {String} square - square
    */
   const selectRunner = (person, square) => {
+    console.log("selectRunner");
     setRunner(person);
 
     setRunFromSquare(square);
@@ -559,6 +572,7 @@ const MainContainer = props => {
    * @param {String} square
    */
   const placeLavaTile = square => {
+    console.log("placeLavaTile");
     placeLavaTileOnSquare(square, lavaTile);
 
     _.get(gridState, `grid.${square}.occupants`, []).forEach(person => {
@@ -591,31 +605,45 @@ const MainContainer = props => {
    * @param {String} toSquare
    */
   const runToSquare = toSquare => {
-    let numberOfRuns = flagsState.runCounter;
+    console.log("runToSquare");
+    let numberOfRuns = toSquare ? flagsState.runCounter : 0;
 
-    const oldSquareOccupants = _.get(
-      gridState,
-      `grid.${runFromSquare}.occupants`
-    );
-    const oldSquareIdx = oldSquareOccupants
-      .map(person => person.player)
-      .indexOf(activePlayer);
-    oldSquareOccupants.splice(oldSquareIdx, 1);
-    placePeopleInSquare(runFromSquare, oldSquareOccupants);
+    if (numberOfRuns) {
+      const oldSquareOccupants = _.get(
+        gridState,
+        `grid.${runFromSquare}.occupants`
+      );
+      const oldSquareIdx = oldSquareOccupants
+        .map(person => person.player)
+        .indexOf(activePlayer);
+      oldSquareOccupants.splice(oldSquareIdx, 1);
+      placePeopleInSquare(runFromSquare, oldSquareOccupants);
 
-    if (escapeSquares.includes(toSquare)) {
-      incrementPlayerSaved(activePlayer, 1);
-    } else {
-      const newSquareOccupants = _.get(gridState, `grid.${toSquare}.occupants`);
-      newSquareOccupants.push({
-        player: activePlayer,
-        gender: runner.gender,
-        lastMoved:
-          oldSquareOccupants.length > 0 ? playersState.totalTurns : undefined
-      });
+      if (escapeSquares.includes(toSquare)) {
+        incrementPlayerSaved(activePlayer, 1);
+        if (_.get(playersState, `details[${activePlayer}].population`) === 1) {
+          numberOfRuns = 1;
+        }
+      } else {
+        const newSquareOccupants = _.get(
+          gridState,
+          `grid.${toSquare}.occupants`
+        );
+        newSquareOccupants.push({
+          player: activePlayer,
+          gender: runner.gender,
+          lastMoved:
+            oldSquareOccupants.length > 0 ? playersState.totalTurns : undefined
+        });
+      }
+
+      numberOfRuns -= 1;
     }
-
-    numberOfRuns -= 1;
+    console.log("numberOfRuns:", numberOfRuns);
+    console.log(
+      "activePlayer Population:",
+      _.get(playersState, `details[${activePlayer}].population`)
+    );
     if (_.get(playersState, `details[${activePlayer}].population`) < 1) {
       numberOfRuns = 0;
     }
@@ -659,6 +687,7 @@ const MainContainer = props => {
         runZone={runZone}
         runToSquare={runToSquare}
         toggleFlags={toggleFlags}
+        placeRelatives={placeRelatives}
       />
     </div>
   );

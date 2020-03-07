@@ -43,7 +43,8 @@ const Main = props => {
     placeLavaTile,
     selectRunner,
     runZone,
-    runToSquare
+    runToSquare,
+    placeRelatives
   } = props;
 
   return (
@@ -55,6 +56,8 @@ const Main = props => {
             performSacrifice={performSacrifice}
             runFlag={flagsState.runCounter}
             selectRunner={selectRunner}
+            placeRelatives={placeRelatives}
+            runToSquare={runToSquare}
           />
           <div className="off-board">
             {flagsState.flags.includes("card-ad79") && <AD79Sidebar />}
@@ -146,7 +149,8 @@ Main.propTypes = {
   highlightDangerZones: PropTypes.func,
   placeLavaTile: PropTypes.func,
   selectRunner: PropTypes.func,
-  runToSquare: PropTypes.func
+  runToSquare: PropTypes.func,
+  placeRelatives: PropTypes.func
 };
 
 Main.defaultProps = {
@@ -169,7 +173,8 @@ Main.defaultProps = {
   highlightDangerZones: () => {},
   placeLavaTile: () => {},
   selectRunner: () => {},
-  runToSquare: () => {}
+  runToSquare: () => {},
+  placeRelatives: () => {}
 };
 
 export default Main;

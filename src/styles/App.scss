@@ -4,6 +4,7 @@
 
 $people-size: 30px;
 $tile-size: 110px;
+$board-width: 1320px;
 
 // mixins
 
@@ -24,7 +25,45 @@ $tile-size: 110px;
 .main-container {
   min-width: 1840px;
   .board-container {
-    width: 1320px;
+    width: $board-width;
+    .overlay-occupancy {
+      position: absolute;
+      top: 0;
+      left: 0;
+      min-width: $board-width;
+      height: 100%;
+      .occupancy-square {
+        @include square-size;
+        position: absolute;
+        display: flex;
+        justify-content: center;
+        white-space: normal;
+        div {
+          align-self: center;
+          .person {
+            display: inline-block;
+            height: $people-size;
+            width: $people-size;
+            text-align: center;
+            border-radius: 50%;
+            border-style: solid;
+            border-width: 1px;
+            border-color: #000000;
+            span {
+              color: #ffffff;
+            }
+            &:hover {
+              opacity: 1;
+            }
+            &.highlight:hover {
+              -moz-box-shadow: 0px 0px 3px 3px yellow;
+              -webkit-box-shadow: 0px 0px 3px 3px yellow;
+              box-shadow: 0px 0px 3px 3px yellow;
+            }
+          }
+        }
+      }
+    }
   }
   .off-board {
     margin: 0 15px 0 15px;
@@ -50,6 +89,9 @@ $tile-size: 110px;
     }
     .players-container {
       max-height: 740px;
+      width: 530px;
+      overflow-x: hidden;
+      overflow-y: auto;
       .person {
         display: inline-block;
         height: 23px;
@@ -107,40 +149,21 @@ fieldset {
   }
 }
 
-.overlay-occupancy {
+/*
+ Cancel Buttons
+----------------*/
+.cancel-buttons {
   position: absolute;
-  top: 0;
-  left: 0;
-  min-width: 1840px;
-  height: 100%;
-  .occupancy-square {
-    @include square-size;
-    position: absolute;
-    display: flex;
-    justify-content: center;
-    white-space: normal;
-    div {
-      align-self: center;
-      .person {
-        display: inline-block;
-        height: $people-size;
-        width: $people-size;
-        text-align: center;
-        border-radius: 50%;
-        border-style: solid;
-        border-width: 1px;
-        border-color: #000000;
-        span {
-          color: #ffffff;
-        }
-        &:hover {
-          opacity: 1;
-        }
-        &.highlight:hover {
-          -moz-box-shadow: 0px 0px 3px 3px yellow;
-          -webkit-box-shadow: 0px 0px 3px 3px yellow;
-          box-shadow: 0px 0px 3px 3px yellow;
-        }
+  top: 30px;
+  left: 1200px;
+  div {
+    display: inline-block;
+    button {
+      width: 40px;
+      text-align: center;
+      .fa-ban {
+        position: absolute;
+        left: 4px;
       }
     }
   }

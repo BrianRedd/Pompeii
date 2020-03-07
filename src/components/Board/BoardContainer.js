@@ -8,6 +8,7 @@ import * as types from "../../types/types";
 
 import Board from "./Board";
 import OccupancyLayer from "./OccupancyLayer";
+import CancelButtons from "./CancelButtons";
 
 const mapStateToProps = state => {
   return {
@@ -26,11 +27,13 @@ const mapStateToProps = state => {
 const BoardContainer = props => {
   const {
     messageState,
-    flagsState: { runCounter },
+    flagsState,
     gridState,
     playersState,
     performSacrifice,
-    selectRunner
+    selectRunner,
+    placeRelatives,
+    runToSquare
   } = props;
   return (
     <div data-test="container-board" className="board-container">
@@ -39,8 +42,13 @@ const BoardContainer = props => {
         gridState={gridState}
         playersState={playersState}
         performSacrifice={performSacrifice}
-        runCounter={runCounter}
+        runCounter={flagsState.runCounter}
         selectRunner={selectRunner}
+      />
+      <CancelButtons
+        flagsState={flagsState}
+        placeRelatives={placeRelatives}
+        runToSquare={runToSquare}
       />
     </div>
   );
@@ -52,7 +60,9 @@ BoardContainer.propTypes = {
   messageState: types.messageState.types,
   playersState: types.playersState.types,
   performSacrifice: PropTypes.func,
-  selectRunner: PropTypes.func
+  selectRunner: PropTypes.func,
+  placeRelatives: PropTypes.func,
+  runToSquare: PropTypes.func
 };
 
 BoardContainer.defaultProps = {
@@ -61,7 +71,9 @@ BoardContainer.defaultProps = {
   messageState: types.messageState.defaults,
   playersState: types.playersState.defaults,
   performSacrifice: () => {},
-  selectRunner: () => {}
+  selectRunner: () => {},
+  placeRelatives: () => {},
+  runToSquare: () => {}
 };
 
 export const BoardContainerTest = BoardContainer;
