@@ -11,10 +11,10 @@ import * as types from "../../types/types";
 const messageState = (state = types.messageState.defaults, action) => {
   const { type, payload } = action;
   switch (type) {
-    case actions.INCREMENT_STAGE:
+    case actions.SET_STAGE:
       return {
         ...state,
-        stage: state.stage + 1
+        stage: payload
       };
     case actions.UPDATE_INSTRUCTIONS:
       return {

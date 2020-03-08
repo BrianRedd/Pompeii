@@ -10,10 +10,10 @@ test("should return initial state", () => {
   expect(Reducer(undefined, { type: "", payload: "" })).toEqual(defaultState);
 });
 
-test("should handle INCREMENT_STAGE action", () => {
+test("should handle SET_STAGE action", () => {
   const payload = null;
   const action = {
-    type: actionTypes.INCREMENT_STAGE,
+    type: actionTypes.SET_STAGE,
     payload
   };
   const state = Reducer(undefined, action);

@@ -6,7 +6,7 @@ import * as actions from "../MessageActions";
 test("incrementStage", () => {
   const payload = null;
   const expectedAction = {
-    type: actionTypes.INCREMENT_STAGE,
+    type: actionTypes.SET_STAGE,
     payload
   };
   expect(actions.incrementStage(payload)).toEqual(expectedAction);

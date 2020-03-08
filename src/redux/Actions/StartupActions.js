@@ -4,60 +4,50 @@ import _ from "lodash";
 
 import { generateDeck } from "./CardsActions";
 import { addGrid } from "./GridActions";
-import { updateInstructions } from "./MessageActions";
+import { updateInstructions, setStageInStore } from "./MessageActions";
 import { setPlayerArray, addPlayers } from "./PlayersActions";
 import { generatePile } from "./TilesActions";
 import { playerColors } from "../../data/playerData";
 import { gridSquares } from "../../data/gridData";
 import * as constant from "../../data/constants";
 
-export const gameSetup = numberOfPlayers => async dispatch => {
-  const testMode = false;
+/**
+ * @function gameSetup
+ * @description takes start game values and dispatches initial game store values
+ * @param {Object} details playerState details object
+ * @param {Object} testMode testMode object
+ */
+export const gameSetup = (details, testMode = {}) => async dispatch => {
+  const theseDetails = { ...details };
 
-  let nop = testMode ? 3 : numberOfPlayers;
-  if (!nop) nop = Math.ceil(Math.random() * 3) + 1;
-  if (nop < 2) nop = 2;
-  if (nop > 4) nop = 4;
-  const players = [];
-  for (let i = 1; i <= nop; i += 1) {
-    players.push(`player${i}`);
-  }
-  await dispatch(setPlayerArray(players));
-  const details = {};
-  players.forEach((player, idx) => {
-    details[player] = {
-      name: `Player ${idx + 1}`,
-      hand: [],
-      color: playerColors[idx],
-      casualties: 0,
-      population: 0,
-      saved: 0
-    };
-  });
-
-  if (testMode) {
+  if (testMode.active) {
     // START PRE-POPULATION (TEST)
-    const playersArray = ["player1", "player2", "player3"];
+    const playersArray = Object.keys(theseDetails);
     const gridKeys = Object.keys(gridSquares);
     gridKeys.forEach(grid => {
       const potentialPop = _.get(gridSquares, `${grid}.buildingCapacity`, 0);
       const actualPop = Math.round(Math.random() * potentialPop);
       const occupants = [];
       for (let i = 0; i < actualPop; i += 1) {
-        const player = playersArray[Math.floor(Math.random() * 3)];
+        const player =
+          playersArray[Math.floor(Math.random() * playersArray.length)];
         occupants.push({
           player,
           gender: Math.floor(Math.random() * 2) === 1 ? "male" : "female"
         });
-        details[player].population += 1;
+        theseDetails[player].population += 1;
       }
       gridSquares[grid].occupants = occupants;
     });
     // END PRE-POPULATION (TEST)
   }
 
+  if (testMode.stage > 0) {
+    await dispatch(setStageInStore(testMode.stage));
+  }
   await dispatch(addGrid(gridSquares));
-  await dispatch(addPlayers(details));
+  await dispatch(setPlayerArray(Object.keys(theseDetails)));
+  await dispatch(addPlayers(theseDetails));
   await dispatch(generateDeck());
   await dispatch(generatePile());
   await dispatch(

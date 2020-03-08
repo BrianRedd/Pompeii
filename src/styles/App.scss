@@ -50,17 +50,17 @@ $board-width: 1320px;
             border-radius: 50%;
             border-style: solid;
             border-width: 1px;
-            border-color: #000000;
+            border-color: $color-black;
             span {
-              color: #ffffff;
+              color: $color-white;
             }
             &:hover {
               opacity: 1;
             }
             &.highlight:hover {
-              -moz-box-shadow: 0px 0px 3px 3px yellow;
-              -webkit-box-shadow: 0px 0px 3px 3px yellow;
-              box-shadow: 0px 0px 3px 3px yellow;
+              -moz-box-shadow: 0px 0px 3px 3px $color-yellow;
+              -webkit-box-shadow: 0px 0px 3px 3px $color-yellow;
+              box-shadow: 0px 0px 3px 3px $color-yellow;
             }
           }
         }
@@ -74,7 +74,7 @@ $board-width: 1320px;
       @include card-size;
       margin-left: auto;
       margin-right: auto;
-      border: 1px solid grey;
+      border: 1px solid $color-grey;
     }
     .tile-pile {
       button {
@@ -98,7 +98,7 @@ $board-width: 1320px;
         display: inline-block;
         height: 23px;
         width: 23px;
-        background-color: rgba(255, 255, 255, 0.5);
+        background-color: $color-light-grey;
         text-align: center;
         border-radius: 50%;
       }
@@ -146,7 +146,7 @@ fieldset {
   position: absolute !important;
   div {
     @include square-size;
-    background-color: #ff0000;
+    background-color: $color-green;
     opacity: 0.4;
   }
 }
@@ -186,16 +186,16 @@ fieldset {
   color: #ffffff;
   &.success > div {
     color: #cccccc;
-    background-color: rgb(180, 201, 83);
+    background-color: $color-green;
   }
   &.info > div {
-    background-color: #153a4a;
+    background-color: $color-purple;
   }
   &.warning > div {
-    background-color: rgb(217, 174, 65);
+    background-color: $color-olive;
   }
   &.error > div {
-    background-color: #ce3426;
+    background-color: $color-magenta;
   }
 }
 
@@ -205,7 +205,7 @@ fieldset {
 
 .btn {
   border-color: transparent;
-  color: $color-dark-blue;
+  color: $color-purple;
   font-size: inherit !important;
   text-transform: initial !important;
   &.center {
@@ -214,16 +214,20 @@ fieldset {
 
   &:hover {
     border-color: transparent;
-    color: $color-dark-blue;
+    color: $color-purple;
     opacity: 0.7;
   }
 
   &.btn-primary {
     background-color: $color-green !important;
+    color: $color-white;
+    &:hover {
+      color: $color-white;
+    }
   }
 
   &.btn-secondary {
-    background-color: $color-dark-blue !important;
+    background-color: $color-blue !important;
     color: $color-white;
     &:hover {
       color: $color-white;
@@ -231,35 +235,27 @@ fieldset {
   }
 
   &.btn-info {
-    background-color: $color-tan !important;
+    background-color: $color-olive !important;
   }
 
   &.btn-warning {
-    background-color: $color-rust !important;
+    background-color: $color-magenta !important;
     color: $color-white;
     &:hover {
       color: $color-white;
     }
   }
 
-  &.btn-light {
-    color: $color-dark-blue;
-  }
-
-  &.btn-light-alt {
-    color: $color-white-masked;
-  }
-
   &.btn-grey {
-    background-color: $color-alt-grey;
+    background-color: $color-grey;
     color: $color-white;
     font-size: 0.85rem !important;
     width: 190px;
     &.active {
-      background-color: $color-dark-blue;
+      background-color: $color-blue;
     }
     &:hover {
-      background-color: $color-grey;
+      background-color: color-grey;
     }
   }
 

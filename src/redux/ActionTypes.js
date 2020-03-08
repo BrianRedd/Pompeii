@@ -22,7 +22,7 @@ export const PLACE_PEOPLE = "PLACE_PEOPLE";
 export const PLACE_LAVA = "PLACE_LAVA";
 
 // message actions
-export const INCREMENT_STAGE = "INCREMENT_STAGE";
+export const SET_STAGE = "SET_STAGE";
 export const UPDATE_INSTRUCTIONS = "UPDATE_INSTRUCTIONS";
 
 // tiles actions

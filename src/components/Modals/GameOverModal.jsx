@@ -14,7 +14,7 @@ import { Button } from "@material-ui/core";
 
 import * as types from "../../types/types";
 
-import "./styles/gameover.scss";
+import "./styles/modals.scss";
 
 const PlayerStats = ({ details }) => {
   const detailsArray = Object.keys(details);
@@ -65,7 +65,7 @@ const GameOverModal = props => {
         </Row>
       </ModalBody>
       <ModalFooter className="justify-content-center">
-        <Button className="btn btn-info" onClick={() => acceptGameOver()}>
+        <Button className="btn btn-primary" onClick={() => acceptGameOver()}>
           <span className="far fa-times-circle fa-lg mr-2" />
           Continue
         </Button>

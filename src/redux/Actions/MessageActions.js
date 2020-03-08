@@ -6,12 +6,13 @@ import { addSnackbar } from "./SnackbarActions";
 import { stageData } from "../../data/messageData";
 
 /**
- * @function incrementStageInStore
+ * @function setStageInStore
  * @description increments stage in MessageState store
+ * @param {Number} stage
  */
-export const incrementStageInStore = () => ({
-  type: actionTypes.INCREMENT_STAGE,
-  payload: null
+export const setStageInStore = stage => ({
+  type: actionTypes.SET_STAGE,
+  payload: stage
 });
 
 /**
@@ -25,7 +26,7 @@ export const updateInstructions = instructionObj => ({
 });
 
 /**
- * @function incrementStageInStore
+ * @function setStageInStore
  * @description increments stage with snackbar
  */
 export const incrementStage = () => (dispatch, getState) => {
@@ -38,5 +39,5 @@ export const incrementStage = () => (dispatch, getState) => {
       type: "error"
     })
   );
-  dispatch(incrementStageInStore());
+  dispatch(setStageInStore(stage + 1));
 };

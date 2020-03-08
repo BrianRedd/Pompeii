@@ -50,6 +50,11 @@ const flagsList = [
     name: "game-over",
     description: "Game Over!",
     defaultState: false
+  },
+  {
+    name: "game-start",
+    description: "Start of Game Modal",
+    defaultState: true
   }
 ];
 

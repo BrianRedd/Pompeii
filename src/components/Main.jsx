@@ -15,7 +15,8 @@ import PlacementHighlighter from "./Board/PlacementHighlighter";
 import AD79Sidebar from "./Sidebars/AD79Sidebar";
 import LavaTileSidebar from "./Sidebars/LavaTileSidebar";
 import SnackbarNotifier from "./Helpers/SnackbarNotifier";
-import GameOverContainer from "./GameOver/GameOverContainer";
+import GameOverContainer from "./Modals/GameOverContainer";
+import StartGameContainer from "./Modals/StartGameContainer";
 
 /**
  * @function Main
@@ -62,37 +63,42 @@ const Main = props => {
             runToSquare={runToSquare}
             toggleFlags={toggleFlags}
           />
-          <div className="off-board">
-            {flagsState.flags.includes("card-ad79") && <AD79Sidebar />}
-            {(flagsState.flags.includes("wild-lava-tile") ||
-              flagsState.flags.includes("no-place-to-place")) && (
-              <LavaTileSidebar
-                lavaTile={lavaTile}
-                tileState={tileState}
-                highlightDangerZones={highlightDangerZones}
-                resolveNoPlaceToPlace={resolveNoPlaceToPlace}
-              />
-            )}
-            {messageState.stage < 2 &&
-              !flagsState.flags.includes("card-ad79") &&
-              !flagsState.flags.includes("lava-tile") && (
-                <DeckContainer drawCard={drawCard} deckEnabled={deckEnabled} />
-              )}
-            {messageState.stage === 2 &&
-              !flagsState.flags.includes("card-ad79") &&
-              !flagsState.flags.includes("wild-lava-tile") &&
-              !flagsState.flags.includes("no-place-to-place") && (
-                <TilesContainer
+          {!flagsState.flags.includes("game-start") && (
+            <div className="off-board">
+              {flagsState.flags.includes("card-ad79") && <AD79Sidebar />}
+              {(flagsState.flags.includes("wild-lava-tile") ||
+                flagsState.flags.includes("no-place-to-place")) && (
+                <LavaTileSidebar
                   lavaTile={lavaTile}
-                  drawTile={drawTile}
-                  pileEnabled={pileEnabled}
+                  tileState={tileState}
+                  highlightDangerZones={highlightDangerZones}
+                  resolveNoPlaceToPlace={resolveNoPlaceToPlace}
                 />
               )}
-            <PlayersContainer
-              playPompCard={playPompCard}
-              stage={messageState.stage}
-            />
-          </div>
+              {messageState.stage < 2 &&
+                !flagsState.flags.includes("card-ad79") &&
+                !flagsState.flags.includes("lava-tile") && (
+                  <DeckContainer
+                    drawCard={drawCard}
+                    deckEnabled={deckEnabled}
+                  />
+                )}
+              {messageState.stage === 2 &&
+                !flagsState.flags.includes("card-ad79") &&
+                !flagsState.flags.includes("wild-lava-tile") &&
+                !flagsState.flags.includes("no-place-to-place") && (
+                  <TilesContainer
+                    lavaTile={lavaTile}
+                    drawTile={drawTile}
+                    pileEnabled={pileEnabled}
+                  />
+                )}
+              <PlayersContainer
+                playPompCard={playPompCard}
+                stage={messageState.stage}
+              />
+            </div>
+          )}
         </Row>
         {(() => {
           if (messageState.stage < 2) {
@@ -129,6 +135,7 @@ const Main = props => {
         })()}
       </Col>
       {flagsState.flags.includes("game-over") && <GameOverContainer />}
+      {flagsState.flags.includes("game-start") && <StartGameContainer />}
     </SnackbarProvider>
   );
 };

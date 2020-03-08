@@ -41,7 +41,6 @@ const MainContainer = props => {
     playersState,
     tileState,
     toggleFlags,
-    gameSetup,
     takeCard,
     discardCard,
     takeTile,
@@ -58,18 +57,18 @@ const MainContainer = props => {
     addSnackbar
   } = props;
 
-  const numberOfPlayers = null; // 3;
+  // const numberOfPlayers = 3;
   const numberOfEruptionTurns = 6;
 
-  useEffect(() => {
-    if (!_.get(cardsState.cards)) {
-      if (numberOfPlayers) {
-        gameSetup(numberOfPlayers);
-      } else {
-        gameSetup();
-      }
-    }
-  }, [cardsState.cards, gameSetup]);
+  // useEffect(() => {
+  //   if (!_.get(cardsState.cards)) {
+  //     if (numberOfPlayers) {
+  //       gameSetup(numberOfPlayers);
+  //     } else {
+  //       gameSetup();
+  //     }
+  //   }
+  // }, [cardsState.cards, gameSetup]);
 
   const [activePlayer, setActivePlayer] = useState();
 
@@ -703,7 +702,6 @@ MainContainer.propTypes = {
   playersState: types.playersState.types,
   tileState: types.tileState.types,
   toggleFlags: PropTypes.func,
-  gameSetup: PropTypes.func,
   takeCard: PropTypes.func,
   discardCard: PropTypes.func,
   takeTile: PropTypes.func,
@@ -728,7 +726,6 @@ MainContainer.defaultProps = {
   playersState: types.playersState.defaults,
   tileState: types.tileState.defaults,
   toggleFlags: () => {},
-  gameSetup: () => {},
   takeCard: () => {},
   discardCard: () => {},
   takeTile: () => {},

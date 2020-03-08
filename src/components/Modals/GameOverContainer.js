@@ -7,8 +7,6 @@ import { connect } from "react-redux";
 import actions from "../../redux/Actions";
 import * as types from "../../types/types";
 
-import "./styles/gameover.scss";
-
 import GameOverModal from "./GameOverModal";
 
 const mapStateToProps = state => {
@@ -42,6 +40,7 @@ const GameOverContainer = props => {
    */
   const acceptGameOver = () => {
     toggleFlags(GameOver);
+    toggleFlags("game-start");
   };
 
   return (
