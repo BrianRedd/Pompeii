@@ -12,7 +12,8 @@ import {
   gridByColor,
   voidLavaSquares,
   voidRunSquares,
-  escapeSquares
+  escapeSquares,
+  gateSquares
 } from "../data/gridData";
 
 import Main from "./Main";
@@ -57,18 +58,7 @@ const MainContainer = props => {
     addSnackbar
   } = props;
 
-  // const numberOfPlayers = 3;
   const numberOfEruptionTurns = 6;
-
-  // useEffect(() => {
-  //   if (!_.get(cardsState.cards)) {
-  //     if (numberOfPlayers) {
-  //       gameSetup(numberOfPlayers);
-  //     } else {
-  //       gameSetup();
-  //     }
-  //   }
-  // }, [cardsState.cards, gameSetup]);
 
   const [activePlayer, setActivePlayer] = useState();
 
@@ -567,6 +557,25 @@ const MainContainer = props => {
     );
   };
 
+  const checkForBlockage = square => {
+    const exits = gateSquares; // array of gates
+    console.log("exits:", exits);
+    const hotZones = voidLavaSquares;
+
+    const gridKeys = Object.keys(gridState.grid);
+    gridKeys.forEach(key => {
+      if (_.get(gridState, `grid.${key}.lava`)) {
+        hotZones.push(key);
+      }
+    });
+    console.log("hotZones:", hotZones);
+
+    const directions = ["1_0", "0_1", "-1_0", "0_-1"];
+    console.log("directions:", directions);
+
+    return square;
+  };
+
   /**
    * @function placeLavaTile
    * @description placing tile in highlight area
@@ -586,6 +595,9 @@ const MainContainer = props => {
     }
     setLavaTile();
     setDangerZone([]);
+
+    // check for blockage
+    checkForBlockage(square);
 
     if (initialEruptionCounter) {
       setInitialEruptionCounter(initialEruptionCounter - 1);

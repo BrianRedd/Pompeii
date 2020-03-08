@@ -526,3 +526,5 @@ export const escapeSquares = [
   "7_6",
   "7_8"
 ];
+
+export const gateSquares = ["0_0", "0_5", "1_9", "4_0", "4_10", "6_6", "6_8"];
