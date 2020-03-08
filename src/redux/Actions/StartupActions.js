@@ -12,7 +12,7 @@ import { gridSquares } from "../../data/gridData";
 import * as constant from "../../data/constants";
 
 export const gameSetup = numberOfPlayers => async dispatch => {
-  const testMode = true;
+  const testMode = false;
 
   let nop = testMode ? 3 : numberOfPlayers;
   if (!nop) nop = Math.ceil(Math.random() * 3) + 1;

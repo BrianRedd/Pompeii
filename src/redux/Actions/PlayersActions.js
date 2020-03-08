@@ -128,9 +128,13 @@ export const incrementPlayerTurn = () => (dispatch, getState) => {
   // game over?
   // out of tiles
   // no people left on board
+  console.log(
+    "total population:",
+    _.sum(Object.values(playersState.details).map(arr => arr.population))
+  );
   if (
     pile.length === 0 ||
-    Object.values(playersState.details).map(arr => arr.population) === 0
+    _.sum(Object.values(playersState.details).map(arr => arr.population)) === 0
   ) {
     const gridArray = Object.keys(grid);
     gridArray.forEach(square => {

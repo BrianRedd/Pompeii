@@ -29,15 +29,13 @@ const OccupancySquare = ({
         `details.${person.player}.name`
       )}`;
       let style = {
-        backgroundColor: color,
-        position: "absolute",
-        left: 0,
-        top: 0
+        backgroundColor: color
       };
       const offSetArray = _.get(grid, `${square}.offSets`);
-      if (messageState.stage === 0 && offSetArray.length > 0) {
+      if (messageState.stage < 2 && offSetArray.length > 0) {
         style = {
           ...style,
+          position: "absolute",
           left: `${offSetArray[idx][0]}px`,
           top: `${offSetArray[idx][1]}px`
         };
