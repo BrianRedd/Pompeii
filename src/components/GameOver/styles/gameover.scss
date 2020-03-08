@@ -1,0 +1,37 @@
+/**
+ * @module gameover.scss
+ * @description general styles for modals
+ * */
+
+.lineItem_modal_header {
+  width: 100%;
+  .modal-title {
+    width: 100%;
+    margin-bottom: -15px;
+  }
+}
+
+.modal-dialog {
+  .modal-content {
+    .modal-header {
+      background-color: #5E5EAF;
+      color: #FFF;
+      button.close {
+        color: #FFF;
+      }
+    }
+    .modal-body {
+      .form-group {
+        margin-bottom: 0.5rem;
+      }
+    }
+  }
+}
+
+.modal-container {
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}

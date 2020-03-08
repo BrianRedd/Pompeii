@@ -15,6 +15,7 @@ import PlacementHighlighter from "./Board/PlacementHighlighter";
 import AD79Sidebar from "./Sidebars/AD79Sidebar";
 import LavaTileSidebar from "./Sidebars/LavaTileSidebar";
 import SnackbarNotifier from "./Helpers/SnackbarNotifier";
+import GameOverContainer from "./GameOver/GameOverContainer";
 
 /**
  * @function Main
@@ -44,7 +45,8 @@ const Main = props => {
     selectRunner,
     runZone,
     runToSquare,
-    placeRelatives
+    placeRelatives,
+    toggleFlags
   } = props;
 
   return (
@@ -58,6 +60,7 @@ const Main = props => {
             selectRunner={selectRunner}
             placeRelatives={placeRelatives}
             runToSquare={runToSquare}
+            toggleFlags={toggleFlags}
           />
           <div className="off-board">
             {flagsState.flags.includes("card-ad79") && <AD79Sidebar />}
@@ -125,6 +128,7 @@ const Main = props => {
           );
         })()}
       </Col>
+      {flagsState.flags.includes("game-over") && <GameOverContainer />}
     </SnackbarProvider>
   );
 };
@@ -150,7 +154,8 @@ Main.propTypes = {
   placeLavaTile: PropTypes.func,
   selectRunner: PropTypes.func,
   runToSquare: PropTypes.func,
-  placeRelatives: PropTypes.func
+  placeRelatives: PropTypes.func,
+  toggleFlags: PropTypes.func
 };
 
 Main.defaultProps = {
@@ -174,7 +179,8 @@ Main.defaultProps = {
   placeLavaTile: () => {},
   selectRunner: () => {},
   runToSquare: () => {},
-  placeRelatives: () => {}
+  placeRelatives: () => {},
+  toggleFlags: () => {}
 };
 
 export default Main;

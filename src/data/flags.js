@@ -45,6 +45,11 @@ const flagsList = [
     name: "no-place-to-place",
     description: "Placing Lava tile",
     defaultState: false
+  },
+  {
+    name: "game-over",
+    description: "Game Over!",
+    defaultState: false
   }
 ];
 

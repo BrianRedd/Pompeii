@@ -2,13 +2,24 @@
 
 import * as actions from "../ActionTypes";
 import * as types from "../../types/types";
+import flagsList from "../../data/flags";
+
+/**
+ * @constant defaultFlags
+ * @description Takes flagsList array of Objects, filters out those that
+ * do are not true by default, and maps to array of names only
+ */
+const defaultFlags = flagsList.filter(t => t.defaultState).map(t => t.name);
 
 /**
  * @constant flagsState
  * @param {Object} state - flags state object
  * @param {Object} action
  */
-const flagsState = (state = types.flagsState.defaults, action) => {
+const flagsState = (
+  state = { ...types.flagsState.defaults, flags: defaultFlags },
+  action
+) => {
   const { type, payload } = action;
   const { flags } = state;
   const newFlags = [...flags];

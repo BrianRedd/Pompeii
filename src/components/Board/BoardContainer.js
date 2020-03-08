@@ -33,7 +33,8 @@ const BoardContainer = props => {
     performSacrifice,
     selectRunner,
     placeRelatives,
-    runToSquare
+    runToSquare,
+    toggleFlags
   } = props;
   return (
     <div data-test="container-board" className="board-container">
@@ -49,6 +50,8 @@ const BoardContainer = props => {
         flagsState={flagsState}
         placeRelatives={placeRelatives}
         runToSquare={runToSquare}
+        toggleFlags={toggleFlags}
+        messageState={messageState}
       />
     </div>
   );
@@ -62,7 +65,8 @@ BoardContainer.propTypes = {
   performSacrifice: PropTypes.func,
   selectRunner: PropTypes.func,
   placeRelatives: PropTypes.func,
-  runToSquare: PropTypes.func
+  runToSquare: PropTypes.func,
+  toggleFlags: PropTypes.func
 };
 
 BoardContainer.defaultProps = {
@@ -73,7 +77,8 @@ BoardContainer.defaultProps = {
   performSacrifice: () => {},
   selectRunner: () => {},
   placeRelatives: () => {},
-  runToSquare: () => {}
+  runToSquare: () => {},
+  toggleFlags: () => {}
 };
 
 export const BoardContainerTest = BoardContainer;

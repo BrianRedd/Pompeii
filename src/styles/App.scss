@@ -1,5 +1,7 @@
 /** @module App.scss */
 
+@import "./colors.scss";
+
 //variables
 
 $people-size: 30px;
@@ -162,8 +164,15 @@ fieldset {
       width: 40px;
       text-align: center;
       .fa-ban {
+        display: none;
         position: absolute;
         left: 4px;
+      }
+    }
+    &:hover {
+      opacity: 1;
+      .fa-ban {
+        display: inline;
       }
     }
   }
@@ -187,5 +196,92 @@ fieldset {
   }
   &.error > div {
     background-color: #ce3426;
+  }
+}
+
+/*
+ Buttons
+--------- */
+
+.btn {
+  border-color: transparent;
+  color: $color-dark-blue;
+  font-size: inherit !important;
+  text-transform: initial !important;
+  &.center {
+    left: 30%;
+  }
+
+  &:hover {
+    border-color: transparent;
+    color: $color-dark-blue;
+    opacity: 0.7;
+  }
+
+  &.btn-primary {
+    background-color: $color-green !important;
+  }
+
+  &.btn-secondary {
+    background-color: $color-dark-blue !important;
+    color: $color-white;
+    &:hover {
+      color: $color-white;
+    }
+  }
+
+  &.btn-info {
+    background-color: $color-tan !important;
+  }
+
+  &.btn-warning {
+    background-color: $color-rust !important;
+    color: $color-white;
+    &:hover {
+      color: $color-white;
+    }
+  }
+
+  &.btn-light {
+    color: $color-dark-blue;
+  }
+
+  &.btn-light-alt {
+    color: $color-white-masked;
+  }
+
+  &.btn-grey {
+    background-color: $color-alt-grey;
+    color: $color-white;
+    font-size: 0.85rem !important;
+    width: 190px;
+    &.active {
+      background-color: $color-dark-blue;
+    }
+    &:hover {
+      background-color: $color-grey;
+    }
+  }
+
+  &.disabled,
+  &:disabled {
+    background-color: $color-light-grey !important;
+  }
+
+  &.btn-pill {
+    border-radius: 10px;
+  }
+
+  &.nopadding {
+    margin: 0;
+    padding: 0 2px 0 2px;
+    min-width: initial;
+    width: initial;
+    min-height: initial;
+  }
+
+  span.far,
+  span.fas {
+    margin-top: -3px;
   }
 }

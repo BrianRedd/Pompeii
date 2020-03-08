@@ -6,6 +6,7 @@ import * as actionTypes from "../ActionTypes";
 import * as constant from "../../data/constants";
 import { updateInstructions } from "./MessageActions";
 import { addSnackbar } from "./SnackbarActions";
+import { toggleFlags } from "./FlagsActions";
 
 /**
  * @function setPlayerArray
@@ -120,15 +121,27 @@ export const incrementPlayerTurn = () => (dispatch, getState) => {
   const {
     playersState,
     messageState: { stage },
-    tileState: { pile }
+    tileState: { pile },
+    gridState: { grid }
   } = getState();
 
   // game over?
+  // out of tiles
+  // no people left on board
   if (
     pile.length === 0 ||
     Object.values(playersState.details).map(arr => arr.population) === 0
   ) {
+    const gridArray = Object.keys(grid);
+    gridArray.forEach(square => {
+      if (square.occupants.length > 0) {
+        square.occupants.forEach(person => {
+          incrementPlayerCasualties(person.player, 1);
+        });
+      }
+    });
     alert("Game Over!");
+    dispatch(toggleFlags("game-over"));
   }
 
   // get next player
