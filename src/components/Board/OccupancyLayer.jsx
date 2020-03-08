@@ -9,56 +9,72 @@ import * as types from "../../types/types";
 import * as constant from "../../data/constants";
 
 const OccupancySquare = ({
-  occupants,
   square,
   playersState,
   performSacrifice,
   runCounter,
-  selectRunner
+  selectRunner,
+  messageState,
+  grid
 }) => {
-  const occupancySquare = occupants.map((person, idx) => {
-    const key = `${person.player}-${person.gender}-${idx}`;
-    const color = `rgb(${_.get(
-      playersState,
-      `details.${person.player}.color`
-    )})`;
-    const playerName = `${_.get(
-      playersState,
-      `details.${person.player}.name`
-    )}`;
-    return (
-      <Tooltip key={key} title={`${playerName}`} placement="top" arrow>
-        <ButtonBase
-          className={`person${
-            (playersState.players[playersState.turn] === person.player &&
-              runCounter) ||
-            (playersState.players[playersState.turn] !== person.player &&
-              !runCounter)
-              ? " highlight"
-              : ""
-          }`}
-          style={{
-            backgroundColor: color
-          }}
-          onClick={() => {
-            if (runCounter) {
-              selectRunner(person, square);
-            } else {
-              performSacrifice(person, square);
-            }
-          }}
-        >
-          <span className={`fas fa-${person.gender} fa-lg`} />
-        </ButtonBase>
-      </Tooltip>
-    );
-  });
+  const occupancySquare = _.get(grid, `${square}.occupants`, []).map(
+    (person, idx) => {
+      const key = `${person.player}-${person.gender}-${idx}`;
+      const color = `rgb(${_.get(
+        playersState,
+        `details.${person.player}.color`
+      )})`;
+      const playerName = `${_.get(
+        playersState,
+        `details.${person.player}.name`
+      )}`;
+      let style = {
+        backgroundColor: color,
+        position: "absolute",
+        left: 0,
+        top: 0
+      };
+      const offSetArray = _.get(grid, `${square}.offSets`);
+      if (messageState.stage === 0 && offSetArray.length > 0) {
+        style = {
+          ...style,
+          left: `${offSetArray[idx][0]}px`,
+          top: `${offSetArray[idx][1]}px`
+        };
+      }
+      return (
+        <Tooltip key={key} title={`${playerName}`} placement="top" arrow>
+          <ButtonBase
+            className={`person${
+              (playersState.players[playersState.turn] === person.player &&
+                runCounter) ||
+              (playersState.players[playersState.turn] !== person.player &&
+                !runCounter)
+                ? " highlight"
+                : ""
+            }`}
+            style={style}
+            onClick={() => {
+              if (runCounter) {
+                selectRunner(person, square);
+              } else {
+                performSacrifice(person, square);
+              }
+            }}
+          >
+            <span className={`fas fa-${person.gender} fa-lg`} />
+          </ButtonBase>
+        </Tooltip>
+      );
+    }
+  );
   return <div>{occupancySquare}</div>;
 };
 
 OccupancySquare.propTypes = {
+  messageState: types.messageState.types,
   playersState: types.playersState.types,
-  occupants: PropTypes.arrayOf(PropTypes.object),
+  grid: types.gridSquare.types,
   square: PropTypes.string,
   runCounter: PropTypes.number,
   selectRunner: PropTypes.func,
@@ -66,8 +82,9 @@ OccupancySquare.propTypes = {
 };
 
 OccupancySquare.defaultProps = {
+  messageState: types.messageState.defaults,
   playersState: types.playersState.defaults,
-  occupants: [],
+  grid: types.gridSquare.defaults,
   square: "",
   runCounter: 0,
   selectRunner: () => {},
@@ -86,7 +103,8 @@ const OccupancyLayer = props => {
     playersState,
     performSacrifice,
     runCounter,
-    selectRunner
+    selectRunner,
+    messageState
   } = props;
 
   const occupancy = Object.keys(grid).map(square => {
@@ -97,7 +115,7 @@ const OccupancyLayer = props => {
       <div
         key={square}
         data-test="square-occupancy"
-        className="occupancy-square"
+        className={`occupancy-square ${square}`}
         style={{
           top: `${row * 110 + constant.Y_OFFSET}px`,
           left: `${col * 110 + constant.X_OFFSET}px`
@@ -108,12 +126,13 @@ const OccupancyLayer = props => {
         )}
         {_.get(grid, `${square}.occupants.length`) > 0 && (
           <OccupancySquare
-            occupants={_.get(grid, `${square}.occupants`, [])}
             square={square}
             playersState={playersState}
             performSacrifice={performSacrifice}
             runCounter={runCounter}
             selectRunner={selectRunner}
+            messageState={messageState}
+            grid={grid}
           />
         )}
       </div>
@@ -129,6 +148,7 @@ const OccupancyLayer = props => {
 
 OccupancyLayer.propTypes = {
   gridState: types.gridState.types,
+  messageState: types.messageState.types,
   playersState: types.playersState.types,
   runCounter: PropTypes.number,
   performSacrifice: PropTypes.func,
@@ -137,6 +157,7 @@ OccupancyLayer.propTypes = {
 
 OccupancyLayer.defaultProps = {
   gridState: types.gridState.defaults,
+  messageState: types.messageState.defaults,
   playersState: types.playersState.defaults,
   runCounter: 0,
   performSacrifice: () => {},

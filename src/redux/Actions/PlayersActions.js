@@ -134,7 +134,7 @@ export const incrementPlayerTurn = () => (dispatch, getState) => {
   ) {
     const gridArray = Object.keys(grid);
     gridArray.forEach(square => {
-      if (square.occupants.length > 0) {
+      if (_.get(square, "occupants.length") > 0) {
         square.occupants.forEach(person => {
           incrementPlayerCasualties(person.player, 1);
         });

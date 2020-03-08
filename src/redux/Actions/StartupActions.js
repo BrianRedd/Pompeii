@@ -12,7 +12,9 @@ import { gridSquares } from "../../data/gridData";
 import * as constant from "../../data/constants";
 
 export const gameSetup = numberOfPlayers => async dispatch => {
-  let nop = numberOfPlayers;
+  const testMode = true;
+
+  let nop = testMode ? 3 : numberOfPlayers;
   if (!nop) nop = Math.ceil(Math.random() * 3) + 1;
   if (nop < 2) nop = 2;
   if (nop > 4) nop = 4;
@@ -33,7 +35,6 @@ export const gameSetup = numberOfPlayers => async dispatch => {
     };
   });
 
-  const testMode = false;
   if (testMode) {
     // START PRE-POPULATION (TEST)
     const playersArray = ["player1", "player2", "player3"];

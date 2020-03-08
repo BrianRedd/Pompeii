@@ -85,14 +85,16 @@ export const gridSquare = {
     buildingCapacity: number,
     ventName: string,
     gateName: string,
-    occupants: arrayOf(occupant.types)
+    occupants: arrayOf(occupant.types),
+    offSets: arrayOf(arrayOf(number))
   }),
   defaults: {
     buildingName: null,
     buildingCapacity: null,
     ventName: null,
     gateName: null,
-    occupants: []
+    occupants: [],
+    offSets: []
   }
 };
 

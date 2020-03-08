@@ -45,6 +45,7 @@ const BoardContainer = props => {
         performSacrifice={performSacrifice}
         runCounter={flagsState.runCounter}
         selectRunner={selectRunner}
+        messageState={messageState}
       />
       <CancelButtons
         flagsState={flagsState}
