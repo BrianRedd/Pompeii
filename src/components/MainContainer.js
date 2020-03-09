@@ -557,23 +557,100 @@ const MainContainer = props => {
     );
   };
 
-  const checkForBlockage = square => {
-    const exits = gateSquares; // array of gates
-    console.log("exits:", exits);
-    const hotZones = voidLavaSquares;
+  /**
+   * @function boundardDFS
+   * @description DFS helper function
+   * @param {Array} grid
+   * @param {Number} i
+   * @param {Number} j
+   */
+  const boundaryDFS = (grid, i, j) => {
+    const thisGrid = [...grid];
+    if (i > thisGrid.length - 1 || i < 0 || j > thisGrid[0].length || j < 0)
+      return;
 
-    const gridKeys = Object.keys(gridState.grid);
-    gridKeys.forEach(key => {
-      if (_.get(gridState, `grid.${key}.lava`)) {
-        hotZones.push(key);
-      }
+    if (thisGrid[i][j] === "O") thisGrid[i][j] = "*";
+
+    if (i > 0 && thisGrid[i - 1][j] === "O") {
+      boundaryDFS(thisGrid, i - 1, j);
+    }
+
+    if (i < thisGrid.length - 1 && thisGrid[i + 1][j] === "O") {
+      boundaryDFS(thisGrid, i + 1, j);
+    }
+
+    if (j > 0 && thisGrid[i][j - 1] === "O") {
+      boundaryDFS(thisGrid, i, j - 1);
+    }
+
+    if (i < thisGrid[0].length - 1 && thisGrid[i][j + 1] === "O") {
+      boundaryDFS(thisGrid, i, j + 1);
+    }
+  };
+
+  /**
+   * @function burnSurroundedTiles
+   * @description if tiles are surrounded by lava, burn 'em all
+   * @param {Array} tiles
+   */
+  const burnSurroundedTiles = tiles => {
+    tiles.forEach(tile => {
+      placeLavaTileOnSquare(tile, "Lava");
+
+      _.get(gridState, `grid.${tile}.occupants`, []).forEach(person => {
+        incrementPlayerCasualties(person.player, 1);
+      });
+      placePeopleInSquare(tile, []);
     });
-    console.log("hotZones:", hotZones);
+  };
 
-    const directions = ["1_0", "0_1", "-1_0", "0_-1"];
-    console.log("directions:", directions);
+  /**
+   * @function checkForSurroundedTiles
+   * @description DFS-based check for tiles surrounded by lava
+   * @param {String} tile most recently placed tile location
+   * @returns {Array} array of surrounded tiles
+   */
+  const checkForSurroundedTiles = tile => {
+    const surroundedTiles = [];
+    const tempGrid = [];
+    for (let i = 0; i < 7; i += 1) {
+      const row = [];
+      for (let ii = 0; ii < 11; ii += 1) {
+        let gridValue = _.get(gridState, `grid.${i}_${ii}.lava`) ? "L" : "O";
+        if (tile === `${i}_${ii}`) gridValue = "L";
+        if (voidLavaSquares.includes(`${i}_${ii}`)) {
+          gridValue = "W";
+        }
+        if (gridValue === "O" && gateSquares.includes(`${i}_${ii}`)) {
+          gridValue = "X";
+        }
+        row.push(gridValue);
+      }
+      tempGrid.push(row);
+    }
 
-    return square;
+    const rows = tempGrid.length;
+    const columns = tempGrid[0].length;
+
+    gateSquares.forEach(square => {
+      const coords = square.split("_");
+      const i = parseFloat(coords[0]);
+      const j = parseFloat(coords[1]);
+
+      if (tempGrid[i][j] === "X") boundaryDFS(tempGrid, i, j);
+    });
+
+    for (let i = 0; i < rows; i += 1) {
+      for (let j = 0; j < columns; j += 1) {
+        if (tempGrid[i][j] === "O") {
+          tempGrid[i][j] = "L";
+          surroundedTiles.push(`${i}_${j}`);
+        } else if (tempGrid[i][j] === "*") {
+          tempGrid[i][j] = "O";
+        }
+      }
+    }
+    return surroundedTiles;
   };
 
   /**
@@ -582,6 +659,7 @@ const MainContainer = props => {
    * @param {String} square
    */
   const placeLavaTile = square => {
+    console.log("lavaTile:", lavaTile);
     console.log("placeLavaTile; square:", square);
     placeLavaTileOnSquare(square, lavaTile);
 
@@ -596,8 +674,11 @@ const MainContainer = props => {
     setLavaTile();
     setDangerZone([]);
 
-    // check for blockage
-    checkForBlockage(square);
+    // check for tiles surrounded by lava
+    const tilesSurroundedByLava = checkForSurroundedTiles(square);
+    if (tilesSurroundedByLava.length > 0) {
+      burnSurroundedTiles(tilesSurroundedByLava);
+    }
 
     if (initialEruptionCounter) {
       setInitialEruptionCounter(initialEruptionCounter - 1);
