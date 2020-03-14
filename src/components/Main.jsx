@@ -17,6 +17,7 @@ import LavaTileSidebar from "./Sidebars/LavaTileSidebar";
 import SnackbarNotifier from "./Helpers/SnackbarNotifier";
 import GameOverContainer from "./Modals/GameOverContainer";
 import StartGameContainer from "./Modals/StartGameContainer";
+import GameStatisticsContainer from "./Modals/GameStatisticsContainer";
 
 /**
  * @function Main
@@ -139,6 +140,7 @@ const Main = props => {
         })()}
       </Col>
       {flagsState.flags.includes("game-over") && <GameOverContainer />}
+      {flagsState.flags.includes("game-stats") && <GameStatisticsContainer />}
       {flagsState.flags.includes("game-start") && <StartGameContainer />}
     </SnackbarProvider>
   );

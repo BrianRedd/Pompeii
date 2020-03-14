@@ -7,6 +7,7 @@ import * as constant from "../../data/constants";
 import { updateInstructions } from "./MessageActions";
 import { addSnackbar } from "./SnackbarActions";
 import { toggleFlags } from "./FlagsActions";
+import { placeLavaTileOnSquare, placePeopleInSquare } from "./GridActions";
 
 /**
  * @function setPlayerArray
@@ -82,6 +83,7 @@ export const incrementPlayerCasualties = (playerId, casualties) => (
   dispatch,
   getState
 ) => {
+  console.log("kill a person:", playerId, casualties);
   const { playersState } = getState();
   setTimeout(() => {
     dispatch(
@@ -158,11 +160,15 @@ export const incrementPlayerTurn = () => (dispatch, getState) => {
   ) {
     const gridArray = Object.keys(grid);
     gridArray.forEach(square => {
-      if (_.get(square, "occupants.length") > 0) {
-        square.occupants.forEach(person => {
-          incrementPlayerCasualties(person.player, 1);
+      if (_.get(grid, `${square}.occupants.length`) > 0) {
+        _.get(grid, `${square}.occupants`).forEach(person => {
+          dispatch(incrementPlayerCasualtiesInStore(person.player, 1));
         });
       }
+      if (!_.get(grid, `${square}.lava`)) {
+        dispatch(placeLavaTileOnSquare(square, "Lava"));
+      }
+      dispatch(placePeopleInSquare(square, []));
     });
     dispatch(toggleFlags("game-over"));
   }

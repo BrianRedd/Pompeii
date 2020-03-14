@@ -52,6 +52,11 @@ const flagsList = [
     defaultState: false
   },
   {
+    name: "game-stats",
+    description: "Game Statistics",
+    defaultState: false
+  },
+  {
     name: "game-start",
     description: "Start of Game Modal",
     defaultState: true

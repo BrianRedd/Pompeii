@@ -1,8 +1,8 @@
 /** @module GameOverContainer */
 
-import React from "react";
-import PropTypes from "prop-types";
+import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
+import _ from "lodash";
 
 import actions from "../../redux/Actions";
 import * as types from "../../types/types";
@@ -28,9 +28,24 @@ const mapDispatchToProps = {
 const GameOverContainer = props => {
   const {
     flagsState: { flags },
-    playersState,
-    toggleFlags
+    playersState
   } = props;
+
+  const [rankings, setRankings] = useState();
+
+  useEffect(() => {
+    const statistics = _.get(playersState, "players").map(player => {
+      return {
+        code: player,
+        name: _.get(playersState, `details.${player}.name`),
+        victoryPoints:
+          parseFloat(_.get(playersState, `details.${player}.saved`)) * 100 +
+          99 -
+          parseFloat(_.get(playersState, `details.${player}.casualties`))
+      };
+    });
+    setRankings(statistics.sort((a, b) => b.victoryPoints - a.victoryPoints));
+  }, [playersState]);
 
   const GameOver = "game-over";
 
@@ -39,29 +54,31 @@ const GameOverContainer = props => {
    * @description After reading statistics, continue
    */
   const acceptGameOver = () => {
-    toggleFlags(GameOver);
-    toggleFlags("game-start");
+    document.location.reload();
   };
 
   return (
-    <GameOverModal
-      playersState={playersState}
-      flags={flags}
-      acceptGameOver={acceptGameOver}
-    />
+    <div>
+      {rankings && (
+        <GameOverModal
+          playersState={playersState}
+          isOpen={flags.includes(GameOver)}
+          acceptGameOver={acceptGameOver}
+          rankings={rankings}
+        />
+      )}
+    </div>
   );
 };
 
 GameOverContainer.propTypes = {
   playersState: types.playersState.types,
-  flagsState: types.flagsState.types,
-  toggleFlags: PropTypes.func
+  flagsState: types.flagsState.types
 };
 
 GameOverContainer.defaultProps = {
   playersState: types.playersState.defaults,
-  flagsState: types.flagsState.defaults,
-  toggleFlags: () => {}
+  flagsState: types.flagsState.defaults
 };
 
 export const GameOverContainerTest = GameOverContainer;
