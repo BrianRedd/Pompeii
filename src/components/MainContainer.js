@@ -55,7 +55,7 @@ const MainContainer = props => {
     incrementPlayerCasualties,
     placeLavaTileOnSquare,
     setRunCounter,
-    dispatchSnackbar
+    addSnackbar
   } = props;
 
   const numberOfEruptionTurns = 6;
@@ -119,10 +119,10 @@ const MainContainer = props => {
         toggleFlags("placing-person");
       }
       updateInstructions({
-        text: `${_.get(playersState, `details[${activePlayer}].name`)}: ${
+        text: `${_.get(playersState, `details.${activePlayer}.name`)}: ${
           constant.DRAW
         }`,
-        color: _.get(playersState, `details[${activePlayer}].color`)
+        color: _.get(playersState, `details.${activePlayer}.color`)
       });
     }
   };
@@ -171,10 +171,10 @@ const MainContainer = props => {
       ]).filter(val => val !== grid);
       setCardGrid(newGridArray);
       updateInstructions({
-        text: `${_.get(playersState, `details[${activePlayer}].name`)}: ${
+        text: `${_.get(playersState, `details.${activePlayer}.name`)}: ${
           constant.RELATIVE
         }`,
-        color: _.get(playersState, `details[${activePlayer}].color`)
+        color: _.get(playersState, `details.${activePlayer}.color`)
       });
     } else {
       // else complete placement
@@ -186,10 +186,10 @@ const MainContainer = props => {
         toggleFlags("card-wild");
       }
       updateInstructions({
-        text: `${_.get(playersState, `details[${activePlayer}].name`)}: ${
+        text: `${_.get(playersState, `details.${activePlayer}.name`)}: ${
           constant.DRAW
         }`,
-        color: _.get(playersState, `details[${activePlayer}].color`)
+        color: _.get(playersState, `details.${activePlayer}.color`)
       });
     }
   };
@@ -241,10 +241,10 @@ const MainContainer = props => {
 
     setCardGrid(gridHighlights);
     updateInstructions({
-      text: `${_.get(playersState, `details[${activePlayer}].name`)}: ${
+      text: `${_.get(playersState, `details.${activePlayer}.name`)}: ${
         constant.PLACE
       }`,
-      color: _.get(playersState, `details[${activePlayer}].color`)
+      color: _.get(playersState, `details.${activePlayer}.color`)
     });
   };
 
@@ -308,10 +308,10 @@ const MainContainer = props => {
       toggleFlags("card-omen");
     }
     updateInstructions({
-      text: `${_.get(playersState, `details[${activePlayer}].name`)}: ${
+      text: `${_.get(playersState, `details.${activePlayer}.name`)}: ${
         constant.DRAW
       }`,
-      color: _.get(playersState, `details[${activePlayer}].color`)
+      color: _.get(playersState, `details.${activePlayer}.color`)
     });
   };
 
@@ -323,10 +323,10 @@ const MainContainer = props => {
     console.log("resolveOmen");
     setReadyForSacrifice(true);
     updateInstructions({
-      text: `${_.get(playersState, `details[${activePlayer}].name`)}: ${
+      text: `${_.get(playersState, `details.${activePlayer}.name`)}: ${
         constant.SACRIFICE
       }`,
-      color: _.get(playersState, `details[${activePlayer}].color`)
+      color: _.get(playersState, `details.${activePlayer}.color`)
     });
     if (!flagsState.flags.includes("card-omen")) {
       toggleFlags("card-omen");
@@ -358,7 +358,7 @@ const MainContainer = props => {
     }
 
     const newHand = [
-      ..._.get(playersState, `details[${activePlayer}].hand`),
+      ..._.get(playersState, `details.${activePlayer}.hand`),
       takenCard
     ];
 
@@ -433,10 +433,10 @@ const MainContainer = props => {
   const runForYourLives = async () => {
     console.log("runForYourLives");
     await updateInstructions({
-      text: `${_.get(playersState, `details[${activePlayer}].name`)}: ${
+      text: `${_.get(playersState, `details.${activePlayer}.name`)}: ${
         constant.RUN
       }`,
-      color: _.get(playersState, `details[${activePlayer}].color`)
+      color: _.get(playersState, `details.${activePlayer}.color`)
     });
   };
 
@@ -457,7 +457,7 @@ const MainContainer = props => {
     if (initialEruptionCounter) {
       setInitialEruptionCounter(initialEruptionCounter - 1);
       incrementPlayerTurn();
-    } else if (_.get(playersState, `details[${activePlayer}].population`) < 1) {
+    } else if (_.get(playersState, `details.${activePlayer}.population`) < 1) {
       incrementPlayerTurn();
     } else {
       setRunCounter(2);
@@ -501,7 +501,8 @@ const MainContainer = props => {
 
     setRunFromSquare(square);
     if (person.player !== activePlayer) {
-      dispatchSnackbar({
+      console.log("Not your person!");
+      addSnackbar({
         message: "Not your person!",
         type: "warning"
       });
@@ -509,9 +510,10 @@ const MainContainer = props => {
     }
     if (
       person.lastMoved === playersState.totalTurns &&
-      _.get(playersState, `details[${activePlayer}].population`) !== 1
+      _.get(playersState, `details.${activePlayer}.population`) !== 1
     ) {
-      dispatchSnackbar({
+      console.log("Already ran this person this turn!");
+      addSnackbar({
         message: "Already ran this person this turn!",
         type: "warning"
       });
@@ -670,8 +672,7 @@ const MainContainer = props => {
    * @param {String} square
    */
   const placeLavaTile = square => {
-    console.log("lavaTile:", lavaTile);
-    console.log("placeLavaTile; square:", square);
+    console.log("placeLavaTile:", lavaTile, square);
     placeLavaTileOnSquare(square, lavaTile);
 
     _.get(gridState, `grid.${square}.occupants`, []).forEach(person => {
@@ -694,7 +695,7 @@ const MainContainer = props => {
     if (initialEruptionCounter) {
       setInitialEruptionCounter(initialEruptionCounter - 1);
       incrementPlayerTurn();
-    } else if (_.get(playersState, `details[${activePlayer}].population`) < 1) {
+    } else if (_.get(playersState, `details.${activePlayer}.population`) < 1) {
       incrementPlayerTurn();
     } else {
       setRunCounter(2);
@@ -726,7 +727,7 @@ const MainContainer = props => {
 
       if (escapeSquares.includes(toSquare)) {
         incrementPlayerSaved(activePlayer, 1);
-        if (_.get(playersState, `details[${activePlayer}].population`) === 1) {
+        if (_.get(playersState, `details.${activePlayer}.population`) === 1) {
           numberOfRuns = 1;
         }
       } else {
@@ -744,12 +745,7 @@ const MainContainer = props => {
 
       numberOfRuns -= 1;
     }
-    console.log("numberOfRuns:", numberOfRuns);
-    console.log(
-      "activePlayer Population:",
-      _.get(playersState, `details[${activePlayer}].population`)
-    );
-    if (_.get(playersState, `details[${activePlayer}].population`) < 1) {
+    if (_.get(playersState, `details.${activePlayer}.population`) < 1) {
       numberOfRuns = 0;
     }
     setRunCounter(numberOfRuns);
@@ -768,7 +764,7 @@ const MainContainer = props => {
         tileState={tileState}
         drawCard={drawCard}
         deckEnabled={
-          _.get(playersState, `details[${activePlayer}].hand.length`) < 4 &&
+          _.get(playersState, `details.${activePlayer}.hand.length`) < 4 &&
           !flagsState.flags.includes("placing-person") &&
           !flagsState.flags.includes("card-omen")
         }
@@ -820,7 +816,7 @@ MainContainer.propTypes = {
   incrementPlayerSaved: PropTypes.func,
   placeLavaTileOnSquare: PropTypes.func,
   setRunCounter: PropTypes.func,
-  dispatchSnackbar: PropTypes.func
+  addSnackbar: PropTypes.func
 };
 
 MainContainer.defaultProps = {
@@ -844,7 +840,7 @@ MainContainer.defaultProps = {
   incrementPlayerSaved: () => {},
   placeLavaTileOnSquare: () => {},
   setRunCounter: () => {},
-  dispatchSnackbar: () => {}
+  addSnackbar: () => {}
 };
 
 export const MainContainerTest = MainContainer;

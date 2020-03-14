@@ -73,17 +73,6 @@ export const incrementPlayerCasualtiesInStore = (playerId, casualties) => ({
 });
 
 /**
- * @function incrementPlayerSaved
- * @description adds/updates single player saved to PlayersState store
- * @param {String} playerId
- * @param {Object} saved - player saved increase
- */
-export const incrementPlayerSaved = (playerId, saved) => ({
-  type: actionTypes.INCREMENT_PLAYER_SAVED,
-  payload: { playerId, saved }
-});
-
-/**
  * @function incrementPlayerCasualties
  * @description adds/updates single player casualties with snackbar
  * @param {String} playerId
@@ -94,13 +83,48 @@ export const incrementPlayerCasualties = (playerId, casualties) => (
   getState
 ) => {
   const { playersState } = getState();
-  dispatch(
-    addSnackbar({
-      message: `${casualties} of ${playersState.details[playerId].name}'s people have been killed!`,
-      type: "info"
-    })
-  );
+  setTimeout(() => {
+    dispatch(
+      addSnackbar({
+        message: `${playersState.details[playerId].name}'s people have suffered casualties!`,
+        type: "error"
+      })
+    );
+  }, 10);
   dispatch(incrementPlayerCasualtiesInStore(playerId, casualties));
+};
+
+/**
+ * @function incrementPlayerSavedInStore
+ * @description adds/updates single player saved to PlayersState store
+ * @param {String} playerId
+ * @param {Object} saved - player saved increase
+ */
+export const incrementPlayerSavedInStore = (playerId, saved) => ({
+  type: actionTypes.INCREMENT_PLAYER_SAVED,
+  payload: { playerId, saved }
+});
+
+/**
+ * @function incrementPlayerSaved
+ * @description adds/updates single player saved with snackbar
+ * @param {String} playerId
+ * @param {Number} saved - player saved increase
+ */
+export const incrementPlayerSaved = (playerId, saved) => (
+  dispatch,
+  getState
+) => {
+  const { playersState } = getState();
+  setTimeout(() => {
+    dispatch(
+      addSnackbar({
+        message: `One of ${playersState.details[playerId].name}'s people have escaped!`,
+        type: "success"
+      })
+    );
+  }, 10);
+  dispatch(incrementPlayerSavedInStore(playerId, saved));
 };
 
 /**
