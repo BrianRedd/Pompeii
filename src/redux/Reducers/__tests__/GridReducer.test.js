@@ -46,6 +46,7 @@ test("should handle PLACE_PEOPLE action", () => {
       buildingName: null,
       buildingCapacity: null,
       occupants: [{ gender: "neuter", player: "tester" }],
+      offSets: [],
       ventName: null,
       gateName: null
     }

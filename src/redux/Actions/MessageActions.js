@@ -26,7 +26,7 @@ export const updateInstructions = instructionObj => ({
 });
 
 /**
- * @function setStageInStore
+ * @function incrementStage
  * @description increments stage with snackbar
  */
 export const incrementStage = () => (dispatch, getState) => {

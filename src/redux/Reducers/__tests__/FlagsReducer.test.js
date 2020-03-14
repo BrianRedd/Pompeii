@@ -3,8 +3,10 @@
 import * as actionTypes from "../../ActionTypes";
 import Reducer from "../FlagsReducer";
 import * as types from "../../../types/types";
+import flagsList from "../../../data/flags";
 
-const defaultState = types.flagsState.defaults;
+const defaultFlags = flagsList.filter(t => t.defaultState).map(t => t.name);
+const defaultState = { ...types.flagsState.defaults, flags: defaultFlags };
 
 test("should return initial state", () => {
   expect(Reducer(undefined, { type: "", payload: "" })).toEqual(defaultState);

@@ -8,8 +8,8 @@ import * as actions from "../StartupActions";
 
 test("gameSetup", async () => {
   const expectedActions = [
-    actionTypes.SET_PLAYERS_ARRAY,
     actionTypes.ADD_GRID,
+    actionTypes.SET_PLAYERS_ARRAY,
     actionTypes.ADD_PLAYERS,
     actionTypes.ADD_CARDS,
     actionTypes.ADD_DECK,

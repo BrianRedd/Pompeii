@@ -76,7 +76,7 @@ test("incrementPlayerPopulation", () => {
   );
 });
 
-test("incrementPlayerCasualties", () => {
+test("incrementPlayerCasualtiesInStore", () => {
   const playerId = "player1";
   const casualties = 1;
   const expectedAction = {
@@ -86,12 +86,12 @@ test("incrementPlayerCasualties", () => {
       casualties
     }
   };
-  expect(actions.incrementPlayerCasualties(playerId, casualties)).toEqual(
-    expectedAction
-  );
+  expect(
+    actions.incrementPlayerCasualtiesInStore(playerId, casualties)
+  ).toEqual(expectedAction);
 });
 
-test("incrementPlayerSaved", () => {
+test("incrementPlayerSavedInStore", () => {
   const playerId = "player1";
   const saved = 1;
   const expectedAction = {
@@ -101,7 +101,9 @@ test("incrementPlayerSaved", () => {
       saved
     }
   };
-  expect(actions.incrementPlayerSaved(playerId, saved)).toEqual(expectedAction);
+  expect(actions.incrementPlayerSavedInStore(playerId, saved)).toEqual(
+    expectedAction
+  );
 });
 
 test("setPlayerturn", () => {
@@ -128,8 +130,9 @@ describe("incrementPlayerTurn", () => {
         }
       }
     },
+    gridState: { grid: [] },
     messageState: { stage: 0 },
-    tileState: { pile: [] }
+    tileState: { pile: [{ key: "value" }] }
   };
   test("0 -> 1", () => {
     const thisState = { ...initialState };

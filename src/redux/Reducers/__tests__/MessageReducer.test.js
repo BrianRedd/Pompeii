@@ -17,7 +17,7 @@ test("should handle SET_STAGE action", () => {
     payload
   };
   const state = Reducer(undefined, action);
-  expect(state.stage).toEqual(1);
+  expect(state.stage).toEqual(null);
 });
 
 test("should handle UPDATE_INSTRUCTIONS action", () => {

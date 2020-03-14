@@ -3,13 +3,13 @@
 import * as actionTypes from "../../ActionTypes";
 import * as actions from "../MessageActions";
 
-test("incrementStage", () => {
+test("setStageInStore", () => {
   const payload = null;
   const expectedAction = {
     type: actionTypes.SET_STAGE,
     payload
   };
-  expect(actions.incrementStage(payload)).toEqual(expectedAction);
+  expect(actions.setStageInStore(payload)).toEqual(expectedAction);
 });
 
 test("updateInstructions", () => {

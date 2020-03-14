@@ -83,7 +83,6 @@ export const incrementPlayerCasualties = (playerId, casualties) => (
   dispatch,
   getState
 ) => {
-  console.log("kill a person:", playerId, casualties);
   const { playersState } = getState();
   setTimeout(() => {
     dispatch(
