@@ -144,10 +144,34 @@ fieldset {
 .highlighter {
   @include square-size;
   position: absolute !important;
-  div {
-    @include square-size;
-    background-color: $color-green;
-    opacity: 0.4;
+  &.player1 {
+    div {
+      @include square-size;
+      background-color: $color-blue;
+      opacity: 0.4;
+    }
+  }
+  &.player2 {
+    div {
+      @include square-size;
+      background-color: $color-green;
+      opacity: 0.4;
+    }
+  }
+  &.player3 {
+    div {
+      @include square-size;
+      background-color: $color-red;
+      opacity: 0.4;
+    }
+  }
+  &.player4 {
+    div {
+      @include square-size;
+      background-color: $color-black;
+      opacity: 0.3;
+      border-color: $color-black;
+    }
   }
 }
 

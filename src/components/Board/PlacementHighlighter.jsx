@@ -13,7 +13,7 @@ import * as constant from "../../data/constants";
  * @returns {React.Component} - Rendered component.
  */
 const PlacementHighlighter = props => {
-  const { gridArray, validation, selectSquare } = props;
+  const { gridArray, validation, selectSquare, activePlayer } = props;
 
   const placementHighlighter = gridArray.map(square => {
     if (validation(square)) {
@@ -25,7 +25,7 @@ const PlacementHighlighter = props => {
           data-test="square-highlighted"
           key={square}
           onClick={() => selectSquare(square)}
-          className="highlighter"
+          className={`highlighter ${activePlayer}`}
           style={{
             top: `${row * 110 + constant.Y_OFFSET}px`,
             left: `${col * 110 + constant.X_OFFSET}px`
@@ -45,12 +45,14 @@ const PlacementHighlighter = props => {
 
 PlacementHighlighter.propTypes = {
   gridArray: PropTypes.arrayOf(PropTypes.string),
+  activePlayer: PropTypes.string,
   selectSquare: PropTypes.func,
   validation: PropTypes.func
 };
 
 PlacementHighlighter.defaultProps = {
   gridArray: [],
+  activePlayer: "",
   selectSquare: () => {},
   validation: () => {}
 };

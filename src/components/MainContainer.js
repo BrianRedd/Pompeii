@@ -55,7 +55,7 @@ const MainContainer = props => {
     incrementPlayerCasualties,
     placeLavaTileOnSquare,
     setRunCounter,
-    addSnackbar
+    dispatchSnackbar
   } = props;
 
   const numberOfEruptionTurns = 6;
@@ -427,6 +427,20 @@ const MainContainer = props => {
   };
 
   /**
+   * @function runForYourLives
+   * @description player can now run two of their people
+   */
+  const runForYourLives = async () => {
+    console.log("runForYourLives");
+    await updateInstructions({
+      text: `${_.get(playersState, `details[${activePlayer}].name`)}: ${
+        constant.RUN
+      }`,
+      color: _.get(playersState, `details[${activePlayer}].color`)
+    });
+  };
+
+  /**
    * @function resolveNoPlaceToPlace
    * @description continue from no place to place
    */
@@ -440,7 +454,15 @@ const MainContainer = props => {
     }
     setLavaTile();
     setDangerZone([]);
-    incrementPlayerTurn();
+    if (initialEruptionCounter) {
+      setInitialEruptionCounter(initialEruptionCounter - 1);
+      incrementPlayerTurn();
+    } else if (_.get(playersState, `details[${activePlayer}].population`) < 1) {
+      incrementPlayerTurn();
+    } else {
+      setRunCounter(2);
+      runForYourLives();
+    }
   };
 
   /**
@@ -468,20 +490,6 @@ const MainContainer = props => {
   };
 
   /**
-   * @function runForYourLives
-   * @description player can now run two of their people
-   */
-  const runForYourLives = async () => {
-    console.log("runForYourLives");
-    await updateInstructions({
-      text: `${_.get(playersState, `details[${activePlayer}].name`)}: ${
-        constant.RUN
-      }`,
-      color: _.get(playersState, `details[${activePlayer}].color`)
-    });
-  };
-
-  /**
    * @function selectRunner
    * @description select person to run
    * @param {Object} person - person object
@@ -493,14 +501,17 @@ const MainContainer = props => {
 
     setRunFromSquare(square);
     if (person.player !== activePlayer) {
-      addSnackbar({
+      dispatchSnackbar({
         message: "Not your person!",
         type: "warning"
       });
       return;
     }
-    if (person.lastMoved === playersState.totalTurns) {
-      addSnackbar({
+    if (
+      person.lastMoved === playersState.totalTurns &&
+      _.get(playersState, `details[${activePlayer}].population`) !== 1
+    ) {
+      dispatchSnackbar({
         message: "Already ran this person this turn!",
         type: "warning"
       });
@@ -782,6 +793,7 @@ const MainContainer = props => {
         runToSquare={runToSquare}
         toggleFlags={toggleFlags}
         placeRelatives={placeRelatives}
+        activePlayer={activePlayer}
       />
     </div>
   );
@@ -808,7 +820,7 @@ MainContainer.propTypes = {
   incrementPlayerSaved: PropTypes.func,
   placeLavaTileOnSquare: PropTypes.func,
   setRunCounter: PropTypes.func,
-  addSnackbar: PropTypes.func
+  dispatchSnackbar: PropTypes.func
 };
 
 MainContainer.defaultProps = {
@@ -832,7 +844,7 @@ MainContainer.defaultProps = {
   incrementPlayerSaved: () => {},
   placeLavaTileOnSquare: () => {},
   setRunCounter: () => {},
-  addSnackbar: () => {}
+  dispatchSnackbar: () => {}
 };
 
 export const MainContainerTest = MainContainer;

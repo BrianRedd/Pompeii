@@ -47,7 +47,8 @@ const Main = props => {
     runZone,
     runToSquare,
     placeRelatives,
-    toggleFlags
+    toggleFlags,
+    activePlayer
   } = props;
 
   return (
@@ -107,6 +108,7 @@ const Main = props => {
                 gridArray={cardGrid}
                 selectSquare={placePerson}
                 validation={vacancy}
+                activePlayer={activePlayer}
               />
             );
           }
@@ -118,6 +120,7 @@ const Main = props => {
                 validation={() => {
                   return true;
                 }}
+                activePlayer={activePlayer}
               />
             );
           }
@@ -130,6 +133,7 @@ const Main = props => {
               validation={() => {
                 return true;
               }}
+              activePlayer={activePlayer}
             />
           );
         })()}
@@ -148,6 +152,7 @@ Main.propTypes = {
   dangerZone: PropTypes.arrayOf(PropTypes.string),
   runZone: PropTypes.arrayOf(PropTypes.string),
   lavaTile: PropTypes.string,
+  activePlayer: PropTypes.string,
   deckEnabled: PropTypes.bool,
   pileEnabled: PropTypes.bool,
   resolveNoPlaceToPlace: PropTypes.func,
@@ -173,6 +178,7 @@ Main.defaultProps = {
   dangerZone: [],
   runZone: [],
   lavaTile: "",
+  activePlayer: "",
   deckEnabled: false,
   pileEnabled: false,
   resolveNoPlaceToPlace: () => {},
