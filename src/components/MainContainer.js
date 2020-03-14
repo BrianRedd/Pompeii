@@ -8,13 +8,8 @@ import _ from "lodash";
 import actions from "../redux/Actions";
 import * as types from "../types/types";
 import * as constant from "../data/constants";
-import {
-  gridByColor,
-  voidLavaSquares,
-  voidRunSquares,
-  escapeSquares,
-  gateSquares
-} from "../data/gridData";
+import { gridByColor, voidLavaSquares, escapeSquares } from "../data/gridData";
+import * as helper from "./Logic/helperFunctions";
 
 import Main from "./Main";
 
@@ -63,7 +58,7 @@ const MainContainer = props => {
   const [activePlayer, setActivePlayer] = useState();
 
   useEffect(() => {
-    setActivePlayer(_.get(playersState, `players[${playersState.turn}]`));
+    setActivePlayer(_.get(playersState, `players.${playersState.turn}`));
   }, [playersState]);
 
   const [cardGrid, setCardGrid] = useState([]);
@@ -195,23 +190,6 @@ const MainContainer = props => {
   };
 
   /**
-   * @function vacancy
-   * @description checks for vacancy within a square
-   * @param {String} square
-   * @return {Boolean}
-   */
-  const vacancy = square => {
-    console.log("vacancy; square:", square);
-    if (
-      _.get(gridState, `grid.${square}.occupants.length`, 0) <
-      _.get(gridState, `grid.${square}.buildingCapacity`, 0)
-    ) {
-      return true;
-    }
-    return false;
-  };
-
-  /**
    * @function playPompCard
    * @description when player plays pompeii card
    * @param {String} card
@@ -219,7 +197,7 @@ const MainContainer = props => {
   const playPompCard = card => {
     console.log("playPompCard; card:", card);
     let gridHighlights = cardsState.cards[card].grid.filter(val =>
-      vacancy(val)
+      helper.vacancy(val)
     );
 
     if (!gridHighlights.length) {
@@ -229,7 +207,7 @@ const MainContainer = props => {
         ...gridByColor.Purple,
         ...gridByColor.Turquoise,
         ...gridByColor.Brown
-      ]).filter(val => vacancy(val));
+      ]).filter(val => helper.vacancy(val));
       if (!flagsState.flags.includes("card-wild")) {
         toggleFlags("card-wild");
       }
@@ -266,11 +244,11 @@ const MainContainer = props => {
         updateInstructions({
           text: `${_.get(
             playersState,
-            `details[${playersState.players[nextPlayer]}].name`
+            `details.${playersState.players[nextPlayer]}.name`
           )}: ${constant.LAVA_TILE}`,
           color: _.get(
             playersState,
-            `details[${playersState.players[nextPlayer]}].color`
+            `details.${playersState.players[nextPlayer]}.color`
           )
         });
       }
@@ -344,14 +322,14 @@ const MainContainer = props => {
     takeCard();
 
     // check for AD79
-    if (_.get(cardsState, `cards[${takenCard}].type`) === constant.AD79) {
+    if (_.get(cardsState, `cards.${takenCard}.type`) === constant.AD79) {
       discardCard(takenCard);
       resolveAd79();
       return;
     }
 
     // check for Omen
-    if (_.get(cardsState, `cards[${takenCard}].type`) === constant.OMEN) {
+    if (_.get(cardsState, `cards.${takenCard}.type`) === constant.OMEN) {
       discardCard(takenCard);
       resolveOmen();
       return;
@@ -501,7 +479,6 @@ const MainContainer = props => {
 
     setRunFromSquare(square);
     if (person.player !== activePlayer) {
-      console.log("Not your person!");
       addSnackbar({
         message: "Not your person!",
         type: "warning"
@@ -512,7 +489,6 @@ const MainContainer = props => {
       person.lastMoved === playersState.totalTurns &&
       _.get(playersState, `details.${activePlayer}.population`) !== 1
     ) {
-      console.log("Already ran this person this turn!");
       addSnackbar({
         message: "Already ran this person this turn!",
         type: "warning"
@@ -522,83 +498,9 @@ const MainContainer = props => {
 
     const pop = _.get(gridState, `grid.${square}.occupants.length`);
 
-    const coord = square.split("_");
-    const coord0 = parseFloat(coord[0]);
-    const coord1 = parseFloat(coord[1]);
-    const targetZones = [];
+    const targetZones = helper.calculateRunZones(square, pop + 1);
 
-    for (let xx = pop; xx >= 0; xx -= 1) {
-      for (let yy = 0; yy <= pop - xx; yy += 1) {
-        targetZones.push(
-          `${Math.min(coord0 + xx, 7)}_${Math.min(
-            coord1 + Math.abs(pop - xx - yy),
-            11
-          )}`
-        );
-        targetZones.push(
-          `${Math.max(coord0 - xx, -1)}_${Math.min(
-            coord1 + Math.abs(pop - xx - yy),
-            11
-          )}`
-        );
-        targetZones.push(
-          `${Math.min(coord0 + xx, 7)}_${Math.max(
-            coord1 - Math.abs(pop - xx - yy),
-            -1
-          )}`
-        );
-        targetZones.push(
-          `${Math.max(coord0 - xx, -1)}_${Math.max(
-            coord1 - Math.abs(pop - xx - yy),
-            -1
-          )}`
-        );
-      }
-    }
-
-    setRunZone(
-      _.uniqBy(
-        targetZones.filter(zone => {
-          return (
-            zone !== square &&
-            !_.get(gridState, `grid.${zone}.ventName`) &&
-            !_.get(gridState, `grid.${zone}.lava`) &&
-            !voidRunSquares.includes(zone)
-          );
-        })
-      )
-    );
-  };
-
-  /**
-   * @function boundardDFS
-   * @description DFS helper function
-   * @param {Array} grid
-   * @param {Number} i
-   * @param {Number} j
-   */
-  const boundaryDFS = (grid, i, j) => {
-    const thisGrid = [...grid];
-    if (i > thisGrid.length - 1 || i < 0 || j > thisGrid[0].length || j < 0)
-      return;
-
-    if (thisGrid[i][j] === "O") thisGrid[i][j] = "*";
-
-    if (i > 0 && thisGrid[i - 1][j] === "O") {
-      boundaryDFS(thisGrid, i - 1, j);
-    }
-
-    if (i < thisGrid.length - 1 && thisGrid[i + 1][j] === "O") {
-      boundaryDFS(thisGrid, i + 1, j);
-    }
-
-    if (j > 0 && thisGrid[i][j - 1] === "O") {
-      boundaryDFS(thisGrid, i, j - 1);
-    }
-
-    if (i < thisGrid[0].length - 1 && thisGrid[i][j + 1] === "O") {
-      boundaryDFS(thisGrid, i, j + 1);
-    }
+    setRunZone(targetZones);
   };
 
   /**
@@ -615,55 +517,6 @@ const MainContainer = props => {
       });
       placePeopleInSquare(tile, []);
     });
-  };
-
-  /**
-   * @function checkForSurroundedTiles
-   * @description DFS-based check for tiles surrounded by lava
-   * @param {String} tile most recently placed tile location
-   * @returns {Array} array of surrounded tiles
-   */
-  const checkForSurroundedTiles = tile => {
-    const surroundedTiles = [];
-    const tempGrid = [];
-    for (let i = 0; i < 7; i += 1) {
-      const row = [];
-      for (let ii = 0; ii < 11; ii += 1) {
-        let gridValue = _.get(gridState, `grid.${i}_${ii}.lava`) ? "L" : "O";
-        if (tile === `${i}_${ii}`) gridValue = "L";
-        if (voidLavaSquares.includes(`${i}_${ii}`)) {
-          gridValue = "W";
-        }
-        if (gridValue === "O" && gateSquares.includes(`${i}_${ii}`)) {
-          gridValue = "X";
-        }
-        row.push(gridValue);
-      }
-      tempGrid.push(row);
-    }
-
-    const rows = tempGrid.length;
-    const columns = tempGrid[0].length;
-
-    gateSquares.forEach(square => {
-      const coords = square.split("_");
-      const i = parseFloat(coords[0]);
-      const j = parseFloat(coords[1]);
-
-      if (tempGrid[i][j] === "X") boundaryDFS(tempGrid, i, j);
-    });
-
-    for (let i = 0; i < rows; i += 1) {
-      for (let j = 0; j < columns; j += 1) {
-        if (tempGrid[i][j] === "O") {
-          tempGrid[i][j] = "L";
-          surroundedTiles.push(`${i}_${j}`);
-        } else if (tempGrid[i][j] === "*") {
-          tempGrid[i][j] = "O";
-        }
-      }
-    }
-    return surroundedTiles;
   };
 
   /**
@@ -687,7 +540,7 @@ const MainContainer = props => {
     setDangerZone([]);
 
     // check for tiles surrounded by lava
-    const tilesSurroundedByLava = checkForSurroundedTiles(square);
+    const tilesSurroundedByLava = helper.checkForSurroundedTiles(square);
     if (tilesSurroundedByLava.length > 0) {
       burnSurroundedTiles(tilesSurroundedByLava);
     }
@@ -706,12 +559,14 @@ const MainContainer = props => {
   /**
    * @function runToSquare
    * @description handle person running from one square to another
-   * @param {String} player
-   * @param {String} fromSquare
    * @param {String} toSquare
    */
   const runToSquare = toSquare => {
     console.log("runToSquare; toSquare:", toSquare);
+    if (toSquare === runFromSquare) {
+      setRunZone([]);
+      return;
+    }
     let numberOfRuns = toSquare ? flagsState.runCounter : 0;
 
     if (numberOfRuns) {
@@ -776,7 +631,7 @@ const MainContainer = props => {
         playPompCard={playPompCard}
         cardGrid={cardGrid}
         placePerson={placePerson}
-        vacancy={vacancy}
+        vacancy={helper.vacancy}
         performSacrifice={performSacrifice}
         drawTile={drawTile}
         resolveNoPlaceToPlace={resolveNoPlaceToPlace}
