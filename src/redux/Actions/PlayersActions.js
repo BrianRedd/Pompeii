@@ -133,7 +133,7 @@ export const incrementPlayerSaved = (playerId, saved) => (
  * @description sets player turn in PlayersState store
  * @param {Number} player - whose turn it is
  */
-export const setPlayerturn = player => ({
+export const setPlayerTurn = player => ({
   type: actionTypes.SET_PLAYER_TURN,
   payload: player
 });
@@ -174,7 +174,7 @@ export const incrementPlayerTurn = () => (dispatch, getState) => {
 
   // get next player
   const nextPlayer = (playersState.turn + 1) % playersState.players.length;
-  dispatch(setPlayerturn(nextPlayer));
+  dispatch(setPlayerTurn(nextPlayer));
   dispatch(
     updateInstructions({
       text: `${_.get(

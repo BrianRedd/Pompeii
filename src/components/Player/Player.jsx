@@ -77,21 +77,35 @@ HandCards.defaultProps = {
  * @returns {React.Component} - Rendered component.
  */
 const Player = props => {
-  const { details, myTurn, playCard, stage } = props;
+  const { details, myTurn, playCard, stage, numberOfPlayers } = props;
 
   return (
     <fieldset
       data-test="presentation-player"
       className="mt-3"
       style={{
-        backgroundColor: myTurn ? `rgba(${details.color}, 0.3)` : "transparent"
+        backgroundColor: myTurn ? `rgba(${details.color}, 0.3)` : "transparent",
+        height:
+          myTurn || stage > 2
+            ? "230px"
+            : `${Math.min(
+                230,
+                (502 - numberOfPlayers * 14) / (numberOfPlayers - 1)
+              )}px`
       }}
     >
       <legend
         style={{ color: `rgb(${details.color})` }}
         className="d-flex w-100 justify-content-between"
       >
-        <span className="font-weight-bold">{details.name}</span>
+        <span className="font-weight-bold d-flex align-content-center">
+          {`${details.name}`}
+          {details.ai ? (
+            <i className="fas fa-robot ml-1 fa-xs" />
+          ) : (
+            <i className="fas fa-user ml-1 fa-xs" />
+          )}
+        </span>
         {stage < 2 && <span>Population: {details.population}</span>}
         {stage < 2 && <span>Casualites: {details.casualties}</span>}
       </legend>
@@ -128,6 +142,7 @@ const Player = props => {
 Player.propTypes = {
   details: types.playerDetails.types,
   stage: PropTypes.number,
+  numberOfPlayers: PropTypes.number,
   myTurn: PropTypes.bool,
   playCard: PropTypes.func
 };
@@ -135,6 +150,7 @@ Player.propTypes = {
 Player.defaultProps = {
   details: types.playerDetails.defaults,
   stage: 0,
+  numberOfPlayers: 2,
   myTurn: false,
   playCard: () => {}
 };

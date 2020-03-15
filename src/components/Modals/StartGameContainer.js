@@ -41,11 +41,19 @@ const StartGameContainer = props => {
     player2: "Player 2",
     player3: "Player 3",
     player4: "Player 4",
+    player1AI: false,
+    player2AI: false,
+    player3AI: false,
+    player4AI: false,
+    startPlayer: "player1",
     prePopulate: false,
     startPhase: 0
   };
   if (localStorage.getItem("pompeii")) {
-    initialValues = JSON.parse(localStorage.getItem("pompeii"));
+    initialValues = {
+      ...initialValues,
+      ...JSON.parse(localStorage.getItem("pompeii"))
+    };
   }
 
   /**
@@ -55,14 +63,15 @@ const StartGameContainer = props => {
   const commitStartGame = values => {
     localStorage.setItem("pompeii", JSON.stringify(values));
     const details = {};
-    for (let i = 1; i <= values.numberOfPlayers; i += 1) {
+    for (let i = 1; i <= parseFloat(values.numberOfPlayers); i += 1) {
       details[`player${i}`] = {
         name: values[`player${i}`],
         hand: [],
         color: playerColors[i - 1],
         casualties: 0,
         population: 0,
-        saved: 0
+        saved: 0,
+        ai: values[`player${i}AI`]
       };
     }
     let testMode = {};
@@ -72,7 +81,13 @@ const StartGameContainer = props => {
         stage: values.startPhase
       };
     }
-    gameSetup(details, testMode);
+    let { startPlayer } = values;
+    if (parseFloat(startPlayer) === 0) {
+      startPlayer = Math.ceil(
+        Math.random() * parseFloat(values.numberOfPlayers)
+      );
+    }
+    gameSetup(details, startPlayer, testMode);
     toggleFlags(StartGame);
   };
 

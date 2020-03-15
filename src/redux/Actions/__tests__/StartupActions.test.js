@@ -11,6 +11,7 @@ test("gameSetup", async () => {
     actionTypes.ADD_GRID,
     actionTypes.SET_PLAYERS_ARRAY,
     actionTypes.ADD_PLAYERS,
+    actionTypes.SET_PLAYER_TURN,
     actionTypes.ADD_CARDS,
     actionTypes.ADD_DECK,
     actionTypes.UPDATE_PLAYER_HAND,

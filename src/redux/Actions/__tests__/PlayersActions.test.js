@@ -106,13 +106,13 @@ test("incrementPlayerSavedInStore", () => {
   );
 });
 
-test("setPlayerturn", () => {
+test("setPlayerTurn", () => {
   const payload = 1;
   const expectedAction = {
     type: actionTypes.SET_PLAYER_TURN,
     payload
   };
-  expect(actions.setPlayerturn(1)).toEqual(expectedAction);
+  expect(actions.setPlayerTurn(1)).toEqual(expectedAction);
 });
 
 describe("incrementPlayerTurn", () => {

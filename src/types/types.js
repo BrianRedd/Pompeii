@@ -1,6 +1,14 @@
 /** @module types */
 
-import { arrayOf, number, object, oneOf, string, shape } from "prop-types";
+import {
+  arrayOf,
+  bool,
+  number,
+  object,
+  oneOf,
+  string,
+  shape
+} from "prop-types";
 
 // card types
 export const cards = {
@@ -39,7 +47,8 @@ export const playerDetails = {
       color: string,
       casualties: number,
       population: number,
-      saved: number
+      saved: number,
+      ai: bool
     })
   }),
   defaults: {
@@ -49,7 +58,8 @@ export const playerDetails = {
       color: "#FFFFFF",
       casualties: 0,
       population: 0,
-      saved: 0
+      saved: 0,
+      ai: false
     }
   }
 };

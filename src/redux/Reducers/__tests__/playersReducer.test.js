@@ -57,12 +57,10 @@ test("should handle UPDATE_PLAYER_HAND action", () => {
   const state = Reducer(undefined, action);
   expect(state.details).toEqual({
     player1: {
+      ...types.playerDetails.defaults.player1,
       name: "Player 1",
       color: "#FFFFFF",
-      hand: ["card_1", "card_2"],
-      casualties: 0,
-      population: 0,
-      saved: 0
+      hand: ["card_1", "card_2"]
     }
   });
 });

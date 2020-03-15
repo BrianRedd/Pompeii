@@ -37,6 +37,7 @@ const PlayerCards = ({ playersState, playCard, stage }) => {
         myTurn={playersState.turn === idx}
         playCard={cardIdx => playCard(player, cardIdx)}
         stage={stage}
+        numberOfPlayers={playersState.players.length}
       />
     );
   });
