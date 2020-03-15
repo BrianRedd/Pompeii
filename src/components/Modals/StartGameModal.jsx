@@ -125,7 +125,7 @@ const PlayerNameSelection = ({ formProps }) => {
   const playerNameSelection = [];
   for (let i = 1; i <= formProps.values.numberOfPlayers; i += 1) {
     playerNameSelection.push(
-      <Row className="form-group">
+      <Row className="form-group" key={i}>
         <Label xs={5}>{`Player ${i} Name:`}</Label>
         <Col xs={5}>
           {formProps.values[`player${i}AI`] ? (

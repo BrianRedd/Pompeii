@@ -45,7 +45,7 @@ const StartGameContainer = props => {
     player2AI: false,
     player3AI: false,
     player4AI: false,
-    startPlayer: "player1",
+    startPlayer: 0,
     prePopulate: false,
     startPhase: 0
   };

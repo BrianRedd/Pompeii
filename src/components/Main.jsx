@@ -18,6 +18,7 @@ import SnackbarNotifier from "./Helpers/SnackbarNotifier";
 import GameOverContainer from "./Modals/GameOverContainer";
 import StartGameContainer from "./Modals/StartGameContainer";
 import GameStatisticsContainer from "./Modals/GameStatisticsContainer";
+import RecommendationHighlighter from "./Board/RecommendationHighlighter";
 
 /**
  * @function Main
@@ -49,7 +50,9 @@ const Main = props => {
     runToSquare,
     placeRelatives,
     toggleFlags,
-    activePlayer
+    activePlayer,
+    recommendationArray,
+    setRecommendationArray
   } = props;
 
   return (
@@ -98,10 +101,12 @@ const Main = props => {
               <PlayersContainer
                 playPompCard={playPompCard}
                 stage={messageState.stage}
+                setRecommendationArray={setRecommendationArray}
               />
             </div>
           )}
         </Row>
+        <RecommendationHighlighter recommendationArray={recommendationArray} />
         {(() => {
           if (messageState.stage < 2) {
             return (
@@ -153,6 +158,7 @@ Main.propTypes = {
   cardGrid: PropTypes.arrayOf(PropTypes.string),
   dangerZone: PropTypes.arrayOf(PropTypes.string),
   runZone: PropTypes.arrayOf(PropTypes.string),
+  recommendationArray: PropTypes.arrayOf(PropTypes.object),
   lavaTile: PropTypes.string,
   activePlayer: PropTypes.string,
   deckEnabled: PropTypes.bool,
@@ -169,7 +175,8 @@ Main.propTypes = {
   selectRunner: PropTypes.func,
   runToSquare: PropTypes.func,
   placeRelatives: PropTypes.func,
-  toggleFlags: PropTypes.func
+  toggleFlags: PropTypes.func,
+  setRecommendationArray: PropTypes.func
 };
 
 Main.defaultProps = {
@@ -179,6 +186,7 @@ Main.defaultProps = {
   cardGrid: [],
   dangerZone: [],
   runZone: [],
+  recommendationArray: [],
   lavaTile: "",
   activePlayer: "",
   deckEnabled: false,
@@ -195,7 +203,8 @@ Main.defaultProps = {
   selectRunner: () => {},
   runToSquare: () => {},
   placeRelatives: () => {},
-  toggleFlags: () => {}
+  toggleFlags: () => {},
+  setRecommendationArray: () => {}
 };
 
 export default Main;

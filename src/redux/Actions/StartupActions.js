@@ -24,6 +24,7 @@ export const gameSetup = (
   testMode = {}
 ) => async dispatch => {
   const theseDetails = { ...details };
+  console.log("details:", details);
 
   if (testMode.active) {
     // START PRE-POPULATION (TEST)
@@ -58,7 +59,7 @@ export const gameSetup = (
   await dispatch(generatePile());
   await dispatch(
     updateInstructions({
-      text: `Player ${startPlayer}: ${constant.PLAY}`,
+      text: `${details[`player${startPlayer}`].name}: ${constant.PLAY}`,
       color: playerColors[parseFloat(startPlayer) - 1]
     })
   );

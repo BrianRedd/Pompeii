@@ -79,6 +79,8 @@ const MainContainer = props => {
   const [runFromSquare, setRunFromSquare] = useState();
   const [runner, setRunner] = useState();
 
+  const [recommendationArray, setRecommendationArray] = useState();
+
   /**
    * @function placeRelatives
    * @description function when relatives is placed
@@ -254,6 +256,7 @@ const MainContainer = props => {
       }
     }, 100);
     incrementStage();
+    setRecommendationArray([]);
   };
 
   /**
@@ -645,6 +648,8 @@ const MainContainer = props => {
         toggleFlags={toggleFlags}
         placeRelatives={placeRelatives}
         activePlayer={activePlayer}
+        recommendationArray={recommendationArray}
+        setRecommendationArray={setRecommendationArray}
       />
     </div>
   );

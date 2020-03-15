@@ -1,6 +1,6 @@
 /** @module PlayersContainer */
 
-import React from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import _ from "lodash";
@@ -12,7 +12,9 @@ import Player from "./Player";
 
 const mapStateToProps = state => {
   return {
+    cardsState: state.cardsState,
     flagsState: state.flagsState,
+    gridState: state.gridState,
     playersState: state.playersState
   };
 };
@@ -51,12 +53,74 @@ const PlayerCards = ({ playersState, playCard, stage }) => {
  */
 const PlayersContainer = props => {
   const {
+    cardsState,
+    gridState,
     playersState,
     discardCard,
     updatePlayerHand,
     playPompCard,
-    stage
+    stage,
+    setRecommendationArray
   } = props;
+
+  useEffect(() => {
+    // recommendations
+    if (stage < 2) {
+      const activePlayerHand = _.get(
+        playersState,
+        `details.${playersState.players[playersState.turn]}.hand`
+      );
+      if (activePlayerHand.length === 4) {
+        const targetSpaces = [];
+        activePlayerHand.forEach(card => {
+          targetSpaces.push(...cardsState.cards[card].grid);
+        });
+        const evaluations = {};
+        // evaluate each square
+        targetSpaces.forEach(target => {
+          if (stage === 0) {
+            // TODO: Additional criteria:
+            // * if card is better placed in next phase
+            // * square proximity to vents
+
+            let delta = gridState.grid[target].buildingCapacity; // + building capacity
+            delta -= gridState.grid[target].occupants.length * 2; // - building occupancy (x2)
+            if (evaluations[target]) {
+              evaluations[target].value += delta + 1; // if multiple copies of card, compound delta
+            } else {
+              evaluations[target] = {
+                value: delta
+              };
+            }
+          }
+          if (stage === 1) {
+            let delta =
+              gridState.grid[target].buildingCapacity -
+              gridState.grid[target].occupants.length; // + building capacity - building occupancy
+            if (delta) {
+              delta += gridState.grid[target].occupants.length * 3; // + building occupancy (x3) (if building has capacity)
+            }
+            if (evaluations[target]) {
+              evaluations[target].value += delta + 1; // if multiple copies of card, compound delta
+            } else {
+              evaluations[target] = {
+                value: delta
+              };
+            }
+          }
+          // TODO: Placement of Relatives
+          // * placement to plan ahead for cards in hand
+        });
+        const recommendationArray = Object.keys(evaluations).map(evals => {
+          return {
+            space: evals,
+            value: evaluations[evals].value
+          };
+        });
+        setRecommendationArray(recommendationArray);
+      }
+    }
+  }, [playersState, stage, cardsState, setRecommendationArray, gridState]);
 
   /**
    * @function playCard
@@ -87,19 +151,25 @@ const PlayersContainer = props => {
 };
 
 PlayersContainer.propTypes = {
+  cardsState: types.cardsState.types,
+  gridState: types.gridState.types,
   playersState: types.playersState.types,
   stage: PropTypes.number,
   discardCard: PropTypes.func,
   updatePlayerHand: PropTypes.func,
-  playPompCard: PropTypes.func
+  playPompCard: PropTypes.func,
+  setRecommendationArray: PropTypes.func
 };
 
 PlayersContainer.defaultProps = {
+  cardsState: types.cardsState.defaults,
+  gridState: types.gridState.defaults,
   playersState: types.playersState.defaults,
   stage: 0,
   discardCard: () => {},
   updatePlayerHand: () => {},
-  playPompCard: () => {}
+  playPompCard: () => {},
+  setRecommendationArray: () => {}
 };
 
 export const PlayersContainerTest = PlayersContainer;
