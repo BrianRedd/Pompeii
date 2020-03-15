@@ -21,7 +21,11 @@ const PlayerStats = ({ details, winner }) => {
   const detailsArray = Object.keys(details);
   const playersStats = detailsArray.map(player => {
     return (
-      <Col xs={12 / detailsArray.length} key={player}>
+      <Col
+        data-test="column-player-stats"
+        xs={12 / detailsArray.length}
+        key={player}
+      >
         <h5 style={{ color: `rgb(${details[player].color})` }}>
           {details[player].name}
           {winner && winner === player && (
@@ -115,7 +119,11 @@ const GameOverModal = props => {
             End Game
           </Button>
         )}
-        <Button className="btn btn-primary" onClick={() => acceptGameOver()}>
+        <Button
+          data-test="button-submit"
+          className="btn btn-primary"
+          onClick={() => acceptGameOver()}
+        >
           <span className="far fa-times-circle fa-lg mr-2" />
           Continue
         </Button>

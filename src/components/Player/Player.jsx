@@ -86,12 +86,13 @@ const Player = props => {
       style={{
         backgroundColor: myTurn ? `rgba(${details.color}, 0.3)` : "transparent",
         height:
-          myTurn || stage > 2
+          myTurn || stage > 1
             ? "230px"
             : `${Math.min(
                 230,
                 (502 - numberOfPlayers * 14) / (numberOfPlayers - 1)
-              )}px`
+              )}px`,
+        transition: "height 250"
       }}
     >
       <legend

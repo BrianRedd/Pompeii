@@ -6,6 +6,31 @@ import { shallow, mount } from "enzyme";
 import { Provider } from "react-redux";
 
 /**
+ * @function localStorageMock
+ * @description Mocks localStorage for unit tests
+ * Be sure to add following to any file using this:
+ *  Object.defineProperty(window, "localStorage", { value: localStorageMock });
+ * @returns {Object}
+ */
+export const localStorageMock = (() => {
+  let store = {};
+  return {
+    getItem: key => {
+      return store[key] || null;
+    },
+    setItem: (key, value) => {
+      store[key] = value.toString();
+    },
+    removeItem: key => {
+      delete store[key];
+    },
+    clear: () => {
+      store = {};
+    }
+  };
+})();
+
+/**
  * @function findByTestAttr
  * @description Returns node(s) with given data-test attribute.
  * @param {ShallowWrapper} wrapper - Enzyme shallow wrapper.

@@ -33,7 +33,7 @@ const StartGameContainer = props => {
     gameSetup
   } = props;
 
-  const StartGame = "game-start";
+  const startGame = "game-start";
 
   let initialValues = {
     numberOfPlayers: 3,
@@ -88,15 +88,17 @@ const StartGameContainer = props => {
       );
     }
     gameSetup(details, startPlayer, testMode);
-    toggleFlags(StartGame);
+    toggleFlags(startGame);
   };
 
   return (
-    <StartGameModal
-      flags={flags}
-      commitStartGame={commitStartGame}
-      initialValues={initialValues}
-    />
+    <div data-test="container-start-game">
+      <StartGameModal
+        flags={flags}
+        commitStartGame={commitStartGame}
+        initialValues={initialValues}
+      />
+    </div>
   );
 };
 

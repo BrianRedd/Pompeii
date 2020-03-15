@@ -47,7 +47,7 @@ const GameOverContainer = props => {
     setRankings(statistics.sort((a, b) => b.victoryPoints - a.victoryPoints));
   }, [playersState]);
 
-  const GameOver = "game-over";
+  const gameOver = "game-over";
 
   /**
    * @function acceptGameOver
@@ -58,11 +58,11 @@ const GameOverContainer = props => {
   };
 
   return (
-    <div>
+    <div data-test="container-game-over-modal">
       {rankings && (
         <GameOverModal
           playersState={playersState}
-          isOpen={flags.includes(GameOver)}
+          isOpen={flags.includes(gameOver)}
           acceptGameOver={acceptGameOver}
           rankings={rankings}
         />

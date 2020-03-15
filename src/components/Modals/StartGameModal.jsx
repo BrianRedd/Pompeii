@@ -18,14 +18,24 @@ import { aiPlayers } from "../../data/playerData";
 
 import "./styles/modals.scss";
 
+/**
+ * @function HumanOrAI
+ * @description React component to return Human/AI icon
+ * @param {Object} formProps
+ * @param {String} name
+ * @returns {React.Component}
+ */
 const HumanOrAI = ({ formProps, name }) => {
   return (
     <Col xs={2}>
       <ButtonBase
         className="form-control"
-        onClick={() => formProps.setFieldValue(name, !formProps.values[name])}
+        onClick={() => {
+          formProps.setFieldValue(`${name}AI`, !formProps.values[`${name}AI`]);
+          formProps.setFieldValue(name, "");
+        }}
       >
-        {formProps.values[name] ? (
+        {formProps.values[`${name}AI`] ? (
           <i className="fas fa-robot" />
         ) : (
           <i className="fas fa-user" />
@@ -51,6 +61,13 @@ HumanOrAI.defaultProps = {
   name: ""
 };
 
+/**
+ * @function AIDropDown
+ * @description React component to return AI drop down options
+ * @param {Object} formProps
+ * @param {String} name
+ * @returns {React.Component}
+ */
 const AIDropDown = ({ formProps, name }) => {
   const currentPlayers = Object.values(formProps.values).map(value => value);
   const aiDropDown = Object.keys(aiPlayers).map(ai => {
@@ -66,6 +83,8 @@ const AIDropDown = ({ formProps, name }) => {
   });
   return (
     <Field
+      data-test="field-ai-drop-down"
+      required
       as="select"
       name={name}
       className="form-control"
@@ -74,6 +93,7 @@ const AIDropDown = ({ formProps, name }) => {
         formProps.setFieldValue(name, e.target.value);
       }}
     >
+      <option value=""> </option>
       {aiDropDown}
     </Field>
   );
@@ -96,6 +116,37 @@ AIDropDown.defaultProps = {
 };
 
 /**
+ * @function PlayerNameSelection
+ * @description React component to return player selection
+ * @param {Object} formProps
+ * @returns {React.Component}
+ */
+const PlayerNameSelection = ({ formProps }) => {
+  const playerNameSelection = [];
+  for (let i = 1; i <= formProps.values.numberOfPlayers; i += 1) {
+    playerNameSelection.push(
+      <Row className="form-group">
+        <Label xs={5}>{`Player ${i} Name:`}</Label>
+        <Col xs={5}>
+          {formProps.values[`player${i}AI`] ? (
+            <AIDropDown formProps={formProps} name={`player${i}`} />
+          ) : (
+            <Field
+              data-test="field-name"
+              required
+              name={`player${i}`}
+              className="form-control"
+            />
+          )}
+        </Col>
+        <HumanOrAI formProps={formProps} name={`player${i}`} />
+      </Row>
+    );
+  }
+  return playerNameSelection;
+};
+
+/**
  * @function StartGameModal
  * @description Functional Presentational component for Game Over Modal
  * @returns {React.Component} - Rendered component.
@@ -103,10 +154,10 @@ AIDropDown.defaultProps = {
 const StartGameModal = props => {
   const { flags, commitStartGame, initialValues } = props;
 
-  const StartGame = "game-start";
+  const startGame = "game-start";
 
   return (
-    <Modal data-test="modal-game-start" isOpen={flags.includes(StartGame)}>
+    <Modal data-test="modal-game-start" isOpen={flags.includes(startGame)}>
       <ModalHeader>Start Game</ModalHeader>
       <Formik
         initialValues={initialValues}
@@ -124,63 +175,16 @@ const StartGameModal = props => {
                       name="numberOfPlayers"
                       className="form-control"
                     >
-                      <option value={2}>Two</option>
-                      <option value={3}>Three</option>
-                      <option value={4}>Four</option>
+                      <option value={2}>Two (2)</option>
+                      <option value={3}>Three (3)</option>
+                      <option value={4}>Four (4)</option>
                     </Field>
                   </Col>
                 </Row>
               </Col>
               <hr />
               <Col xs={12}>
-                <Row className="form-group">
-                  <Label xs={5}>Player 1 Name:</Label>
-                  <Col xs={5}>
-                    {formProps.values.player1AI ? (
-                      <AIDropDown formProps={formProps} name="player1" />
-                    ) : (
-                      <Field name="player1" className="form-control" />
-                    )}
-                  </Col>
-                  <HumanOrAI formProps={formProps} name="player1AI" />
-                </Row>
-                <Row className="form-group">
-                  <Label xs={5}>Player 2 Name:</Label>
-                  <Col xs={5}>
-                    {formProps.values.player2AI ? (
-                      <AIDropDown formProps={formProps} name="player2" />
-                    ) : (
-                      <Field name="player2" className="form-control" />
-                    )}
-                  </Col>
-                  <HumanOrAI formProps={formProps} name="player2AI" />
-                </Row>
-                {formProps.values.numberOfPlayers > 2 && (
-                  <Row className="form-group">
-                    <Label xs={5}>Player 3 Name:</Label>
-                    <Col xs={5}>
-                      {formProps.values.player3AI ? (
-                        <AIDropDown formProps={formProps} name="player3" />
-                      ) : (
-                        <Field name="player3" className="form-control" />
-                      )}
-                    </Col>
-                    <HumanOrAI formProps={formProps} name="player3AI" />
-                  </Row>
-                )}
-                {formProps.values.numberOfPlayers > 3 && (
-                  <Row className="form-group">
-                    <Label xs={5}>Player 4 Name:</Label>
-                    <Col xs={5}>
-                      {formProps.values.player4AI ? (
-                        <AIDropDown formProps={formProps} name="player4" />
-                      ) : (
-                        <Field name="player4" className="form-control" />
-                      )}
-                    </Col>
-                    <HumanOrAI formProps={formProps} name="player4AI" />
-                  </Row>
-                )}
+                <PlayerNameSelection formProps={formProps} />
               </Col>
               <hr />
               <Col xs={12}>
@@ -261,7 +265,11 @@ const StartGameModal = props => {
               </Col>
             </ModalBody>
             <ModalFooter className="justify-content-center">
-              <Button className="btn btn-primary" type="submit">
+              <Button
+                data-test="button-submit"
+                className="btn btn-primary"
+                type="submit"
+              >
                 <span className="far fa-times-circle fa-lg mr-2" />
                 Continue
               </Button>

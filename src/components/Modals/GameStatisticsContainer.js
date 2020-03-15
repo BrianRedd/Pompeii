@@ -43,13 +43,15 @@ const GameStatisticsContainer = props => {
   };
 
   return (
-    <GameOverModal
-      playersState={playersState}
-      isOpen={flags.includes(GameStats)}
-      acceptGameOver={acceptGameOver}
-      statisticsOnly
-      toggleFlags={toggleFlags}
-    />
+    <div data-test="container-statistics-modal">
+      <GameOverModal
+        playersState={playersState}
+        isOpen={flags.includes(GameStats)}
+        acceptGameOver={acceptGameOver}
+        statisticsOnly
+        toggleFlags={toggleFlags}
+      />
+    </div>
   );
 };
 
