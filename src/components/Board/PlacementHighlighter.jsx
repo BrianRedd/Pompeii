@@ -14,6 +14,7 @@ import * as constant from "../../data/constants";
  */
 const PlacementHighlighter = props => {
   const { gridArray, validation, selectSquare, activePlayer } = props;
+  // console.log("activePlayer:", activePlayer);
 
   const placementHighlighter = gridArray.map(square => {
     if (validation(square)) {

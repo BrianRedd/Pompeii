@@ -387,8 +387,6 @@ export const gridSquares = {
     offSets: [[42, 13]]
   },
   "5_9": {
-    buildingName: "Brown 11",
-    buildingCapacity: 0,
     occupants: []
   },
   "5_10": {

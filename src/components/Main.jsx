@@ -54,6 +54,7 @@ const Main = props => {
     recommendationArray,
     setRecommendationArray
   } = props;
+  // console.log("activePlayer:", activePlayer);
 
   return (
     <SnackbarProvider maxSnack={3}>

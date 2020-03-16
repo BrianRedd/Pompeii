@@ -105,6 +105,13 @@ const MainContainer = props => {
       thisPlacedRelatives = [...placedRelatives, grid];
       setPlacedRelatives(thisPlacedRelatives);
       setCardGrid([...cardGrid].filter(val => val !== grid));
+      addSnackbar({
+        message: `${_.get(
+          playersState,
+          `details.${activePlayer}.name`
+        )} places a relative at ${grid.split("_")[1]} x ${grid.split("_")[0]}`,
+        type: "success"
+      });
     }
 
     // if enough relatives have been placed, end relative placement
@@ -149,6 +156,13 @@ const MainContainer = props => {
       }
     ]);
     incrementPlayerPopulation(activePlayer, 1);
+    addSnackbar({
+      message: `${_.get(
+        playersState,
+        `details.${activePlayer}.name`
+      )} places a person at ${grid.split("_")[1]} x ${grid.split("_")[0]}`,
+      type: "success"
+    });
 
     // if there should be relatives, set relative states
     if (

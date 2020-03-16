@@ -78,13 +78,33 @@ const PlayersContainer = props => {
         const evaluations = {};
         // evaluate each square
         targetSpaces.forEach(target => {
+          const coord = target.split("_");
           if (stage === 0) {
             // TODO: Additional criteria:
             // * if card is better placed in next phase
-            // * square proximity to vents
 
             let delta = gridState.grid[target].buildingCapacity; // + building capacity
             delta -= gridState.grid[target].occupants.length * 2; // - building occupancy (x2)
+            if (
+              _.get(
+                gridState,
+                `grid.${parseFloat(coord[0]) - 1}_${coord[1]}.ventName`
+              ) ||
+              _.get(
+                gridState,
+                `grid.${parseFloat(coord[0]) + 1}_${coord[1]}.ventName`
+              ) ||
+              _.get(
+                gridState,
+                `grid.${coord[0]}_${parseFloat(coord[1]) - 1}.ventName`
+              ) ||
+              _.get(
+                gridState,
+                `grid.${coord[0]}_${parseFloat(coord[1]) + 1}.ventName`
+              )
+            ) {
+              delta -= 0.5; // next to vent, reduce delta; TODO, apply bravery to this
+            }
             if (evaluations[target]) {
               evaluations[target].value += delta + 1; // if multiple copies of card, compound delta
             } else {
@@ -99,6 +119,34 @@ const PlayersContainer = props => {
               gridState.grid[target].occupants.length; // + building capacity - building occupancy
             if (delta) {
               delta += gridState.grid[target].occupants.length * 3; // + building occupancy (x3) (if building has capacity)
+              const diversity = _.uniqBy(
+                _.get(gridState, `grid.${target}.occupants`, []).map(
+                  occ => occ.player
+                )
+              ).length; // diversity
+              if (diversity > 0) {
+                delta += diversity - 1;
+              }
+            }
+            if (
+              _.get(
+                gridState,
+                `grid.${parseFloat(coord[0]) - 1}_${coord[1]}.ventName`
+              ) ||
+              _.get(
+                gridState,
+                `grid.${parseFloat(coord[0]) + 1}_${coord[1]}.ventName`
+              ) ||
+              _.get(
+                gridState,
+                `grid.${coord[0]}_${parseFloat(coord[1]) - 1}.ventName`
+              ) ||
+              _.get(
+                gridState,
+                `grid.${coord[0]}_${parseFloat(coord[1]) + 1}.ventName`
+              )
+            ) {
+              delta -= 0.5; // next to vent, reduce delta; TODO, apply bravery to this
             }
             if (evaluations[target]) {
               evaluations[target].value += delta + 1; // if multiple copies of card, compound delta

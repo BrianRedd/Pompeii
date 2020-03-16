@@ -89,7 +89,7 @@ export const cardDictionary = {
     number: 11,
     color: "B",
     count: 5,
-    grid: ["5_8", "6_8", "5_9", "5_10", "6_10"]
+    grid: ["5_8", "6_8", "5_10", "6_10"]
   },
   OMEN: {
     name: "Omen",
