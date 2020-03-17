@@ -105,6 +105,8 @@ const PlayersContainer = props => {
             ) {
               delta -= 0.5; // next to vent, reduce delta; TODO, apply bravery to this
             }
+            delta +=
+              (5 - _.get(gridState, `grid.${target}.distanceToExit`)) * 0.5; // distance to exit; modified by strategy
             if (evaluations[target]) {
               evaluations[target].value += delta + 1; // if multiple copies of card, compound delta
             } else {
@@ -127,26 +129,28 @@ const PlayersContainer = props => {
               if (diversity > 0) {
                 delta += diversity - 1;
               }
-            }
-            if (
-              _.get(
-                gridState,
-                `grid.${parseFloat(coord[0]) - 1}_${coord[1]}.ventName`
-              ) ||
-              _.get(
-                gridState,
-                `grid.${parseFloat(coord[0]) + 1}_${coord[1]}.ventName`
-              ) ||
-              _.get(
-                gridState,
-                `grid.${coord[0]}_${parseFloat(coord[1]) - 1}.ventName`
-              ) ||
-              _.get(
-                gridState,
-                `grid.${coord[0]}_${parseFloat(coord[1]) + 1}.ventName`
-              )
-            ) {
-              delta -= 0.5; // next to vent, reduce delta; TODO, apply bravery to this
+              if (
+                _.get(
+                  gridState,
+                  `grid.${parseFloat(coord[0]) - 1}_${coord[1]}.ventName`
+                ) ||
+                _.get(
+                  gridState,
+                  `grid.${parseFloat(coord[0]) + 1}_${coord[1]}.ventName`
+                ) ||
+                _.get(
+                  gridState,
+                  `grid.${coord[0]}_${parseFloat(coord[1]) - 1}.ventName`
+                ) ||
+                _.get(
+                  gridState,
+                  `grid.${coord[0]}_${parseFloat(coord[1]) + 1}.ventName`
+                )
+              ) {
+                delta -= 0.5; // next to vent, reduce delta; TODO, apply bravery to this
+              }
+              delta +=
+                (5 - _.get(gridState, `grid.${target}.distanceToExit`)) * 0.5; // distance to exit; modified by strategy
             }
             if (evaluations[target]) {
               evaluations[target].value += delta + 1; // if multiple copies of card, compound delta
@@ -156,8 +160,6 @@ const PlayersContainer = props => {
               };
             }
           }
-          // TODO: Placement of Relatives
-          // * placement to plan ahead for cards in hand
         });
         const recommendationArray = Object.keys(evaluations).map(evals => {
           return {

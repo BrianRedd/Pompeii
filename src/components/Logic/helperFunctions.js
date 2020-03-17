@@ -66,7 +66,7 @@ const surroundByLavaDFS = (grid, x, y) => {
  * @returns {Array} array of surrounded tiles
  */
 export const checkForSurroundedTiles = tile => {
-  console.log("checkForSurrounedTiles");
+  console.log("checkForSurroundedTiles");
   const { gridState } = store.getState();
   const surroundedTiles = [];
   const tempGrid = [];

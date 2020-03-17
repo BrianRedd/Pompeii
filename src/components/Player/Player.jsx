@@ -9,29 +9,28 @@ import * as types from "../../types/types";
 
 import Card, { CardBack } from "../Helpers/Card";
 
-const PeopleIcons = ({ number, color }) => {
+const PeopleIcons = ({ number, color, type }) => {
   const peopleIcons = [];
   for (let i = 0; i < number; i += 1) {
     peopleIcons.push(
       <div key={i} className="person">
-        <span
-          className="fas fa-male fa-lg"
-          style={{ color: `rgb(${color})` }}
-        />
+        <span className={`${type} fa-lg`} style={{ color: `rgb(${color})` }} />
       </div>
     );
   }
-  return <span>{peopleIcons}</span>;
+  return <div>{peopleIcons}</div>;
 };
 
 PeopleIcons.propTypes = {
   number: PropTypes.number,
-  color: PropTypes.string
+  color: PropTypes.string,
+  type: PropTypes.string
 };
 
 PeopleIcons.defaultProps = {
   number: 0,
-  color: "255, 255, 255"
+  color: "255, 255, 255",
+  type: "fa fa-male"
 };
 
 const HandCards = ({ hand, myTurn, playCard }) => {
@@ -85,13 +84,12 @@ const Player = props => {
       className="mt-3"
       style={{
         backgroundColor: myTurn ? `rgba(${details.color}, 0.3)` : "transparent",
-        height:
-          myTurn || stage > 1
-            ? "230px"
-            : `${Math.min(
-                230,
-                (502 - numberOfPlayers * 14) / (numberOfPlayers - 1)
-              )}px`,
+        height: myTurn
+          ? "230px"
+          : `${Math.min(
+              230,
+              (502 - numberOfPlayers * 14) / (numberOfPlayers - 1)
+            )}px`,
         transition: "height 250"
       }}
     >
@@ -114,24 +112,30 @@ const Player = props => {
         <HandCards hand={details.hand} myTurn={myTurn} playCard={playCard} />
       ) : (
         <div style={{ color: `rgb(${details.color})` }} className="p-2">
-          <Row>
-            <Col xs={3}>Saved:</Col>
-            <Col xs={8}>
-              <PeopleIcons number={details.saved} color={details.color} />
+          <Row className="ml-4 mr-4">
+            <Col xs={4}>
+              <h6 className="d-flex justify-content-center">Saved</h6>
+              <PeopleIcons
+                number={details.saved}
+                color={details.color}
+                type="fas fa-grin-alt"
+              />
             </Col>
-          </Row>
-          <hr />
-          <Row>
-            <Col xs={3}>Population:</Col>
-            <Col xs={8}>
-              <PeopleIcons number={details.population} color={details.color} />
+            <Col xs={4}>
+              <h6 className="d-flex justify-content-center">Population</h6>
+              <PeopleIcons
+                number={details.population}
+                color={details.color}
+                type="fas fa-male"
+              />
             </Col>
-          </Row>
-          <hr />
-          <Row>
-            <Col xs={3}>Casualites:</Col>
-            <Col xs={8}>
-              <PeopleIcons number={details.casualties} color={details.color} />
+            <Col xs={4}>
+              <h6 className="d-flex justify-content-center">Casualites</h6>
+              <PeopleIcons
+                number={details.casualties}
+                color={details.color}
+                type="fas fa-dizzy"
+              />
             </Col>
           </Row>
         </div>

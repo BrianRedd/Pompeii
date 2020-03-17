@@ -5,19 +5,23 @@ import * as constant from "./constants";
 export const gridSquares = {
   "0_0": {
     gateName: "Porta Errolano",
-    occupants: []
+    occupants: [],
+    distanceToExit: 1
   },
   "0_1": {
     buildingName: constant.WHITE,
     buildingCapacity: 1,
     occupants: [],
-    offSets: [[44, 35]]
+    offSets: [[44, 35]],
+    distanceToExit: 2
   },
   "0_2": {
-    occupants: []
+    occupants: [],
+    distanceToExit: 3
   },
   "0_3": {
-    occupants: []
+    occupants: [],
+    distanceToExit: 3
   },
   "0_4": {
     buildingName: "Purple 2",
@@ -26,11 +30,13 @@ export const gridSquares = {
     offSets: [
       [27, 40],
       [63, 40]
-    ]
+    ],
+    distanceToExit: 2
   },
   "0_5": {
     gateName: "Porta Vesuvio",
-    occupants: []
+    occupants: [],
+    distanceToExit: 1
   },
   "0_6": {
     buildingName: constant.WHITE,
@@ -39,7 +45,8 @@ export const gridSquares = {
     offSets: [
       [44, 16],
       [44, 47]
-    ]
+    ],
+    distanceToExit: 2
   },
   "0_7": {
     ventName: "Scroll"
@@ -51,7 +58,8 @@ export const gridSquares = {
     offSets: [
       [12, 9],
       [12, 45]
-    ]
+    ],
+    distanceToExit: 2
   },
   "1_1": {
     buildingName: "Grey 1",
@@ -60,7 +68,8 @@ export const gridSquares = {
     offSets: [
       [32, 46],
       [69, 46]
-    ]
+    ],
+    distanceToExit: 3
   },
   "1_2": {
     ventName: "Coin"
@@ -73,7 +82,8 @@ export const gridSquares = {
       [22, 9],
       [56, 9],
       [22, 44]
-    ]
+    ],
+    distanceToExit: 4
   },
   "1_4": {
     buildingName: "Purple 2",
@@ -82,13 +92,16 @@ export const gridSquares = {
     offSets: [
       [27, 50],
       [64, 50]
-    ]
+    ],
+    distanceToExit: 3
   },
   "1_5": {
-    occupants: []
+    occupants: [],
+    distanceToExit: 2
   },
   "1_6": {
-    occupants: []
+    occupants: [],
+    distanceToExit: 3
   },
   "1_7": {
     buildingName: constant.WHITE,
@@ -97,14 +110,17 @@ export const gridSquares = {
     offSets: [
       [31, 46],
       [66, 46]
-    ]
+    ],
+    distanceToExit: 3
   },
   "1_8": {
-    occupants: []
+    occupants: [],
+    distanceToExit: 2
   },
   "1_9": {
     gateName: "Porta Di Nola",
-    occupants: []
+    occupants: [],
+    distanceToExit: 1
   },
   "2_0": {
     buildingName: constant.WHITE,
@@ -113,10 +129,12 @@ export const gridSquares = {
     offSets: [
       [56, 15],
       [56, 48]
-    ]
+    ],
+    distanceToExit: 3
   },
   "2_1": {
-    occupants: []
+    occupants: [],
+    distanceToExit: 4
   },
   "2_2": {
     buildingName: "Purple 3",
@@ -126,7 +144,8 @@ export const gridSquares = {
       [39, 26],
       [21, 57],
       [58, 57]
-    ]
+    ],
+    distanceToExit: 5
   },
   "2_3": {
     buildingName: "Purple 3",
@@ -135,17 +154,18 @@ export const gridSquares = {
     offSets: [
       [26, 57],
       [63, 57]
-    ]
+    ],
+    distanceToExit: 5
   },
   "2_4": {
     buildingName: constant.WHITE,
-
     buildingCapacity: 2,
     occupants: [],
     offSets: [
       [31, 15],
       [31, 47]
-    ]
+    ],
+    distanceToExit: 4
   },
   "2_5": {
     buildingName: "Grey 4",
@@ -155,7 +175,8 @@ export const gridSquares = {
       [49, 25],
       [31, 56],
       [68, 56]
-    ]
+    ],
+    distanceToExit: 3
   },
   "2_6": {
     buildingName: "Grey 4",
@@ -166,10 +187,12 @@ export const gridSquares = {
       [74, 20],
       [37, 56],
       [74, 56]
-    ]
+    ],
+    distanceToExit: 4
   },
   "2_7": {
-    occupants: []
+    occupants: [],
+    distanceToExit: 4
   },
   "2_8": {
     buildingName: "Purple 5",
@@ -180,17 +203,19 @@ export const gridSquares = {
       [74, 40],
       [37, 75],
       [74, 75]
-    ]
+    ],
+    distanceToExit: 3
   },
   "2_9": {
-    occupants: []
+    occupants: [],
+    distanceToExit: 2
   },
   "2_10": {
-    ventName: "Urn",
-    occupants: []
+    ventName: "Urn"
   },
   "3_0": {
-    occupants: []
+    occupants: [],
+    distanceToExit: 2
   },
   "3_1": {
     buildingName: constant.WHITE,
@@ -200,7 +225,8 @@ export const gridSquares = {
       [24, 11],
       [58, 11],
       [24, 45]
-    ]
+    ],
+    distanceToExit: 3
   },
   "3_2": {
     buildingName: "Turquoise 6",
@@ -209,7 +235,8 @@ export const gridSquares = {
     offSets: [
       [34, 34],
       [68, 37]
-    ]
+    ],
+    distanceToExit: 4
   },
   "3_3": {
     buildingName: "Turquoise 6",
@@ -218,14 +245,15 @@ export const gridSquares = {
     offSets: [
       [21, 54],
       [58, 53]
-    ]
+    ],
+    distanceToExit: 5
   },
   "3_4": {
-    ventName: "Pillar",
-    occupants: []
+    ventName: "Pillar"
   },
   "3_5": {
-    occupants: []
+    occupants: [],
+    distanceToExit: 4
   },
   "3_6": {
     buildingName: "Grey 8",
@@ -235,7 +263,8 @@ export const gridSquares = {
       [8, 19],
       [8, 57],
       [40, 38]
-    ]
+    ],
+    distanceToExit: 5
   },
   "3_7": {
     buildingName: constant.WHITE,
@@ -245,10 +274,12 @@ export const gridSquares = {
       [25, 15],
       [58, 15],
       [25, 48]
-    ]
+    ],
+    distanceToExit: 5
   },
   "3_8": {
-    occupants: []
+    occupants: [],
+    distanceToExit: 4
   },
   "3_9": {
     buildingName: constant.WHITE,
@@ -257,26 +288,31 @@ export const gridSquares = {
     offSets: [
       [30, 10],
       [30, 42]
-    ]
+    ],
+    distanceToExit: 3
   },
   "3_10": {
     buildingName: constant.WHITE,
     buildingCapacity: 1,
     occupants: [],
-    offSets: [[41, 29]]
+    offSets: [[41, 29]],
+    distanceToExit: 2
   },
   "4_0": {
     gateName: "Porta Marina",
-    occupants: []
+    occupants: [],
+    distanceToExit: 1
   },
   "4_1": {
-    occupants: []
+    occupants: [],
+    distanceToExit: 2
   },
   "4_2": {
     buildingName: "Turquoise 6",
     buildingCapacity: 1,
     occupants: [],
-    offSets: [[53, 68]]
+    offSets: [[53, 68]],
+    distanceToExit: 3
   },
   "4_3": {
     buildingName: "Turquoise 6",
@@ -285,10 +321,12 @@ export const gridSquares = {
     offSets: [
       [21, 66],
       [58, 66]
-    ]
+    ],
+    distanceToExit: 4
   },
   "4_4": {
-    occupants: []
+    occupants: [],
+    distanceToExit: 5
   },
   "4_5": {
     buildingName: "Purple 7",
@@ -298,7 +336,8 @@ export const gridSquares = {
       [51, 38],
       [33, 70],
       [70, 70]
-    ]
+    ],
+    distanceToExit: 4
   },
   "4_6": {
     buildingName: "Grey 8",
@@ -307,23 +346,29 @@ export const gridSquares = {
     offSets: [
       [37, 39],
       [74, 39]
-    ]
+    ],
+    distanceToExit: 3
   },
   "4_7": {
-    occupants: []
+    occupants: [],
+    distanceToExit: 4
   },
   "4_8": {
-    occupants: []
+    occupants: [],
+    distanceToExit: 3
   },
   "4_9": {
-    occupants: []
+    occupants: [],
+    distanceToExit: 2
   },
   "4_10": {
     gateName: "Porta Di Sano",
-    occupants: []
+    occupants: [],
+    distanceToExit: 1
   },
   "5_0": {
-    occupants: []
+    occupants: [],
+    distanceToExit: 2
   },
   "5_1": {
     buildingName: constant.WHITE,
@@ -332,10 +377,12 @@ export const gridSquares = {
     offSets: [
       [29, 44],
       [65, 44]
-    ]
+    ],
+    distanceToExit: 3
   },
   "5_2": {
-    occupants: []
+    occupants: [],
+    distanceToExit: 4
   },
   "5_3": {
     buildingName: constant.WHITE,
@@ -344,7 +391,8 @@ export const gridSquares = {
     offSets: [
       [28, 16],
       [28, 49]
-    ]
+    ],
+    distanceToExit: 5
   },
   "5_4": {
     buildingName: "Turquoise 9",
@@ -356,7 +404,8 @@ export const gridSquares = {
       [74, 42],
       [38, 78],
       [74, 78]
-    ]
+    ],
+    distanceToExit: 4
   },
   "5_5": {
     buildingName: "Brown 10",
@@ -366,10 +415,12 @@ export const gridSquares = {
       [49, 15],
       [31, 47],
       [68, 47]
-    ]
+    ],
+    distanceToExit: 3
   },
   "5_6": {
-    occupants: []
+    occupants: [],
+    distanceToExit: 2
   },
   "5_7": {
     buildingName: constant.WHITE,
@@ -378,16 +429,19 @@ export const gridSquares = {
     offSets: [
       [24, 12],
       [24, 44]
-    ]
+    ],
+    distanceToExit: 3
   },
   "5_8": {
     buildingName: "Brown 11",
     buildingCapacity: 1,
     occupants: [],
-    offSets: [[42, 13]]
+    offSets: [[42, 13]],
+    distanceToExit: 2
   },
   "5_9": {
-    occupants: []
+    occupants: [],
+    distanceToExit: 3
   },
   "5_10": {
     buildingName: "Brown 11",
@@ -396,14 +450,15 @@ export const gridSquares = {
     offSets: [
       [10, 61],
       [48, 61]
-    ]
+    ],
+    distanceToExit: 2
   },
   "6_3": {
-    ventName: "Mask",
-    occupants: []
+    ventName: "Mask"
   },
   "6_4": {
-    occupants: []
+    occupants: [],
+    distanceToExit: 3
   },
   "6_5": {
     buildingName: "Brown 10",
@@ -412,31 +467,35 @@ export const gridSquares = {
     offSets: [
       [21, 50],
       [59, 50]
-    ]
+    ],
+    distanceToExit: 2
   },
   "6_6": {
     gateName: "Porta De Stabia",
-    occupants: []
+    occupants: [],
+    distanceToExit: 1
   },
   "6_7": {
-    occupants: []
+    occupants: [],
+    distanceToExit: 2
   },
   "6_8": {
     buildingName: "Brown 11",
     buildingCapacity: 1,
     gateName: "Porta Nocera",
     occupants: [],
-    offSets: [[43, 21]]
+    offSets: [[43, 21]],
+    distanceToExit: 1
   },
   "6_9": {
-    ventName: "Helmet",
-    occupants: []
+    ventName: "Helmet"
   },
   "6_10": {
     buildingName: "Brown 11",
     buildingCapacity: 1,
     occupants: [],
-    offSets: [[32, 8]]
+    offSets: [[32, 8]],
+    distanceToExit: 3
   }
 };
 

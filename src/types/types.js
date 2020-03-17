@@ -96,7 +96,8 @@ export const gridSquare = {
     ventName: string,
     gateName: string,
     occupants: arrayOf(occupant.types),
-    offSets: arrayOf(arrayOf(number))
+    offSets: arrayOf(arrayOf(number)),
+    distanceToExit: number
   }),
   defaults: {
     buildingName: null,
@@ -104,7 +105,8 @@ export const gridSquare = {
     ventName: null,
     gateName: null,
     occupants: [],
-    offSets: []
+    offSets: [],
+    distanceToExit: 0
   }
 };
 

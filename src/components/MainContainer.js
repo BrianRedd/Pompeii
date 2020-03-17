@@ -467,6 +467,9 @@ const MainContainer = props => {
   const drawTile = () => {
     console.log("drawTile");
     const tilePile = [...tileState.pile];
+    if (!flagsState.flags.includes("placing-lava-tile")) {
+      toggleFlags("placing-lava-tile");
+    }
 
     // draw tile
     const takenTile = tilePile.pop();

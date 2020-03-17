@@ -35,3 +35,14 @@ export const placeLavaTileOnSquare = (squareId, tile) => ({
   type: actionTypes.PLACE_LAVA,
   payload: { squareId, tile }
 });
+
+/**
+ * @function updateDistanceToExit
+ * @description updates square's shortest safe distance to exit
+ * @param {String} squareId - square Id
+ * @param {Number} distance - distance
+ */
+export const updateDistanceToExit = (squareId, distance) => ({
+  type: actionTypes.UPDATE_DISTANCE_TO_EXIT,
+  payload: { squareId, distance }
+});
