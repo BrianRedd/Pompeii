@@ -50,7 +50,8 @@ const MainContainer = props => {
     incrementPlayerCasualties,
     placeLavaTileOnSquare,
     setRunCounter,
-    addSnackbar
+    addSnackbar,
+    setRelativesCounter
   } = props;
 
   const numberOfEruptionTurns = 6;
@@ -63,7 +64,6 @@ const MainContainer = props => {
 
   const [cardGrid, setCardGrid] = useState([]);
 
-  const [numberOfRelatives, setNumberOfRelatives] = useState(0);
   const [placedRelatives, setPlacedRelatives] = useState([]);
 
   const [readyForSacrifice, setReadyForSacrifice] = useState(false);
@@ -104,6 +104,9 @@ const MainContainer = props => {
       incrementPlayerPopulation(activePlayer, 1);
       thisPlacedRelatives = [...placedRelatives, grid];
       setPlacedRelatives(thisPlacedRelatives);
+      const idx = recommendationArray.map(rec => rec.space).indexOf(grid);
+      recommendationArray.splice(idx, 1);
+      setRecommendationArray(recommendationArray);
       setCardGrid([...cardGrid].filter(val => val !== grid));
       addSnackbar({
         message: `${_.get(
@@ -115,8 +118,8 @@ const MainContainer = props => {
     }
 
     // if enough relatives have been placed, end relative placement
-    if (thisPlacedRelatives.length === numberOfRelatives || !grid) {
-      setNumberOfRelatives(0);
+    if (thisPlacedRelatives.length === flagsState.relativesCounter || !grid) {
+      setRelativesCounter(0);
       setPlacedRelatives([]);
       setCardGrid([]);
       if (flagsState.flags.includes("placing-person")) {
@@ -139,7 +142,7 @@ const MainContainer = props => {
   const placePerson = grid => {
     console.log("placePerson; grid:", grid);
     // if number of relatives is set, place relative instead
-    if (numberOfRelatives > 0) {
+    if (flagsState.relativesCounter > 0) {
       placeRelatives(grid);
       return;
     }
@@ -168,10 +171,11 @@ const MainContainer = props => {
     if (
       messageState.stage === 1 &&
       currentOccupants.length > 0 &&
-      numberOfRelatives === 0 &&
+      flagsState.relativesCounter === 0 &&
       !flagsState.flags.includes("card-wild")
     ) {
-      setNumberOfRelatives(currentOccupants.length);
+      console.log("flagsState.relativesCounter:", flagsState.relativesCounter);
+      setRelativesCounter(currentOccupants.length);
       setPlacedRelatives([]);
       const newGridArray = _.uniq([
         ...cardGrid,
@@ -181,6 +185,76 @@ const MainContainer = props => {
         ]
       ]).filter(val => val !== grid);
       setCardGrid(newGridArray);
+
+      // placement evaluation/recommendations:
+      const evaluations = [];
+      let handCanPlaceHere = [];
+      const playerHand = _.get(playersState, `details.${activePlayer}.hand`);
+      playerHand.forEach(card => {
+        handCanPlaceHere = [
+          ...handCanPlaceHere,
+          ..._.get(cardsState, `cards.${card}.grid`)
+        ];
+      });
+      newGridArray.forEach(newGrid => {
+        // criteria:
+        // - if empty colored build matching card in hand (capacity - 1)
+        const gridDetail = _.get(gridState, `grid.${newGrid}`);
+        const coord = newGrid.split("_");
+        let value = 1;
+        if (
+          _.get(
+            gridState,
+            `grid.${parseFloat(coord[0]) - 1}_${coord[1]}.ventName`
+          ) ||
+          _.get(
+            gridState,
+            `grid.${parseFloat(coord[0]) + 1}_${coord[1]}.ventName`
+          ) ||
+          _.get(
+            gridState,
+            `grid.${coord[0]}_${parseFloat(coord[1]) - 1}.ventName`
+          ) ||
+          _.get(
+            gridState,
+            `grid.${coord[0]}_${parseFloat(coord[1]) + 1}.ventName`
+          )
+        ) {
+          value -= 0.5; // next to vent, reduce delta; TODO, apply bravery to this
+        }
+        value += (5 - gridDetail.distanceToExit) * 0.5; // distance to exit; modified by strategy
+        const availableSpace =
+          gridDetail.buildingCapacity - gridDetail.occupants.length;
+        console.log("availableSpace", newGrid, availableSpace);
+        if (availableSpace > 0 && gridDetail.buildingName === "White") {
+          value += 1 + gridDetail.occupants.length;
+          value += _.uniqBy(
+            gridDetail.occupants.map(occupant => occupant.player)
+          ).length;
+        }
+        if (
+          gridDetail.occupants.length === 0 &&
+          handCanPlaceHere.includes(newGrid)
+        ) {
+          value *= 2;
+        }
+        if (availableSpace < 1) {
+          value = 0;
+        }
+        console.log(
+          newGrid,
+          "availableSpace:",
+          availableSpace,
+          "value:",
+          value
+        );
+        evaluations.push({
+          space: newGrid,
+          value
+        });
+      });
+      setRecommendationArray(evaluations);
+
       updateInstructions({
         text: `${_.get(playersState, `details.${activePlayer}.name`)}: ${
           constant.RELATIVE
@@ -693,7 +767,8 @@ MainContainer.propTypes = {
   incrementPlayerSaved: PropTypes.func,
   placeLavaTileOnSquare: PropTypes.func,
   setRunCounter: PropTypes.func,
-  addSnackbar: PropTypes.func
+  addSnackbar: PropTypes.func,
+  setRelativesCounter: PropTypes.func
 };
 
 MainContainer.defaultProps = {
@@ -717,7 +792,8 @@ MainContainer.defaultProps = {
   incrementPlayerSaved: () => {},
   placeLavaTileOnSquare: () => {},
   setRunCounter: () => {},
-  addSnackbar: () => {}
+  addSnackbar: () => {},
+  setRelativesCounter: () => {}
 };
 
 export const MainContainerTest = MainContainer;

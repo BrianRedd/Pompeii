@@ -54,6 +54,7 @@ const PlayerCards = ({ playersState, playCard, stage }) => {
 const PlayersContainer = props => {
   const {
     cardsState,
+    flagsState,
     gridState,
     playersState,
     discardCard,
@@ -74,7 +75,6 @@ const PlayersContainer = props => {
         id: item
       };
     });
-    console.log("gridArray", gridArray);
     if (stage < 2) {
       // recommendations (ai's only)
       const activePlayerHand = playerDetails.hand;
@@ -87,20 +87,18 @@ const PlayersContainer = props => {
         // evaluate each square
         targetSpaces.forEach(target => {
           const coord = target.split("_");
+          let delta;
+          const fullBuilding = gridArray.filter(
+            square =>
+              square.buildingName === gridState.grid[target].buildingName
+          );
+          let fullOccupancy = 0;
           if (stage === 0) {
-            // TODO: Additional criteria:
-            // * if card is better placed in next phase
-
-            let delta = gridState.grid[target].buildingCapacity; // + building capacity
-            const fullBuilding = gridArray.filter(
-              square =>
-                square.buildingName === gridState.grid[target].buildingName
-            );
-            let fullOccupancy = 0;
+            delta = gridState.grid[target].buildingCapacity; // + building capacity
             fullBuilding.forEach(room => {
               fullOccupancy += room.occupants.length;
             });
-            delta -= fullOccupancy * 2; // - full building occupancy (x2)
+            delta -= fullOccupancy * 3; // - full building occupancy (x3)
             if (
               _.get(
                 gridState,
@@ -132,8 +130,8 @@ const PlayersContainer = props => {
               };
             }
           }
-          if (stage === 1) {
-            let delta =
+          if (flagsState.relativesCounter === 0) {
+            delta =
               gridState.grid[target].buildingCapacity -
               gridState.grid[target].occupants.length; // + building capacity - building occupancy
             if (delta) {
@@ -187,7 +185,14 @@ const PlayersContainer = props => {
         setRecommendationArray(playerDetails.ai ? recommendationArray : []);
       }
     }
-  }, [playersState, stage, cardsState, setRecommendationArray, gridState]);
+  }, [
+    playersState,
+    stage,
+    cardsState,
+    setRecommendationArray,
+    gridState,
+    flagsState.relativesCounter
+  ]);
 
   /**
    * @function playCard
@@ -219,6 +224,7 @@ const PlayersContainer = props => {
 
 PlayersContainer.propTypes = {
   cardsState: types.cardsState.types,
+  flagsState: types.flagsState.types,
   gridState: types.gridState.types,
   playersState: types.playersState.types,
   stage: PropTypes.number,
@@ -230,6 +236,7 @@ PlayersContainer.propTypes = {
 
 PlayersContainer.defaultProps = {
   cardsState: types.cardsState.defaults,
+  flagsState: types.flagsState.defaults,
   gridState: types.gridState.defaults,
   playersState: types.playersState.defaults,
   stage: 0,

@@ -40,6 +40,11 @@ const flagsState = (
         ...state,
         runCounter: payload
       };
+    case actions.SET_RELATIVES_COUNTER:
+      return {
+        ...state,
+        relativesCounter: payload
+      };
     default:
       return state;
   }

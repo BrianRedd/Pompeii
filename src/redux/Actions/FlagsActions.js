@@ -22,3 +22,13 @@ export const setRunCounter = counter => ({
   type: actionTypes.SET_RUN_COUNTER,
   payload: counter
 });
+
+/**
+ * @function setRelativesCounter
+ * @description updates relatives counter within flagState
+ * @param {Number} counter - counter (replacing existing)
+ */
+export const setRelativesCounter = counter => ({
+  type: actionTypes.SET_RELATIVES_COUNTER,
+  payload: counter
+});

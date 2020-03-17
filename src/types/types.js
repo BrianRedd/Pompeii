@@ -169,11 +169,13 @@ export const tileState = {
 export const flagsState = {
   types: shape({
     flags: arrayOf(string),
-    runCounter: number
+    runCounter: number,
+    relativesCounter: number
   }),
   defaults: {
     flags: [],
-    runCounter: 0
+    runCounter: 0,
+    relativesCounter: 0
   }
 };
 

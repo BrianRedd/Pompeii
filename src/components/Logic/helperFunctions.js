@@ -17,7 +17,6 @@ import {
  * @return {Boolean}
  */
 export const vacancy = square => {
-  console.log("vacancy; square:", square);
   const { gridState } = store.getState();
   if (
     _.get(gridState, `grid.${square}.occupants.length`, 0) <
