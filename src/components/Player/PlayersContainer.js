@@ -64,12 +64,20 @@ const PlayersContainer = props => {
   } = props;
 
   useEffect(() => {
-    // recommendations
+    const playerDetails = _.get(
+      playersState,
+      `details.${playersState.players[playersState.turn]}`
+    );
+    const gridArray = Object.keys(gridState.grid).map(item => {
+      return {
+        ...gridState.grid[item],
+        id: item
+      };
+    });
+    console.log("gridArray", gridArray);
     if (stage < 2) {
-      const activePlayerHand = _.get(
-        playersState,
-        `details.${playersState.players[playersState.turn]}.hand`
-      );
+      // recommendations (ai's only)
+      const activePlayerHand = playerDetails.hand;
       if (activePlayerHand.length === 4) {
         const targetSpaces = [];
         activePlayerHand.forEach(card => {
@@ -84,7 +92,15 @@ const PlayersContainer = props => {
             // * if card is better placed in next phase
 
             let delta = gridState.grid[target].buildingCapacity; // + building capacity
-            delta -= gridState.grid[target].occupants.length * 2; // - building occupancy (x2)
+            const fullBuilding = gridArray.filter(
+              square =>
+                square.buildingName === gridState.grid[target].buildingName
+            );
+            let fullOccupancy = 0;
+            fullBuilding.forEach(room => {
+              fullOccupancy += room.occupants.length;
+            });
+            delta -= fullOccupancy * 2; // - full building occupancy (x2)
             if (
               _.get(
                 gridState,
@@ -107,6 +123,7 @@ const PlayersContainer = props => {
             }
             delta +=
               (5 - _.get(gridState, `grid.${target}.distanceToExit`)) * 0.5; // distance to exit; modified by strategy
+
             if (evaluations[target]) {
               evaluations[target].value += delta + 1; // if multiple copies of card, compound delta
             } else {
@@ -167,7 +184,7 @@ const PlayersContainer = props => {
             value: evaluations[evals].value
           };
         });
-        setRecommendationArray(recommendationArray);
+        setRecommendationArray(playerDetails.ai ? recommendationArray : []);
       }
     }
   }, [playersState, stage, cardsState, setRecommendationArray, gridState]);

@@ -17,11 +17,10 @@ export const CancelButtons = props => {
 
   return (
     <div data-test="cancel-buttons" className="cancel-buttons">
-      <Tooltip title="End Game">
+      <Tooltip title="Statistics">
         <div>
           <IconButton onClick={() => toggleFlags("game-stats")}>
-            <i className="fas fa-trophy" />
-            <span className="fas fa-ban fa-lg text-danger" />
+            <i className="fas fa-chart-bar" />
           </IconButton>
         </div>
       </Tooltip>
