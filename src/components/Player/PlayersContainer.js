@@ -10,6 +10,7 @@ import * as types from "../../types/types";
 import * as data from "../../data/gridData";
 
 import Player from "./Player";
+import { randAndArrangeRecommendations } from "../../utils/utilsCommon";
 
 const mapStateToProps = state => {
   return {
@@ -102,24 +103,6 @@ const PlayersContainer = props => {
             });
             delta -= fullOccupancy * 3; // - full building occupancy (x3)
             if (data.nextToVentSquares.includes(target)) {
-              // if (
-              //   _.get(
-              //     gridState,
-              //     `grid.${parseFloat(coord[0]) - 1}_${coord[1]}.ventName`
-              //   ) ||
-              //   _.get(
-              //     gridState,
-              //     `grid.${parseFloat(coord[0]) + 1}_${coord[1]}.ventName`
-              //   ) ||
-              //   _.get(
-              //     gridState,
-              //     `grid.${coord[0]}_${parseFloat(coord[1]) - 1}.ventName`
-              //   ) ||
-              //   _.get(
-              //     gridState,
-              //     `grid.${coord[0]}_${parseFloat(coord[1]) + 1}.ventName`
-              //   )
-              // ) {
               delta -= 0.5; // next to vent, reduce delta; TODO, apply bravery to this
             }
             delta +=
@@ -149,24 +132,6 @@ const PlayersContainer = props => {
                 delta += diversity - 1;
               }
               if (data.nextToVentSquares.includes(target)) {
-                // if (
-                //   _.get(
-                //     gridState,
-                //     `grid.${parseFloat(coord[0]) - 1}_${coord[1]}.ventName`
-                //   ) ||
-                //   _.get(
-                //     gridState,
-                //     `grid.${parseFloat(coord[0]) + 1}_${coord[1]}.ventName`
-                //   ) ||
-                //   _.get(
-                //     gridState,
-                //     `grid.${coord[0]}_${parseFloat(coord[1]) - 1}.ventName`
-                //   ) ||
-                //   _.get(
-                //     gridState,
-                //     `grid.${coord[0]}_${parseFloat(coord[1]) + 1}.ventName`
-                //   )
-                // ) {
                 delta -= 0.5; // next to vent, reduce delta; TODO, apply bravery to this
               }
               delta +=
@@ -187,7 +152,11 @@ const PlayersContainer = props => {
             value: evaluations[evals].value
           };
         });
-        setRecommendationArray(playerDetails.ai ? recommendationArray : []);
+        setRecommendationArray(
+          playerDetails.ai
+            ? randAndArrangeRecommendations(recommendationArray)
+            : []
+        );
       }
     }
   }, [

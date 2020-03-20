@@ -36,3 +36,21 @@ export const shuffle = tiles => {
   }
   return shuffledCards;
 };
+
+/**
+ * @function randAndArrangeRecommendations
+ * @description randomize than arrange (sort) recommendationsArray
+ * @param {Array} recommendationsArray
+ * @returns {Array}
+ */
+export const randAndArrangeRecommendations = recommendationsArray => {
+  const array = [...recommendationsArray];
+  for (let i = array.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const temp = array[i];
+    array[i] = array[j];
+    array[j] = temp;
+  }
+  const sortedEvaluations = array.sort((a, b) => (a.value < b.value ? 1 : -1));
+  return sortedEvaluations;
+};

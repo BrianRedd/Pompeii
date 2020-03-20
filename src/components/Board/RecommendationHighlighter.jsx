@@ -15,11 +15,6 @@ import * as constant from "../../data/constants";
 const RecommendationHighlighter = props => {
   const { recommendationArray } = props;
 
-  const sortedArray = recommendationArray.sort((a, b) =>
-    a.value < b.value ? 1 : -1
-  );
-  console.log("recommendationArray:", recommendationArray, sortedArray);
-
   /**
    * @function TopCoordinatesDisplay
    * @description display coordinates at top of map
@@ -75,7 +70,7 @@ const RecommendationHighlighter = props => {
    * @description generates recommendation components array
    * @returns {Array}
    */
-  const recommendationHighlighter = sortedArray.map((square, idx) => {
+  const recommendationHighlighter = recommendationArray.map((square, idx) => {
     const coords = square.space.split("_");
     const row = parseFloat(coords[0]);
     const col = parseFloat(coords[1]);

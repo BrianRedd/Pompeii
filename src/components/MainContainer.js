@@ -10,6 +10,7 @@ import * as types from "../types/types";
 import * as constant from "../data/constants";
 import { gridByColor, voidLavaSquares, escapeSquares } from "../data/gridData";
 import * as helper from "./Logic/helperFunctions";
+import { randAndArrangeRecommendations } from "../utils/utilsCommon";
 
 import Main from "./Main";
 
@@ -106,7 +107,9 @@ const MainContainer = props => {
       setPlacedRelatives(thisPlacedRelatives);
       const idx = recommendationArray.map(rec => rec.space).indexOf(grid);
       recommendationArray.splice(idx, 1);
-      setRecommendationArray(recommendationArray);
+      setRecommendationArray(
+        randAndArrangeRecommendations(recommendationArray)
+      );
       setCardGrid([...cardGrid].filter(val => val !== grid));
       addSnackbar({
         message: `${_.get(
@@ -225,7 +228,6 @@ const MainContainer = props => {
         value += (5 - gridDetail.distanceToExit) * 0.5; // distance to exit; modified by strategy
         const availableSpace =
           gridDetail.buildingCapacity - gridDetail.occupants.length;
-        console.log("availableSpace", newGrid, availableSpace);
         if (availableSpace > 0 && gridDetail.buildingName === "White") {
           value += 1 + gridDetail.occupants.length;
           value += _.uniqBy(
@@ -241,19 +243,12 @@ const MainContainer = props => {
         if (availableSpace < 1) {
           value = 0;
         }
-        console.log(
-          newGrid,
-          "availableSpace:",
-          availableSpace,
-          "value:",
-          value
-        );
         evaluations.push({
           space: newGrid,
           value
         });
       });
-      setRecommendationArray(evaluations);
+      setRecommendationArray(randAndArrangeRecommendations(evaluations));
 
       updateInstructions({
         text: `${_.get(playersState, `details.${activePlayer}.name`)}: ${
@@ -467,6 +462,7 @@ const MainContainer = props => {
     });
 
     if (!hotZones.length) {
+      setRecommendationArray([{ space: homeVent, value: 1 }]);
       setDangerZone([homeVent]);
     } else {
       const warmZones = [];
@@ -488,6 +484,25 @@ const MainContainer = props => {
         })
       );
       if (filteredZones.length) {
+        // recommendations
+        const evaluations = [];
+        filteredZones.forEach(zone => {
+          let value = 1 + _.get(gridState, `grid.${zone}.occupants.length`);
+          if (
+            _.get(gridState, `grid.${zone}.occupants`)
+              .map(occupant => occupant.player)
+              .includes(activePlayer)
+          ) {
+            value = 0;
+          }
+
+          evaluations.push({
+            space: zone,
+            value
+          });
+        });
+        setRecommendationArray(randAndArrangeRecommendations(evaluations));
+
         setDangerZone(filteredZones);
       } else if (!flagsState.flags.includes("no-place-to-place")) {
         toggleFlags("no-place-to-place");
