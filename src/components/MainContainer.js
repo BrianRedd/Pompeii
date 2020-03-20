@@ -329,7 +329,7 @@ const MainContainer = props => {
       if (messageState.stage === 1) {
         const nextPlayer =
           (playersState.turn + 1) % playersState.players.length;
-        setActivePlayer(nextPlayer);
+        setActivePlayer(playersState.players[nextPlayer]);
         incrementPlayerTurn();
         updateInstructions({
           text: `${_.get(

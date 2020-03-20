@@ -184,9 +184,13 @@ fieldset {
   text-align: center;
   position: absolute !important;
   font-weight: bold;
-  color: $color-red;
-  background-color: $color-gold;
+  color: $color-gold;
+  background-color: $color-red;
   border-radius: 50%;
+  &.top-choice {
+    color: $color-red;
+    background-color: $color-gold;
+  }
 }
 
 .coordinate_display {

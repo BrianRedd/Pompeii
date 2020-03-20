@@ -7,6 +7,7 @@ import _ from "lodash";
 
 import actions from "../../redux/Actions";
 import * as types from "../../types/types";
+import * as data from "../../data/gridData";
 
 import Player from "./Player";
 
@@ -86,37 +87,39 @@ const PlayersContainer = props => {
         const evaluations = {};
         // evaluate each square
         targetSpaces.forEach(target => {
-          const coord = target.split("_");
+          // const coord = target.split("_");
           let delta;
           const fullBuilding = gridArray.filter(
             square =>
               square.buildingName === gridState.grid[target].buildingName
           );
           let fullOccupancy = 0;
+          // stage 1
           if (stage === 0) {
             delta = gridState.grid[target].buildingCapacity; // + building capacity
             fullBuilding.forEach(room => {
               fullOccupancy += room.occupants.length;
             });
             delta -= fullOccupancy * 3; // - full building occupancy (x3)
-            if (
-              _.get(
-                gridState,
-                `grid.${parseFloat(coord[0]) - 1}_${coord[1]}.ventName`
-              ) ||
-              _.get(
-                gridState,
-                `grid.${parseFloat(coord[0]) + 1}_${coord[1]}.ventName`
-              ) ||
-              _.get(
-                gridState,
-                `grid.${coord[0]}_${parseFloat(coord[1]) - 1}.ventName`
-              ) ||
-              _.get(
-                gridState,
-                `grid.${coord[0]}_${parseFloat(coord[1]) + 1}.ventName`
-              )
-            ) {
+            if (data.nextToVentSquares.includes(target)) {
+              // if (
+              //   _.get(
+              //     gridState,
+              //     `grid.${parseFloat(coord[0]) - 1}_${coord[1]}.ventName`
+              //   ) ||
+              //   _.get(
+              //     gridState,
+              //     `grid.${parseFloat(coord[0]) + 1}_${coord[1]}.ventName`
+              //   ) ||
+              //   _.get(
+              //     gridState,
+              //     `grid.${coord[0]}_${parseFloat(coord[1]) - 1}.ventName`
+              //   ) ||
+              //   _.get(
+              //     gridState,
+              //     `grid.${coord[0]}_${parseFloat(coord[1]) + 1}.ventName`
+              //   )
+              // ) {
               delta -= 0.5; // next to vent, reduce delta; TODO, apply bravery to this
             }
             delta +=
@@ -130,7 +133,8 @@ const PlayersContainer = props => {
               };
             }
           }
-          if (flagsState.relativesCounter === 0) {
+          // stage 2
+          if (stage === 1) {
             delta =
               gridState.grid[target].buildingCapacity -
               gridState.grid[target].occupants.length; // + building capacity - building occupancy
@@ -144,24 +148,25 @@ const PlayersContainer = props => {
               if (diversity > 0) {
                 delta += diversity - 1;
               }
-              if (
-                _.get(
-                  gridState,
-                  `grid.${parseFloat(coord[0]) - 1}_${coord[1]}.ventName`
-                ) ||
-                _.get(
-                  gridState,
-                  `grid.${parseFloat(coord[0]) + 1}_${coord[1]}.ventName`
-                ) ||
-                _.get(
-                  gridState,
-                  `grid.${coord[0]}_${parseFloat(coord[1]) - 1}.ventName`
-                ) ||
-                _.get(
-                  gridState,
-                  `grid.${coord[0]}_${parseFloat(coord[1]) + 1}.ventName`
-                )
-              ) {
+              if (data.nextToVentSquares.includes(target)) {
+                // if (
+                //   _.get(
+                //     gridState,
+                //     `grid.${parseFloat(coord[0]) - 1}_${coord[1]}.ventName`
+                //   ) ||
+                //   _.get(
+                //     gridState,
+                //     `grid.${parseFloat(coord[0]) + 1}_${coord[1]}.ventName`
+                //   ) ||
+                //   _.get(
+                //     gridState,
+                //     `grid.${coord[0]}_${parseFloat(coord[1]) - 1}.ventName`
+                //   ) ||
+                //   _.get(
+                //     gridState,
+                //     `grid.${coord[0]}_${parseFloat(coord[1]) + 1}.ventName`
+                //   )
+                // ) {
                 delta -= 0.5; // next to vent, reduce delta; TODO, apply bravery to this
               }
               delta +=

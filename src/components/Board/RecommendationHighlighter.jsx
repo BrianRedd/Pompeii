@@ -2,6 +2,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
+import _ from "lodash";
 
 import * as constant from "../../data/constants";
 
@@ -13,6 +14,11 @@ import * as constant from "../../data/constants";
  */
 const RecommendationHighlighter = props => {
   const { recommendationArray } = props;
+
+  const sortedArray = recommendationArray.sort((a, b) =>
+    a.value < b.value ? 1 : -1
+  );
+  console.log("recommendationArray:", recommendationArray, sortedArray);
 
   /**
    * @function TopCoordinatesDisplay
@@ -69,7 +75,7 @@ const RecommendationHighlighter = props => {
    * @description generates recommendation components array
    * @returns {Array}
    */
-  const recommendationHighlighter = recommendationArray.map(square => {
+  const recommendationHighlighter = sortedArray.map((square, idx) => {
     const coords = square.space.split("_");
     const row = parseFloat(coords[0]);
     const col = parseFloat(coords[1]);
@@ -77,7 +83,7 @@ const RecommendationHighlighter = props => {
       <div
         data-test="square-recommendation"
         key={square.space}
-        className="recommendation"
+        className={`recommendation${!idx ? " top-choice" : ""}`}
         style={{
           top: `${row * 110 + constant.Y_OFFSET}px`,
           left: `${col * 110 + constant.X_OFFSET + 90}px`
