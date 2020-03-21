@@ -264,7 +264,7 @@ export const gridSquares = {
       [8, 57],
       [40, 38]
     ],
-    distanceToExit: 5
+    distanceToExit: 4
   },
   "3_7": {
     buildingName: constant.WHITE,

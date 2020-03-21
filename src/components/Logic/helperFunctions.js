@@ -4,6 +4,8 @@ import _ from "lodash";
 
 import store from "../../redux/configureStore";
 
+// import { updateDistanceToExit } from "../../redux/Actions/GridActions";
+
 import {
   voidLavaSquares,
   voidRunSquares,
@@ -34,27 +36,38 @@ export const vacancy = square => {
  * @param {Number} x
  * @param {Number} y
  */
-const surroundByLavaDFS = (grid, x, y) => {
+const surroundByLavaDFS = (grid, x, y, distance) => {
   const thisGrid = [...grid];
   if (x > thisGrid.length - 1 || x < 0 || y > thisGrid[0].length || y < 0)
     return;
 
-  if (thisGrid[x][y] === "O") thisGrid[x][y] = "*";
-
-  if (x > 0 && thisGrid[x - 1][y] === "O") {
-    surroundByLavaDFS(thisGrid, x - 1, y);
+  if (
+    parseFloat(thisGrid[x][y]) === 0 ||
+    parseFloat(thisGrid[x][y]) > distance
+  ) {
+    thisGrid[x][y] = distance;
   }
 
-  if (x < thisGrid.length - 1 && thisGrid[x + 1][y] === "O") {
-    surroundByLavaDFS(thisGrid, x + 1, y);
+  if (x > 0 && (thisGrid[x - 1][y] === 0 || thisGrid[x - 1][y] > distance)) {
+    surroundByLavaDFS(thisGrid, x - 1, y, distance + 1);
   }
 
-  if (y > 0 && thisGrid[x][y - 1] === "O") {
-    surroundByLavaDFS(thisGrid, x, y - 1);
+  if (
+    x < thisGrid.length - 1 &&
+    (thisGrid[x + 1][y] === 0 || thisGrid[x + 1][y] > distance)
+  ) {
+    surroundByLavaDFS(thisGrid, x + 1, y, distance + 1);
   }
 
-  if (x < thisGrid[0].length - 1 && thisGrid[x][y + 1] === "O") {
-    surroundByLavaDFS(thisGrid, x, y + 1);
+  if (y > 0 && (thisGrid[x][y - 1] === 0 || thisGrid[x][y - 1] > distance)) {
+    surroundByLavaDFS(thisGrid, x, y - 1, distance + 1);
+  }
+
+  if (
+    x < thisGrid[0].length - 1 &&
+    (thisGrid[x][y + 1] === 0 || thisGrid[x][y + 1] > distance)
+  ) {
+    surroundByLavaDFS(thisGrid, x, y + 1, distance + 1);
   }
 };
 
@@ -64,7 +77,7 @@ const surroundByLavaDFS = (grid, x, y) => {
  * @param {String} tile most recently placed tile location
  * @returns {Array} array of surrounded tiles
  */
-export const checkForSurroundedTiles = tile => {
+export const checkForSurroundedTiles = (tile, updateDistanceToExit) => {
   console.log("checkForSurroundedTiles");
   const { gridState } = store.getState();
   const surroundedTiles = [];
@@ -72,12 +85,12 @@ export const checkForSurroundedTiles = tile => {
   for (let x = 0; x < 7; x += 1) {
     const row = [];
     for (let y = 0; y < 11; y += 1) {
-      let gridValue = _.get(gridState, `grid.${x}_${y}.lava`) ? "L" : "O";
+      let gridValue = _.get(gridState, `grid.${x}_${y}.lava`) ? "L" : 0;
       if (tile === `${x}_${y}`) gridValue = "L";
       if (voidLavaSquares.includes(`${x}_${y}`)) {
         gridValue = "W";
       }
-      if (gridValue === "O" && gateSquares.includes(`${x}_${y}`)) {
+      if (gridValue === 0 && gateSquares.includes(`${x}_${y}`)) {
         gridValue = "X";
       }
       row.push(gridValue);
@@ -93,16 +106,22 @@ export const checkForSurroundedTiles = tile => {
     const x = parseFloat(coords[0]);
     const y = parseFloat(coords[1]);
 
-    if (tempGrid[x][y] === "X") surroundByLavaDFS(tempGrid, x, y);
+    if (tempGrid[x][y] === "X") surroundByLavaDFS(tempGrid, x, y, 1);
   });
 
   for (let x = 0; x < rows; x += 1) {
     for (let y = 0; y < columns; y += 1) {
-      if (tempGrid[x][y] === "O") {
+      if (tempGrid[x][y] === 0) {
         tempGrid[x][y] = "L";
         surroundedTiles.push(`${x}_${y}`);
-      } else if (tempGrid[x][y] === "*") {
-        tempGrid[x][y] = "O";
+      } else if (
+        typeof tempGrid[x][y] === "number" &&
+        _.get(gridState, `grid.${x}_${y}.distanceToExit`) &&
+        parseFloat(tempGrid[x][y]) !==
+          _.get(gridState, `grid.${x}_${y}.distanceToExit`)
+      ) {
+        updateDistanceToExit(`${x}_${y}`, tempGrid[x][y]);
+        console.log("update grid", x, y, "distance to:", tempGrid[x][y]);
       }
     }
   }

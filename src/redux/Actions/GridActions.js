@@ -37,12 +37,22 @@ export const placeLavaTileOnSquare = (squareId, tile) => ({
 });
 
 /**
- * @function updateDistanceToExit
+ * @function updateDistanceToExitInStore
  * @description updates square's shortest safe distance to exit
  * @param {String} squareId - square Id
  * @param {Number} distance - distance
  */
-export const updateDistanceToExit = (squareId, distance) => ({
+export const updateDistanceToExitInStore = (squareId, distance) => ({
   type: actionTypes.UPDATE_DISTANCE_TO_EXIT,
   payload: { squareId, distance }
 });
+
+/**
+ * @function updateDistanceToExit
+ * @description dispatch updated distance to action
+ * @param {String} squareId - square Id
+ * @param {Number} distance - distance
+ */
+export const updateDistanceToExit = (squareId, distance) => dispatch => {
+  dispatch(updateDistanceToExitInStore(squareId, distance));
+};

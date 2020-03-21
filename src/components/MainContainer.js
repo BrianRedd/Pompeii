@@ -57,7 +57,8 @@ const MainContainer = props => {
     placeLavaTileOnSquare,
     setRunCounter,
     addSnackbar,
-    setRelativesCounter
+    setRelativesCounter,
+    updateDistanceToExit
   } = props;
 
   const numberOfEruptionTurns = 6;
@@ -647,7 +648,7 @@ const MainContainer = props => {
     setRecommendationArray([]);
 
     // check for tiles surrounded by lava
-    const tilesSurroundedByLava = helper.checkForSurroundedTiles(square);
+    const tilesSurroundedByLava = helper.checkForSurroundedTiles(square, updateDistanceToExit);
     if (tilesSurroundedByLava.length > 0) {
       burnSurroundedTiles(tilesSurroundedByLava);
     }
@@ -790,7 +791,8 @@ MainContainer.propTypes = {
   placeLavaTileOnSquare: PropTypes.func,
   setRunCounter: PropTypes.func,
   addSnackbar: PropTypes.func,
-  setRelativesCounter: PropTypes.func
+  setRelativesCounter: PropTypes.func,
+  updateDistanceToExit: PropTypes.func
 };
 
 MainContainer.defaultProps = {
@@ -815,7 +817,8 @@ MainContainer.defaultProps = {
   placeLavaTileOnSquare: () => {},
   setRunCounter: () => {},
   addSnackbar: () => {},
-  setRelativesCounter: () => {}
+  setRelativesCounter: () => {},
+  updateDistanceToExit: () => {}
 };
 
 export const MainContainerTest = MainContainer;

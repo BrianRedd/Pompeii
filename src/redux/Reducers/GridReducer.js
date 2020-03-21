@@ -39,7 +39,7 @@ const gridState = (state = { grid: types.gridState.defaults }, action) => {
       };
     case actions.UPDATE_DISTANCE_TO_EXIT:
       newGrid = { ...state.grid[payload.squareId] };
-      newGrid.distance = payload.distance;
+      newGrid.distanceToExit = payload.distance;
       return {
         ...state,
         grid: {
