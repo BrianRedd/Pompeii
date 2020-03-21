@@ -160,7 +160,7 @@ export const calculateRunZones = (square, pop) => {
 };
 
 /**
- * @function runRecommendations
+ * @function runnerRecommendations
  * @description set recommendationsArray for running (initial run for your lives and after placement but with
  * run counters left over)
  * @param {String} activePlayer
@@ -168,8 +168,7 @@ export const calculateRunZones = (square, pop) => {
  * @param {Number} totalTurns
  * @returns {Array}
  */
-export const runRecommendations = (activePlayer, gridState, totalTurns) => {
-  // TODO recommendations
+export const runnerRecommendations = (activePlayer, gridState, totalTurns) => {
   const recommendations = [];
   Object.keys(gridState.grid).forEach(square => {
     const gridSquare = _.get(gridState, `grid.${square}`);
@@ -178,7 +177,6 @@ export const runRecommendations = (activePlayer, gridState, totalTurns) => {
       occupant => occupant.player === activePlayer
     );
     const diversity = _.uniqBy(occupants.map(occupant => occupant.player));
-    // console.log(square, occupants, myOccupants, diversity);
     if (myOccupants.length > 0) {
       // in diverse group -
       let value = 2 + myOccupants.length - diversity.length;
@@ -207,5 +205,26 @@ export const runRecommendations = (activePlayer, gridState, totalTurns) => {
       });
     }
   });
+  return recommendations;
+};
+
+export const runToRecommendations = (targetZones, gridState) => {
+  const recommendations = [];
+  targetZones.forEach(square => {
+    let value = 1;
+    const gridSquare = _.get(gridState, `grid.${square}`);
+    const occupants = _.get(gridSquare, "occupants", []);
+    const diversity = _.uniqBy(occupants.map(occupant => occupant.player));
+    // closest to exit
+    value += 5 - _.get(gridSquare, "distanceToExit", 0);
+    // most diverse group
+    value += (occupants.length + diversity.length) * 0.1;
+
+    recommendations.push({
+      square,
+      value
+    });
+  });
+
   return recommendations;
 };
