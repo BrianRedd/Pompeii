@@ -1,6 +1,19 @@
 /** @module tileData */
 
 export const tileDictionary = {
+  // TODO: Restore once AI is able to handle
+  // WildHM: {
+  //   count: 1,
+  //   wilds: ["Helmet", "Mask"]
+  // },
+  // WildUS: {
+  //   count: 1,
+  //   wilds: ["Urn", "Scroll"]
+  // },
+  // WildPC: {
+  //   count: 1,
+  //   wilds: ["Pillar", "Coin"]
+  // },
   Mask: {
     count: 7
   },
@@ -18,17 +31,5 @@ export const tileDictionary = {
   },
   Urn: {
     count: 8
-  },
-  WildHM: {
-    count: 1,
-    wilds: ["Helmet", "Mask"]
-  },
-  WildUS: {
-    count: 1,
-    wilds: ["Urn", "Scroll"]
-  },
-  WildPC: {
-    count: 1,
-    wilds: ["Pillar", "Coin"]
   }
 };

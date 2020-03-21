@@ -8,7 +8,12 @@ import _ from "lodash";
 import actions from "../redux/Actions";
 import * as types from "../types/types";
 import * as constant from "../data/constants";
-import { gridByColor, voidLavaSquares, escapeSquares } from "../data/gridData";
+import {
+  gridByColor,
+  voidLavaSquares,
+  escapeSquares,
+  nextToVentSquares
+} from "../data/gridData";
 import * as helper from "./Logic/helperFunctions";
 import { randAndArrangeRecommendations } from "../utils/utilsCommon";
 
@@ -105,7 +110,7 @@ const MainContainer = props => {
       incrementPlayerPopulation(activePlayer, 1);
       thisPlacedRelatives = [...placedRelatives, grid];
       setPlacedRelatives(thisPlacedRelatives);
-      const idx = recommendationArray.map(rec => rec.space).indexOf(grid);
+      const idx = recommendationArray.map(rec => rec.square).indexOf(grid);
       recommendationArray.splice(idx, 1);
       setRecommendationArray(
         randAndArrangeRecommendations(recommendationArray)
@@ -124,6 +129,7 @@ const MainContainer = props => {
     if (thisPlacedRelatives.length === flagsState.relativesCounter || !grid) {
       setRelativesCounter(0);
       setPlacedRelatives([]);
+      setRecommendationArray([]);
       setCardGrid([]);
       if (flagsState.flags.includes("placing-person")) {
         toggleFlags("placing-person");
@@ -169,6 +175,7 @@ const MainContainer = props => {
       )} places a person at ${grid.split("_")[1]} x ${grid.split("_")[0]}`,
       type: "success"
     });
+    setRecommendationArray([]);
 
     // if there should be relatives, set relative states
     if (
@@ -203,26 +210,8 @@ const MainContainer = props => {
         // criteria:
         // - if empty colored build matching card in hand (capacity - 1)
         const gridDetail = _.get(gridState, `grid.${newGrid}`);
-        const coord = newGrid.split("_");
         let value = 1;
-        if (
-          _.get(
-            gridState,
-            `grid.${parseFloat(coord[0]) - 1}_${coord[1]}.ventName`
-          ) ||
-          _.get(
-            gridState,
-            `grid.${parseFloat(coord[0]) + 1}_${coord[1]}.ventName`
-          ) ||
-          _.get(
-            gridState,
-            `grid.${coord[0]}_${parseFloat(coord[1]) - 1}.ventName`
-          ) ||
-          _.get(
-            gridState,
-            `grid.${coord[0]}_${parseFloat(coord[1]) + 1}.ventName`
-          )
-        ) {
+        if (nextToVentSquares.includes(newGrid)) {
           value -= 0.5; // next to vent, reduce delta; TODO, apply bravery to this
         }
         value += (5 - gridDetail.distanceToExit) * 0.5; // distance to exit; modified by strategy
@@ -244,7 +233,7 @@ const MainContainer = props => {
           value = 0;
         }
         evaluations.push({
-          space: newGrid,
+          square: newGrid,
           value
         });
       });
@@ -462,7 +451,7 @@ const MainContainer = props => {
     });
 
     if (!hotZones.length) {
-      setRecommendationArray([{ space: homeVent, value: 1 }]);
+      setRecommendationArray([{ square: homeVent, value: 1 }]);
       setDangerZone([homeVent]);
     } else {
       const warmZones = [];
@@ -497,7 +486,7 @@ const MainContainer = props => {
           }
 
           evaluations.push({
-            space: zone,
+            square: zone,
             value
           });
         });
@@ -522,6 +511,15 @@ const MainContainer = props => {
       }`,
       color: _.get(playersState, `details.${activePlayer}.color`)
     });
+    setRecommendationArray(
+      randAndArrangeRecommendations(
+        helper.runRecommendations(
+          activePlayer,
+          gridState,
+          playersState.totalTurns
+        )
+      )
+    );
   };
 
   /**
@@ -647,12 +645,15 @@ const MainContainer = props => {
     }
     setLavaTile();
     setDangerZone([]);
+    setRecommendationArray([]);
 
     // check for tiles surrounded by lava
     const tilesSurroundedByLava = helper.checkForSurroundedTiles(square);
     if (tilesSurroundedByLava.length > 0) {
       burnSurroundedTiles(tilesSurroundedByLava);
     }
+
+    // TODO update distance to exit
 
     if (initialEruptionCounter) {
       setInitialEruptionCounter(initialEruptionCounter - 1);
@@ -671,6 +672,7 @@ const MainContainer = props => {
    * @param {String} toSquare
    */
   const runToSquare = toSquare => {
+    setRecommendationArray([]);
     console.log("runToSquare; toSquare:", toSquare);
     if (toSquare === runFromSquare) {
       setRunZone([]);
@@ -717,6 +719,16 @@ const MainContainer = props => {
     setRunner();
     if (!numberOfRuns) {
       incrementPlayerTurn();
+    } else {
+      setRecommendationArray(
+        randAndArrangeRecommendations(
+          helper.runRecommendations(
+            activePlayer,
+            gridState,
+            playersState.totalTurns
+          )
+        )
+      );
     }
   };
 

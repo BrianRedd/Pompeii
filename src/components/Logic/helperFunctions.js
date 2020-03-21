@@ -158,3 +158,54 @@ export const calculateRunZones = (square, pop) => {
   grid = [];
   return _.uniqBy(newGrid);
 };
+
+/**
+ * @function runRecommendations
+ * @description set recommendationsArray for running (initial run for your lives and after placement but with
+ * run counters left over)
+ * @param {String} activePlayer
+ * @param {Object} gridState
+ * @param {Number} totalTurns
+ * @returns {Array}
+ */
+export const runRecommendations = (activePlayer, gridState, totalTurns) => {
+  // TODO recommendations
+  const recommendations = [];
+  Object.keys(gridState.grid).forEach(square => {
+    const gridSquare = _.get(gridState, `grid.${square}`);
+    const occupants = _.get(gridSquare, "occupants", []);
+    const myOccupants = occupants.filter(
+      occupant => occupant.player === activePlayer
+    );
+    const diversity = _.uniqBy(occupants.map(occupant => occupant.player));
+    // console.log(square, occupants, myOccupants, diversity);
+    if (myOccupants.length > 0) {
+      // in diverse group -
+      let value = 2 + myOccupants.length - diversity.length;
+      const coord = square.split("_");
+      const coord0 = parseFloat(coord[0]);
+      const coord1 = parseFloat(coord[1]);
+      // next to lava +
+      if (
+        _.get(gridState, `grid.${coord0 - 1}_${coord1}.lava`) ||
+        _.get(gridState, `grid.${coord0 + 1}_${coord1}.lava`) ||
+        _.get(gridState, `grid.${coord0}_${coord1 - 1}.lava`) ||
+        _.get(gridState, `grid.${coord0}_${coord1 + 1}.lava`)
+      ) {
+        value += myOccupants.length;
+      }
+      // close to exit
+      value += 1 - gridSquare.distanceToExit * 0.2;
+      // already moved this turn
+      if (myOccupants.length === 1 && myOccupants[0].lastMoved === totalTurns) {
+        value = 0;
+      }
+
+      recommendations.push({
+        square,
+        value: Math.round(value * 10) / 10
+      });
+    }
+  });
+  return recommendations;
+};

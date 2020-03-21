@@ -148,7 +148,7 @@ const PlayersContainer = props => {
         });
         const recommendationArray = Object.keys(evaluations).map(evals => {
           return {
-            space: evals,
+            square: evals,
             value: evaluations[evals].value
           };
         });

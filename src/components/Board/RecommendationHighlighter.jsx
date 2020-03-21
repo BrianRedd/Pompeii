@@ -2,7 +2,6 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import _ from "lodash";
 
 import * as constant from "../../data/constants";
 
@@ -71,13 +70,13 @@ const RecommendationHighlighter = props => {
    * @returns {Array}
    */
   const recommendationHighlighter = recommendationArray.map((square, idx) => {
-    const coords = square.space.split("_");
+    const coords = square.square.split("_");
     const row = parseFloat(coords[0]);
     const col = parseFloat(coords[1]);
     return (
       <div
         data-test="square-recommendation"
-        key={square.space}
+        key={square.square}
         className={`recommendation${!idx ? " top-choice" : ""}`}
         style={{
           top: `${row * 110 + constant.Y_OFFSET}px`,
