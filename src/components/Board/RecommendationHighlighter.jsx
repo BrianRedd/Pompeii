@@ -83,7 +83,7 @@ const RecommendationHighlighter = props => {
           left: `${col * 110 + constant.X_OFFSET + 90}px`
         }}
       >
-        {square.value}
+        {Math.round(parseFloat(square.value) * 10) / 10}
       </div>
     );
   });

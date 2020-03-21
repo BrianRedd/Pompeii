@@ -143,16 +143,16 @@ export const runToDFS = (x, y, distance) => {
  * @function calculateRunZones
  * @description using DFS to determine true run zones
  * @param {String} square
- * @param {Number*} pop
+ * @param {Number*} population
  * @returns {Array}
  */
-export const calculateRunZones = (square, pop) => {
+export const calculateRunZones = (square, population) => {
   console.log("calculateRunZones");
   const coord = square.split("_");
   const coord0 = parseFloat(coord[0]);
   const coord1 = parseFloat(coord[1]);
 
-  runToDFS(coord0, coord1, pop);
+  runToDFS(coord0, coord1, population);
 
   const newGrid = [...grid];
   grid = [];
@@ -160,15 +160,43 @@ export const calculateRunZones = (square, pop) => {
 };
 
 /**
+ * @function squareHotness
+ * @description return number of unique lava tile types surrounding square
+ * @param {Object} gridState
+ * @param {String} square
+ */
+export const squareHotness = square => {
+  const { gridState } = store.getState();
+  const coord = square.split("_");
+  const coord0 = parseFloat(coord[0]);
+  const coord1 = parseFloat(coord[1]);
+  const discoveredLavas = [];
+  const lavas = [
+    _.get(gridState, `grid.${coord0 - 1}_${coord1}.lava`),
+    _.get(gridState, `grid.${coord0 + 1}_${coord1}.lava`),
+    _.get(gridState, `grid.${coord0}_${coord1 - 1}.lava`),
+    _.get(gridState, `grid.${coord0}_${coord1 + 1}.lava`)
+  ];
+  for (let i = 0; i < 4; i += 1) {
+    if (lavas[i] && !discoveredLavas.includes(lavas[i])) {
+      discoveredLavas.push(lavas[i]);
+    }
+  }
+  return discoveredLavas.length;
+};
+
+/**
  * @function runnerRecommendations
  * @description set recommendationsArray for running (initial run for your lives and after placement but with
  * run counters left over)
  * @param {String} activePlayer
- * @param {Object} gridState
- * @param {Number} totalTurns
  * @returns {Array}
  */
-export const runnerRecommendations = (activePlayer, gridState, totalTurns) => {
+export const runnerRecommendations = activePlayer => {
+  const {
+    gridState,
+    playersState: { totalTurns }
+  } = store.getState();
   const recommendations = [];
   Object.keys(gridState.grid).forEach(square => {
     const gridSquare = _.get(gridState, `grid.${square}`);
@@ -180,18 +208,8 @@ export const runnerRecommendations = (activePlayer, gridState, totalTurns) => {
     if (myOccupants.length > 0) {
       // in diverse group -
       let value = 2 + myOccupants.length - diversity.length;
-      const coord = square.split("_");
-      const coord0 = parseFloat(coord[0]);
-      const coord1 = parseFloat(coord[1]);
       // next to lava +
-      if (
-        _.get(gridState, `grid.${coord0 - 1}_${coord1}.lava`) ||
-        _.get(gridState, `grid.${coord0 + 1}_${coord1}.lava`) ||
-        _.get(gridState, `grid.${coord0}_${coord1 - 1}.lava`) ||
-        _.get(gridState, `grid.${coord0}_${coord1 + 1}.lava`)
-      ) {
-        value += myOccupants.length;
-      }
+      value += squareHotness(square);
       // close to exit
       value += 1 - gridSquare.distanceToExit * 0.2;
       // already moved this turn
@@ -201,29 +219,41 @@ export const runnerRecommendations = (activePlayer, gridState, totalTurns) => {
 
       recommendations.push({
         square,
-        value: Math.round(value * 10) / 10
+        value
       });
     }
   });
   return recommendations;
 };
 
-export const runToRecommendations = (targetZones, gridState) => {
+/**
+ * @function runToRecommendations
+ * @description determine recommendation for run to square
+ * @param {Array} targetZones
+ * @param {String} startSquare
+ * @returns {Array}
+ */
+export const runToRecommendations = (targetZones, startSquare) => {
+  const { gridState } = store.getState();
   const recommendations = [];
   targetZones.forEach(square => {
-    let value = 1;
-    const gridSquare = _.get(gridState, `grid.${square}`);
-    const occupants = _.get(gridSquare, "occupants", []);
-    const diversity = _.uniqBy(occupants.map(occupant => occupant.player));
-    // closest to exit
-    value += 5 - _.get(gridSquare, "distanceToExit", 0);
-    // most diverse group
-    value += (occupants.length + diversity.length) * 0.1;
+    if (square !== startSquare) {
+      let value = 1;
+      const gridSquare = _.get(gridState, `grid.${square}`);
+      const occupants = _.get(gridSquare, "occupants", []);
+      const diversity = _.uniqBy(occupants.map(occupant => occupant.player));
+      // closest to exit
+      value += 5 - _.get(gridSquare, "distanceToExit", 0);
+      // most diverse group
+      value += (occupants.length + diversity.length) * 0.1;
+      // dangerous square
+      value -= squareHotness(square) * 0.5;
 
-    recommendations.push({
-      square,
-      value
-    });
+      recommendations.push({
+        square,
+        value
+      });
+    }
   });
 
   return recommendations;

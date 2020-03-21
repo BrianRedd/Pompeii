@@ -512,13 +512,7 @@ const MainContainer = props => {
       color: _.get(playersState, `details.${activePlayer}.color`)
     });
     setRecommendationArray(
-      randAndArrangeRecommendations(
-        helper.runnerRecommendations(
-          activePlayer,
-          gridState,
-          playersState.totalTurns
-        )
-      )
+      randAndArrangeRecommendations(helper.runnerRecommendations(activePlayer))
     );
   };
 
@@ -610,7 +604,7 @@ const MainContainer = props => {
     setRunZone(targetZones);
     setRecommendationArray(
       randAndArrangeRecommendations(
-        helper.runToRecommendations(targetZones, gridState)
+        helper.runToRecommendations(targetZones, square)
       )
     );
   };
@@ -727,11 +721,7 @@ const MainContainer = props => {
     } else {
       setRecommendationArray(
         randAndArrangeRecommendations(
-          helper.runnerRecommendations(
-            activePlayer,
-            gridState,
-            playersState.totalTurns
-          )
+          helper.runnerRecommendations(activePlayer)
         )
       );
     }
