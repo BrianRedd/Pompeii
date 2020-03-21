@@ -77,7 +77,7 @@ const PlayersContainer = props => {
         id: item
       };
     });
-    if (stage < 2) {
+    if (stage < 2 && playerDetails.ai) {
       // recommendations (ai's only)
       const activePlayerHand = playerDetails.hand;
       if (activePlayerHand.length === 4) {
@@ -153,9 +153,7 @@ const PlayersContainer = props => {
           };
         });
         setRecommendationArray(
-          playerDetails.ai
-            ? randAndArrangeRecommendations(recommendationArray)
-            : []
+          randAndArrangeRecommendations(recommendationArray)
         );
       }
     }

@@ -70,22 +70,16 @@ const MainContainer = props => {
   }, [playersState]);
 
   const [cardGrid, setCardGrid] = useState([]);
-
   const [placedRelatives, setPlacedRelatives] = useState([]);
-
   const [readyForSacrifice, setReadyForSacrifice] = useState(false);
-
   const [lavaTile, setLavaTile] = useState();
   const [dangerZone, setDangerZone] = useState([]);
-
   const [initialEruptionCounter, setInitialEruptionCounter] = useState(
     numberOfEruptionTurns
   );
-
   const [runZone, setRunZone] = useState([]);
   const [runFromSquare, setRunFromSquare] = useState();
   const [runner, setRunner] = useState();
-
   const [recommendationArray, setRecommendationArray] = useState();
 
   /**
@@ -95,6 +89,7 @@ const MainContainer = props => {
    */
   const placeRelatives = grid => {
     console.log("placeRelatives; grid:", grid);
+    const playerDetails = _.get(playersState, `details.${activePlayer}`);
     // current other occupants
     const currentOccupants = _.get(gridState, `grid.${grid}.occupants`, []);
     let thisPlacedRelatives = placedRelatives;
@@ -111,17 +106,18 @@ const MainContainer = props => {
       incrementPlayerPopulation(activePlayer, 1);
       thisPlacedRelatives = [...placedRelatives, grid];
       setPlacedRelatives(thisPlacedRelatives);
-      const idx = recommendationArray.map(rec => rec.square).indexOf(grid);
-      recommendationArray.splice(idx, 1);
-      setRecommendationArray(
-        randAndArrangeRecommendations(recommendationArray)
-      );
+      if (playerDetails.ai) {
+        const idx = recommendationArray.map(rec => rec.square).indexOf(grid);
+        recommendationArray.splice(idx, 1);
+        setRecommendationArray(
+          randAndArrangeRecommendations(recommendationArray)
+        );
+      }
       setCardGrid([...cardGrid].filter(val => val !== grid));
       addSnackbar({
-        message: `${_.get(
-          playersState,
-          `details.${activePlayer}.name`
-        )} places a relative at ${grid.split("_")[1]} x ${grid.split("_")[0]}`,
+        message: `${playerDetails.name} places a relative at ${
+          grid.split("_")[1]
+        } x ${grid.split("_")[0]}`,
         type: "success"
       });
     }
@@ -151,6 +147,7 @@ const MainContainer = props => {
    */
   const placePerson = grid => {
     console.log("placePerson; grid:", grid);
+    const playerDetails = _.get(playersState, `details.${activePlayer}`);
     // if number of relatives is set, place relative instead
     if (flagsState.relativesCounter > 0) {
       placeRelatives(grid);
@@ -170,10 +167,9 @@ const MainContainer = props => {
     ]);
     incrementPlayerPopulation(activePlayer, 1);
     addSnackbar({
-      message: `${_.get(
-        playersState,
-        `details.${activePlayer}.name`
-      )} places a person at ${grid.split("_")[1]} x ${grid.split("_")[0]}`,
+      message: `${playerDetails.name} places a person at ${
+        grid.split("_")[1]
+      } x ${grid.split("_")[0]}`,
       type: "success"
     });
     setRecommendationArray([]);
@@ -185,7 +181,6 @@ const MainContainer = props => {
       flagsState.relativesCounter === 0 &&
       !flagsState.flags.includes("card-wild")
     ) {
-      console.log("flagsState.relativesCounter:", flagsState.relativesCounter);
       setRelativesCounter(currentOccupants.length);
       setPlacedRelatives([]);
       const newGridArray = _.uniq([
@@ -197,54 +192,54 @@ const MainContainer = props => {
       ]).filter(val => val !== grid);
       setCardGrid(newGridArray);
 
-      // placement evaluation/recommendations:
-      const evaluations = [];
-      let handCanPlaceHere = [];
-      const playerHand = _.get(playersState, `details.${activePlayer}.hand`);
-      playerHand.forEach(card => {
-        handCanPlaceHere = [
-          ...handCanPlaceHere,
-          ..._.get(cardsState, `cards.${card}.grid`)
-        ];
-      });
-      newGridArray.forEach(newGrid => {
-        // criteria:
-        // - if empty colored build matching card in hand (capacity - 1)
-        const gridDetail = _.get(gridState, `grid.${newGrid}`);
-        let value = 1;
-        if (nextToVentSquares.includes(newGrid)) {
-          value -= 0.5; // next to vent, reduce delta; TODO, apply bravery to this
-        }
-        value += (5 - gridDetail.distanceToExit) * 0.5; // distance to exit; modified by strategy
-        const availableSpace =
-          gridDetail.buildingCapacity - gridDetail.occupants.length;
-        if (availableSpace > 0 && gridDetail.buildingName === "White") {
-          value += 1 + gridDetail.occupants.length;
-          value += _.uniqBy(
-            gridDetail.occupants.map(occupant => occupant.player)
-          ).length;
-        }
-        if (
-          gridDetail.occupants.length === 0 &&
-          handCanPlaceHere.includes(newGrid)
-        ) {
-          value *= 2;
-        }
-        if (availableSpace < 1) {
-          value = 0;
-        }
-        evaluations.push({
-          square: newGrid,
-          value
+      if (playerDetails.ai) {
+        // placement evaluation/recommendations:
+        const evaluations = [];
+        let handCanPlaceHere = [];
+        const playerHand = playerDetails.hand;
+        playerHand.forEach(card => {
+          handCanPlaceHere = [
+            ...handCanPlaceHere,
+            ..._.get(cardsState, `cards.${card}.grid`)
+          ];
         });
-      });
-      setRecommendationArray(randAndArrangeRecommendations(evaluations));
+        newGridArray.forEach(newGrid => {
+          // criteria:
+          // - if empty colored build matching card in hand (capacity - 1)
+          const gridDetail = _.get(gridState, `grid.${newGrid}`);
+          let value = 1;
+          if (nextToVentSquares.includes(newGrid)) {
+            value -= 0.5; // next to vent, reduce delta; TODO, apply bravery to this
+          }
+          value += (5 - gridDetail.distanceToExit) * 0.5; // distance to exit; modified by strategy
+          const availableSpace =
+            gridDetail.buildingCapacity - gridDetail.occupants.length;
+          if (availableSpace > 0 && gridDetail.buildingName === "White") {
+            value += 1 + gridDetail.occupants.length;
+            value += _.uniqBy(
+              gridDetail.occupants.map(occupant => occupant.player)
+            ).length;
+          }
+          if (
+            gridDetail.occupants.length === 0 &&
+            handCanPlaceHere.includes(newGrid)
+          ) {
+            value *= 2;
+          }
+          if (availableSpace < 1) {
+            value = 0;
+          }
+          evaluations.push({
+            square: newGrid,
+            value
+          });
+        });
+        setRecommendationArray(randAndArrangeRecommendations(evaluations));
+      }
 
       updateInstructions({
-        text: `${_.get(playersState, `details.${activePlayer}.name`)}: ${
-          constant.RELATIVE
-        }`,
-        color: _.get(playersState, `details.${activePlayer}.color`)
+        text: `${playerDetails.name}: ${constant.RELATIVE}`,
+        color: playerDetails.color
       });
     } else {
       // else complete placement
@@ -256,10 +251,8 @@ const MainContainer = props => {
         toggleFlags("card-wild");
       }
       updateInstructions({
-        text: `${_.get(playersState, `details.${activePlayer}.name`)}: ${
-          constant.DRAW
-        }`,
-        color: _.get(playersState, `details.${activePlayer}.color`)
+        text: `${playerDetails.name}: ${constant.DRAW}`,
+        color: playerDetails.color
       });
     }
   };
@@ -451,8 +444,11 @@ const MainContainer = props => {
       }
     });
 
+    const playerDetails = _.get(playersState, `details.${activePlayer}`);
     if (!hotZones.length) {
-      setRecommendationArray([{ square: homeVent, value: 1 }]);
+      if (playerDetails.ai) {
+        setRecommendationArray([{ square: homeVent, value: 1 }]);
+      }
       setDangerZone([homeVent]);
     } else {
       const warmZones = [];
@@ -474,24 +470,26 @@ const MainContainer = props => {
         })
       );
       if (filteredZones.length) {
-        // recommendations
-        const evaluations = [];
-        filteredZones.forEach(zone => {
-          let value = 1 + _.get(gridState, `grid.${zone}.occupants.length`);
-          if (
-            _.get(gridState, `grid.${zone}.occupants`)
-              .map(occupant => occupant.player)
-              .includes(activePlayer)
-          ) {
-            value = 0;
-          }
+        if (playerDetails.ai) {
+          // recommendations
+          const evaluations = [];
+          filteredZones.forEach(zone => {
+            let value = 1 + _.get(gridState, `grid.${zone}.occupants.length`);
+            if (
+              _.get(gridState, `grid.${zone}.occupants`)
+                .map(occupant => occupant.player)
+                .includes(activePlayer)
+            ) {
+              value = 0;
+            }
 
-          evaluations.push({
-            square: zone,
-            value
+            evaluations.push({
+              square: zone,
+              value
+            });
           });
-        });
-        setRecommendationArray(randAndArrangeRecommendations(evaluations));
+          setRecommendationArray(randAndArrangeRecommendations(evaluations));
+        }
 
         setDangerZone(filteredZones);
       } else if (!flagsState.flags.includes("no-place-to-place")) {
@@ -506,15 +504,18 @@ const MainContainer = props => {
    */
   const runForYourLives = async () => {
     console.log("runForYourLives");
+    const playerDetails = _.get(playersState, `details.${activePlayer}`);
     await updateInstructions({
-      text: `${_.get(playersState, `details.${activePlayer}.name`)}: ${
-        constant.RUN
-      }`,
-      color: _.get(playersState, `details.${activePlayer}.color`)
+      text: `${playerDetails.name}: ${constant.RUN}`,
+      color: playerDetails.color
     });
-    setRecommendationArray(
-      randAndArrangeRecommendations(helper.runnerRecommendations(activePlayer))
-    );
+    if (playerDetails.ai) {
+      setRecommendationArray(
+        randAndArrangeRecommendations(
+          helper.runnerRecommendations(activePlayer)
+        )
+      );
+    }
   };
 
   /**
@@ -577,6 +578,7 @@ const MainContainer = props => {
    */
   const selectRunner = (person, square) => {
     console.log("selectRunner; person:", person, "square:", square);
+    const playerDetails = _.get(playersState, `details.${activePlayer}`);
     setRunner(person);
 
     setRunFromSquare(square);
@@ -589,7 +591,7 @@ const MainContainer = props => {
     }
     if (
       person.lastMoved === playersState.totalTurns &&
-      _.get(playersState, `details.${activePlayer}.population`) !== 1
+      playerDetails.population !== 1
     ) {
       addSnackbar({
         message: "Already ran this person this turn!",
@@ -603,11 +605,13 @@ const MainContainer = props => {
     const targetZones = helper.calculateRunZones(square, pop + 1);
 
     setRunZone(targetZones);
-    setRecommendationArray(
-      randAndArrangeRecommendations(
-        helper.runToRecommendations(targetZones, square)
-      )
-    );
+    if (playerDetails.ai) {
+      setRecommendationArray(
+        randAndArrangeRecommendations(
+          helper.runToRecommendations(targetZones, square)
+        )
+      );
+    }
   };
 
   /**
@@ -648,7 +652,10 @@ const MainContainer = props => {
     setRecommendationArray([]);
 
     // check for tiles surrounded by lava
-    const tilesSurroundedByLava = helper.checkForSurroundedTiles(square, updateDistanceToExit);
+    const tilesSurroundedByLava = helper.checkForSurroundedTiles(
+      square,
+      updateDistanceToExit
+    );
     if (tilesSurroundedByLava.length > 0) {
       burnSurroundedTiles(tilesSurroundedByLava);
     }
@@ -673,6 +680,7 @@ const MainContainer = props => {
    */
   const runToSquare = toSquare => {
     setRecommendationArray([]);
+    const playerDetails = _.get(playersState, `details.${activePlayer}`);
     console.log("runToSquare; toSquare:", toSquare);
     if (toSquare === runFromSquare) {
       setRunZone([]);
@@ -693,7 +701,7 @@ const MainContainer = props => {
 
       if (escapeSquares.includes(toSquare)) {
         incrementPlayerSaved(activePlayer, 1);
-        if (_.get(playersState, `details.${activePlayer}.population`) === 1) {
+        if (playerDetails.population === 1) {
           numberOfRuns = 1;
         }
       } else {
@@ -711,7 +719,7 @@ const MainContainer = props => {
 
       numberOfRuns -= 1;
     }
-    if (_.get(playersState, `details.${activePlayer}.population`) < 1) {
+    if (playerDetails.population < 1) {
       numberOfRuns = 0;
     }
     setRunCounter(numberOfRuns);
@@ -719,7 +727,7 @@ const MainContainer = props => {
     setRunner();
     if (!numberOfRuns) {
       incrementPlayerTurn();
-    } else {
+    } else if (playerDetails.ai) {
       setRecommendationArray(
         randAndArrangeRecommendations(
           helper.runnerRecommendations(activePlayer)

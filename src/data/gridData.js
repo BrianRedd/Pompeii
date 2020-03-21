@@ -260,7 +260,7 @@ export const gridSquares = {
     buildingCapacity: 3,
     occupants: [],
     offSets: [
-      [8, 19],
+      [9, 19],
       [8, 57],
       [40, 38]
     ],
