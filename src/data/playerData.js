@@ -10,32 +10,38 @@ export const playerColors = [
 export const aiPlayers = {
   Corvus: {
     name: "Corvus",
-    courageous: 0,
-    social: 0,
-    vengeful: 0
+    cautious: 2,
+    social: 1,
+    chaotic: 1
   },
   Graecus: {
     name: "Graecus",
-    courageous: 0,
-    social: 0,
-    vengeful: 0
+    cautious: 1,
+    social: 2,
+    chaotic: 1
   },
   Cassia: {
     name: "Cassia",
-    courageous: 0,
-    social: 0,
-    vengeful: 0
+    cautious: 1,
+    social: 1,
+    chaotic: 2
   },
   Severus: {
     name: "Severus",
-    courageous: 0,
-    social: 0,
-    vengeful: 0
+    cautious: 3,
+    social: 2,
+    chaotic: 0
   },
   Aurelia: {
     name: "Aurelia",
-    courageous: 0,
+    cautious: 0,
+    social: 3,
+    chaotic: 2
+  },
+  Proculus: {
+    name: "Proculus",
+    cautious: 2,
     social: 0,
-    vengeful: 0
+    chaotic: 3
   }
 };

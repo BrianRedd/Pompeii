@@ -4,7 +4,7 @@ import _ from "lodash";
 
 import store from "../../redux/configureStore";
 
-// import { updateDistanceToExit } from "../../redux/Actions/GridActions";
+import { aiPlayers } from "../../data/playerData";
 
 import {
   voidLavaSquares,
@@ -214,8 +214,9 @@ export const squareHotness = square => {
 export const runnerRecommendations = activePlayer => {
   const {
     gridState,
-    playersState: { totalTurns }
+    playersState: { details, totalTurns }
   } = store.getState();
+  const aiPlayer = aiPlayers[_.get(details, `${activePlayer}.name`)];
   const recommendations = [];
   Object.keys(gridState.grid).forEach(square => {
     const gridSquare = _.get(gridState, `grid.${square}`);
@@ -228,7 +229,7 @@ export const runnerRecommendations = activePlayer => {
       // in diverse group -
       let value = 2 + myOccupants.length - diversity.length;
       // next to lava +
-      value += squareHotness(square);
+      value += squareHotness(square) * aiPlayer.cautious;
       // close to exit
       value += 1 - gridSquare.distanceToExit * 0.2;
       // already moved this turn
@@ -250,10 +251,17 @@ export const runnerRecommendations = activePlayer => {
  * @description determine recommendation for run to square
  * @param {Array} targetZones
  * @param {String} startSquare
+ * @param {String} activePlayer
  * @returns {Array}
  */
-export const runToRecommendations = (targetZones, startSquare) => {
-  const { gridState } = store.getState();
+export const runToRecommendations = (
+  targetZones,
+  startSquare,
+  activePlayer
+) => {
+  const { gridState, playersState } = store.getState();
+  const aiPlayer =
+    aiPlayers[_.get(playersState, `details.${activePlayer}.name`)];
   const recommendations = [];
   targetZones.forEach(square => {
     if (square !== startSquare) {
@@ -266,7 +274,7 @@ export const runToRecommendations = (targetZones, startSquare) => {
       // most diverse group
       value += (occupants.length + diversity.length) * 0.1;
       // dangerous square
-      value -= squareHotness(square) * 0.5;
+      value -= squareHotness(square) * 0.5 * aiPlayer.cautious;
 
       recommendations.push({
         square,

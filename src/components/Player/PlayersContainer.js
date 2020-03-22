@@ -8,6 +8,7 @@ import _ from "lodash";
 import actions from "../../redux/Actions";
 import * as types from "../../types/types";
 import * as data from "../../data/gridData";
+import { aiPlayers } from "../../data/playerData";
 
 import Player from "./Player";
 import { randAndArrangeRecommendations } from "../../utils/utilsCommon";
@@ -63,7 +64,8 @@ const PlayersContainer = props => {
     updatePlayerHand,
     playPompCard,
     stage,
-    setRecommendationArray
+    setRecommendationArray,
+    activePlayer
   } = props;
 
   useEffect(() => {
@@ -79,6 +81,8 @@ const PlayersContainer = props => {
     });
     if (stage < 2 && playerDetails.ai) {
       // recommendations (ai's only)
+      const aiPlayer =
+        aiPlayers[_.get(playersState, `details.${activePlayer}.name`)];
       const activePlayerHand = playerDetails.hand;
       if (activePlayerHand.length === 4) {
         const targetSpaces = [];
@@ -101,9 +105,9 @@ const PlayersContainer = props => {
             fullBuilding.forEach(room => {
               fullOccupancy += room.occupants.length;
             });
-            delta -= fullOccupancy * 3; // - full building occupancy (x3)
+            delta -= fullOccupancy * (2 + aiPlayer.social); // - full building occupancy (x3)
             if (data.nextToVentSquares.includes(target)) {
-              delta -= 0.5; // next to vent, reduce delta; TODO, apply bravery to this
+              delta -= 0.5 * aiPlayer.cautious; // next to vent, reduce delta;
             }
             delta +=
               (5 - _.get(gridState, `grid.${target}.distanceToExit`)) * 0.5; // distance to exit; modified by strategy
@@ -122,20 +126,23 @@ const PlayersContainer = props => {
               gridState.grid[target].buildingCapacity -
               gridState.grid[target].occupants.length; // + building capacity - building occupancy
             if (delta) {
-              delta += gridState.grid[target].occupants.length * 3; // + building occupancy (x3) (if building has capacity)
+              delta +=
+                gridState.grid[target].occupants.length * (2 + aiPlayer.social); // + building occupancy
               const diversity = _.uniqBy(
                 _.get(gridState, `grid.${target}.occupants`, []).map(
                   occ => occ.player
                 )
               ).length; // diversity
               if (diversity > 0) {
-                delta += diversity - 1;
+                delta += (diversity - 1) * 0.5 * aiPlayer.social;
               }
               if (data.nextToVentSquares.includes(target)) {
-                delta -= 0.5; // next to vent, reduce delta; TODO, apply bravery to this
+                delta -= 0.5 * aiPlayer.cautious; // next to vent, reduce delta;
               }
               delta +=
-                (5 - _.get(gridState, `grid.${target}.distanceToExit`)) * 0.5; // distance to exit; modified by strategy
+                (5 - _.get(gridState, `grid.${target}.distanceToExit`)) *
+                0.5 *
+                aiPlayer.cautious; // distance to exit; modified by strategy
             }
             if (evaluations[target]) {
               evaluations[target].value += delta + 1; // if multiple copies of card, compound delta
@@ -199,6 +206,7 @@ PlayersContainer.propTypes = {
   flagsState: types.flagsState.types,
   gridState: types.gridState.types,
   playersState: types.playersState.types,
+  activePlayer: PropTypes.string,
   stage: PropTypes.number,
   discardCard: PropTypes.func,
   updatePlayerHand: PropTypes.func,
@@ -211,6 +219,7 @@ PlayersContainer.defaultProps = {
   flagsState: types.flagsState.defaults,
   gridState: types.gridState.defaults,
   playersState: types.playersState.defaults,
+  activePlayer: "",
   stage: 0,
   discardCard: () => {},
   updatePlayerHand: () => {},

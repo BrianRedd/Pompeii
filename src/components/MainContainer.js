@@ -14,6 +14,7 @@ import {
   escapeSquares,
   nextToVentSquares
 } from "../data/gridData";
+import { aiPlayers } from "../data/playerData";
 import * as helper from "./Logic/helperFunctions";
 import { randAndArrangeRecommendations } from "../utils/utilsCommon";
 
@@ -193,6 +194,8 @@ const MainContainer = props => {
 
       if (playerDetails.ai) {
         // placement evaluation/recommendations:
+        const aiPlayer =
+          aiPlayers[_.get(playersState, `details.${activePlayer}.name`)];
         const evaluations = [];
         let handCanPlaceHere = [];
         const playerHand = playerDetails.hand;
@@ -208,7 +211,7 @@ const MainContainer = props => {
           const gridDetail = _.get(gridState, `grid.${newGrid}`);
           let value = 1;
           if (nextToVentSquares.includes(newGrid)) {
-            value -= 0.5; // next to vent, reduce delta; TODO, apply bravery to this
+            value -= 0.5 * aiPlayer.cautious; // next to vent, reduce delta
           }
           value += (5 - gridDetail.distanceToExit) * 0.5; // distance to exit; modified by strategy
           const availableSpace =
@@ -652,7 +655,7 @@ const MainContainer = props => {
     if (playerDetails.ai) {
       setRecommendationArray(
         randAndArrangeRecommendations(
-          helper.runToRecommendations(targetZones, square)
+          helper.runToRecommendations(targetZones, square, activePlayer)
         )
       );
     }

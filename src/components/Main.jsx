@@ -103,6 +103,7 @@ const Main = props => {
                 playPompCard={playPompCard}
                 stage={messageState.stage}
                 setRecommendationArray={setRecommendationArray}
+                activePlayer={activePlayer}
               />
             </div>
           )}
