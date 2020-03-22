@@ -44,7 +44,9 @@ const GameOverContainer = props => {
           parseFloat(_.get(playersState, `details.${player}.casualties`))
       };
     });
-    setRankings(statistics.sort((a, b) => b.victoryPoints - a.victoryPoints));
+    setRankings(
+      statistics.sort((a, b) => (b.victoryPoints > a.victoryPoints ? 1 : -1))
+    );
   }, [playersState]);
 
   const gameOver = "game-over";

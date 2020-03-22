@@ -71,7 +71,6 @@ const MainContainer = props => {
 
   const [cardGrid, setCardGrid] = useState([]);
   const [placedRelatives, setPlacedRelatives] = useState([]);
-  const [readyForSacrifice, setReadyForSacrifice] = useState(false);
   const [lavaTile, setLavaTile] = useState();
   const [dangerZone, setDangerZone] = useState([]);
   const [initialEruptionCounter, setInitialEruptionCounter] = useState(
@@ -330,14 +329,23 @@ const MainContainer = props => {
    * @description upon selection of person, sacrifice if not your own
    * @param {Object} personObj
    * @param {String} square
+   * @param {Boolean} ai - is sacrifice performed by AI?
    */
-  const performSacrifice = (personObj, square) => {
-    console.log("performSacrifice; personObj:", personObj, "square:", square);
+  const performSacrifice = (personObj, square, ai) => {
+    console.log(
+      "performSacrifice; personObj:",
+      personObj,
+      "square:",
+      square,
+      ai
+    );
     if (
-      !flagsState.flags.includes("card-omen") ||
-      personObj.player === activePlayer
-    )
+      !ai &&
+      (!flagsState.flags.includes("card-omen") ||
+        personObj.player === activePlayer)
+    ) {
       return;
+    }
 
     const currentOccupants = _.get(gridState, `grid.${square}.occupants`, []);
 
@@ -346,20 +354,17 @@ const MainContainer = props => {
       .indexOf(personObj.player);
     currentOccupants.splice(idx, 1);
 
-    if (!readyForSacrifice) return;
     placePeopleInSquare(square, currentOccupants);
     incrementPlayerCasualties(personObj.player, 1);
-
-    setReadyForSacrifice(false);
-    if (flagsState.flags.includes("card-omen")) {
-      toggleFlags("card-omen");
-    }
     updateInstructions({
       text: `${_.get(playersState, `details.${activePlayer}.name`)}: ${
         constant.DRAW
       }`,
       color: _.get(playersState, `details.${activePlayer}.color`)
     });
+    if (flagsState.flags.includes("card-omen")) {
+      toggleFlags("card-omen");
+    }
   };
 
   /**
@@ -368,14 +373,53 @@ const MainContainer = props => {
    */
   const resolveOmen = () => {
     console.log("resolveOmen");
-    setReadyForSacrifice(true);
+    const playerDetails = _.get(playersState, `details.${activePlayer}`);
     updateInstructions({
-      text: `${_.get(playersState, `details.${activePlayer}.name`)}: ${
-        constant.SACRIFICE
-      }`,
-      color: _.get(playersState, `details.${activePlayer}.color`)
+      text: `${playerDetails.name}: ${constant.SACRIFICE}`,
+      color: playerDetails.color
     });
-    if (!flagsState.flags.includes("card-omen")) {
+
+    // ai performing sacrifice
+    if (playerDetails.ai) {
+      setTimeout(() => {
+        const playersArray = [];
+        Object.keys(_.get(playersState, "details")).forEach(player => {
+          playersArray.push({
+            ...playersState.details[player],
+            player
+          });
+        });
+        const playersScores = playersArray
+          .filter(player => player.player !== activePlayer)
+          .sort((a, b) =>
+            // TODO if chaotic, perhaps a 0-1 to this comparison
+            a.population - a.casualties * 0.1 <
+            b.population - b.casualties * 0.1
+              ? 1
+              : -1
+          );
+        const target = playersScores[0];
+        const census = [];
+        Object.keys(_.get(gridState, "grid")).forEach(square => {
+          _.get(gridState, `grid.${square}.occupants`, []).forEach(occupant => {
+            census.push({
+              player: occupant.player,
+              square,
+              personObj: occupant
+            });
+          });
+        });
+        const targetList = census.filter(person => {
+          return person.player === target.player;
+        });
+        const rand = Math.floor(Math.random() * targetList.length);
+        performSacrifice(
+          targetList[rand].personObj,
+          targetList[rand].square,
+          true
+        );
+      }, 1000);
+    } else if (!flagsState.flags.includes("card-omen")) {
       toggleFlags("card-omen");
     }
   };
