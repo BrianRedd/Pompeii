@@ -26,6 +26,7 @@ $board-width: 1320px;
 
 .main-container {
   min-width: 1840px;
+  background-color: rgba(131, 177, 57, 0.2);
   .board-container {
     width: $board-width;
     .overlay-occupancy {
@@ -133,6 +134,9 @@ fieldset {
     span {
       background-color: rgba(255, 255, 255, 0.7);
     }
+  }
+  button {
+    margin-left: 4px !important;
   }
 }
 
