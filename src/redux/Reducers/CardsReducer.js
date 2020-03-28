@@ -31,6 +31,11 @@ const cardsState = (state = types.cardsState.defaults, action) => {
         ...state,
         discard: [...state.discard, payload]
       };
+    case actions.SET_CARD_GRID:
+      return {
+        ...state,
+        grid: payload
+      };
     default:
       return state;
   }

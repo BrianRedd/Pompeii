@@ -46,6 +46,26 @@ export const discardCard = card => ({
 });
 
 /**
+ * @function setCardGridInStore
+ * @description sets cardState.grid array
+ * @param {Array} cards - cards array
+ */
+export const setCardGridInStore = cards => ({
+  type: actionTypes.SET_CARD_GRID,
+  payload: cards
+});
+
+/**
+ * @function setCardGrid
+ * @description dispatchs cards array to setCardGridInStore action
+ * @param {Array} cards
+ */
+export const setCardGrid = cards => dispatch => {
+  console.log("setCardGrid; cards:", cards);
+  dispatch(setCardGridInStore(cards));
+};
+
+/**
  * @function generateDeck
  * @description generates deck for game
  */

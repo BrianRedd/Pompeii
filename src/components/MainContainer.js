@@ -17,6 +17,7 @@ import {
 import { aiPlayers } from "../data/playerData";
 import * as helper from "./Logic/helperFunctions";
 import { randAndArrangeRecommendations } from "../utils/utilsCommon";
+import * as cardLogic from "./Logic/cardLogic";
 
 import Main from "./Main";
 
@@ -63,7 +64,8 @@ const MainContainer = props => {
     setRelativesCounter,
     updateDistanceToExit,
     addRecommendations,
-    addActivePlayer
+    addActivePlayer,
+    setCardGrid
   } = props;
 
   const numberOfEruptionTurns = 6;
@@ -82,7 +84,6 @@ const MainContainer = props => {
     setActivePlayer(_.get(playersState, `players.${playersState.turn}`));
   }, [playersState, setActivePlayer]);
 
-  const [cardGrid, setCardGrid] = useState([]);
   const [placedRelatives, setPlacedRelatives] = useState([]);
   const [lavaTile, setLavaTile] = useState();
   const [dangerZone, setDangerZone] = useState([]);
@@ -92,6 +93,17 @@ const MainContainer = props => {
   const [runZone, setRunZone] = useState([]);
   const [runFromSquare, setRunFromSquare] = useState();
   const [runner, setRunner] = useState();
+
+  // const [cardGrid, setCardGridInState] = useState([]);
+
+  const setCardGridLocal = useCallback(
+    grid => {
+      console.log("setCardGridLocal > grid:", grid);
+      setCardGrid(grid);
+      // setCardGridInState(grid);
+    },
+    [setCardGrid]
+  );
 
   /**
    * @function setRecommendationArray
@@ -135,7 +147,7 @@ const MainContainer = props => {
         recommendations.splice(idx, 1);
         setRecommendationArray(randAndArrangeRecommendations(recommendations));
       }
-      setCardGrid([...cardGrid].filter(val => val !== grid));
+      setCardGridLocal([...cardsState.grid].filter(val => val !== grid));
       addSnackbar({
         message: `${playerDetails.name} places a relative at ${
           grid.split("_")[1]
@@ -149,7 +161,7 @@ const MainContainer = props => {
       setRelativesCounter(0);
       setPlacedRelatives([]);
       setRecommendationArray([]);
-      setCardGrid([]);
+      setCardGridLocal([]);
       if (flagsState.flags.includes("placing-person")) {
         toggleFlags("placing-person");
       }
@@ -206,13 +218,13 @@ const MainContainer = props => {
       setRelativesCounter(currentOccupants.length);
       setPlacedRelatives([]);
       const newGridArray = _.uniq([
-        ...cardGrid,
+        ...cardsState.grid,
         ...gridByColor.White,
         ...gridByColor[
           _.get(gridState, `grid.${grid}.buildingName`, "").split(" ")[0]
         ]
       ]).filter(val => val !== grid);
-      setCardGrid(newGridArray);
+      setCardGridLocal(newGridArray);
 
       if (playerDetails.ai) {
         // placement evaluation/recommendations:
@@ -251,7 +263,7 @@ const MainContainer = props => {
             value *= 2;
           }
           if (availableSpace < 1) {
-            value = 0;
+            value = -1;
           }
           evaluations.push({
             square: newGrid,
@@ -267,7 +279,7 @@ const MainContainer = props => {
       });
     } else {
       // else complete placement
-      setCardGrid([]);
+      setCardGridLocal([]);
       if (flagsState.flags.includes("placing-person")) {
         toggleFlags("placing-person");
       }
@@ -281,42 +293,42 @@ const MainContainer = props => {
     }
   };
 
-  /**
-   * @function playPompCard
-   * @description when player plays pompeii card
-   * @param {String} card
-   */
-  const playPompCard = card => {
-    console.log("playPompCard; card:", card);
-    let gridHighlights = cardsState.cards[card].grid.filter(val =>
-      helper.vacancy(val)
-    );
+  // /**
+  //  * @function playPompCard
+  //  * @description when player plays pompeii card
+  //  * @param {String} card
+  //  */
+  // const playPompCard = card => {
+  //   console.log("playPompCard; card:", card);
+  //   let gridHighlights = cardsState.cards[card].grid.filter(val =>
+  //     helper.vacancy(val)
+  //   );
 
-    if (!gridHighlights.length) {
-      gridHighlights = _.uniqBy([
-        ...gridByColor.White,
-        ...gridByColor.Grey,
-        ...gridByColor.Purple,
-        ...gridByColor.Turquoise,
-        ...gridByColor.Brown
-      ]).filter(val => helper.vacancy(val));
-      if (!flagsState.flags.includes("card-wild")) {
-        toggleFlags("card-wild");
-      }
-    }
+  //   if (!gridHighlights.length) {
+  //     gridHighlights = _.uniqBy([
+  //       ...gridByColor.White,
+  //       ...gridByColor.Grey,
+  //       ...gridByColor.Purple,
+  //       ...gridByColor.Turquoise,
+  //       ...gridByColor.Brown
+  //     ]).filter(val => helper.vacancy(val));
+  //     if (!flagsState.flags.includes("card-wild")) {
+  //       toggleFlags("card-wild");
+  //     }
+  //   }
 
-    if (!flagsState.flags.includes("placing-person")) {
-      toggleFlags("placing-person");
-    }
+  //   if (!flagsState.flags.includes("placing-person")) {
+  //     toggleFlags("placing-person");
+  //   }
 
-    setCardGrid(gridHighlights);
-    updateInstructions({
-      text: `${_.get(playersState, `details.${activePlayer}.name`)}: ${
-        constant.PLACE
-      }`,
-      color: _.get(playersState, `details.${activePlayer}.color`)
-    });
-  };
+  //   setCardGridLocal(gridHighlights);
+  //   updateInstructions({
+  //     text: `${_.get(playersState, `details.${activePlayer}.name`)}: ${
+  //       constant.PLACE
+  //     }`,
+  //     color: _.get(playersState, `details.${activePlayer}.color`)
+  //   });
+  // };
 
   /**
    * @function resolveAd79
@@ -549,7 +561,7 @@ const MainContainer = props => {
                 .map(occupant => occupant.player)
                 .includes(activePlayer)
             ) {
-              value = 0;
+              value = -2;
             }
 
             evaluations.push({
@@ -822,8 +834,8 @@ const MainContainer = props => {
           !flagsState.flags.includes("placing-lava-tile") &&
           !flagsState.runCounter
         }
-        playPompCard={playPompCard}
-        cardGrid={cardGrid}
+        playPompCard={card => cardLogic.playPompCard(card, setCardGridLocal)}
+        cardGrid={cardsState.grid}
         placePerson={placePerson}
         vacancy={helper.vacancy}
         performSacrifice={performSacrifice}
@@ -840,7 +852,6 @@ const MainContainer = props => {
         placeRelatives={placeRelatives}
         activePlayer={activePlayer}
         recommendations={recommendations}
-        setRecommendationArray={setRecommendationArray}
       />
     </div>
   );
@@ -872,7 +883,8 @@ MainContainer.propTypes = {
   setRelativesCounter: PropTypes.func,
   updateDistanceToExit: PropTypes.func,
   addRecommendations: PropTypes.func,
-  addActivePlayer: PropTypes.func
+  addActivePlayer: PropTypes.func,
+  setCardGrid: PropTypes.func
 };
 
 MainContainer.defaultProps = {
@@ -901,7 +913,8 @@ MainContainer.defaultProps = {
   setRelativesCounter: () => {},
   updateDistanceToExit: () => {},
   addRecommendations: () => {},
-  addActivePlayer: () => {}
+  addActivePlayer: () => {},
+  setCardGrid: () => {}
 };
 
 export const MainContainerTest = MainContainer;

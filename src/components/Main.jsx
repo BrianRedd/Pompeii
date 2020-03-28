@@ -51,10 +51,8 @@ const Main = props => {
     placeRelatives,
     toggleFlags,
     activePlayer,
-    recommendations,
-    setRecommendationArray
+    recommendations
   } = props;
-  // console.log("activePlayer:", activePlayer);
 
   return (
     <SnackbarProvider maxSnack={3}>
@@ -102,8 +100,6 @@ const Main = props => {
               <PlayersContainer
                 playPompCard={playPompCard}
                 stage={messageState.stage}
-                setRecommendationArray={setRecommendationArray}
-                activePlayer={activePlayer}
               />
             </div>
           )}

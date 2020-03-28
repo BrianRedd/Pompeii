@@ -5,6 +5,7 @@ export const ADD_CARDS = "ADD_CARDS";
 export const ADD_DECK = "ADD_DECK";
 export const TAKE_CARD = "TAKE_CARD";
 export const DISCARD_CARD = "DISCARD_CARD";
+export const SET_CARD_GRID = "SET_CARD_GRID";
 
 // player actions
 export const SET_PLAYERS_ARRAY = "SET_PLAYERS_ARRAY";

@@ -234,7 +234,7 @@ export const runnerRecommendations = activePlayer => {
       value += 1 - gridSquare.distanceToExit * 0.2;
       // already moved this turn
       if (myOccupants.length === 1 && myOccupants[0].lastMoved === totalTurns) {
-        value = 0;
+        value = -2;
       }
 
       recommendations.push({

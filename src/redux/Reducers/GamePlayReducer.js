@@ -12,7 +12,6 @@ const gamePlayState = (state = types.gamePlayState.defaults, action) => {
   const { type, payload } = action;
   switch (type) {
     case actions.ADD_RECOMMENDATIONS:
-      console.log("ADD_RECOMMENDATIONS action:", payload);
       return {
         ...state,
         recommendations: payload

@@ -33,7 +33,6 @@ export const addRecommendationsToStore = recommendations => ({
  * @param {Array} recommendations - array or recommendations
  */
 export const addRecommendations = recommendations => dispatch => {
-  console.log("GamePlayActions > addRecommendations:", recommendations);
   dispatch(addRecommendationsToStore(recommendations));
 };
 

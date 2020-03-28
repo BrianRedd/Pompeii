@@ -29,12 +29,14 @@ export const cardsState = {
   types: shape({
     cards: cards.types,
     deck: deck.types,
-    discard: deck.types
+    discard: deck.types,
+    grid: deck.types
   }),
   defaults: {
     cards: cards.defaults,
     deck: deck.defaults,
-    discard: deck.defaults
+    discard: deck.defaults,
+    grid: deck.defaults
   }
 };
 
