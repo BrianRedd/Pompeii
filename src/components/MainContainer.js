@@ -11,8 +11,9 @@ import * as constant from "../data/constants";
 import { voidLavaSquares, escapeSquares } from "../data/gridData";
 import * as helper from "./Logic/helperFunctions";
 import { randAndArrangeRecommendations } from "../utils/utilsCommon";
-import * as cardLogic from "./Logic/cardLogic";
-import * as placePeopleLogic from "./Logic/placePeopleLogic";
+import { playPompCard } from "./Logic/cardLogic";
+import { placePerson } from "./Logic/placePeopleLogic";
+import { placeRelatives } from "./Logic/placeRelativesLogic";
 
 import Main from "./Main";
 
@@ -596,9 +597,9 @@ const MainContainer = props => {
           !flagsState.flags.includes("placing-lava-tile") &&
           !flagsState.runCount
         }
-        playPompCard={cardLogic.playPompCard}
-        placePerson={placePeopleLogic.placePerson}
-        placeRelatives={placePeopleLogic.placeRelatives}
+        playPompCard={playPompCard}
+        placePerson={placePerson}
+        placeRelatives={placeRelatives}
         cardGrid={cardsState.grid}
         vacancy={helper.vacancy}
         performSacrifice={performSacrifice}

@@ -306,6 +306,5 @@ export const AIDetermineCardToPlay = () => {
       playThisCard = card;
     }
   });
-  console.log("***playThisCard:", playThisCard);
   return playThisCard;
 };

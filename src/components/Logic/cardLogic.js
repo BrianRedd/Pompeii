@@ -61,7 +61,7 @@ export const playPompCard = card => {
   // AI: Place person
   if (playersState.details[playersState.activePlayer].ai) {
     setTimeout(() => {
-      console.log("I'm an AI!");
+      console.log("I'm an AI, and I'm placing a person!");
       placePeopleLogic.placePerson(
         _.get(gamePlayState, "recommendations[0].square")
       );

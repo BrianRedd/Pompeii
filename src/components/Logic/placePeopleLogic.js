@@ -9,90 +9,8 @@ import * as constant from "../../data/constants";
 import { randAndArrangeRecommendations } from "../../utils/utilsCommon";
 import actions from "../../redux/Actions";
 
-/**
- * @function placeRelatives
- * @description function when relatives is placed
- * @param {String} grid - grid where "parent" was placed
- */
-export const placeRelatives = grid => {
-  console.log("placeRelatives; grid:", grid);
-  const storeState = store.getState();
-  const {
-    cardsState,
-    flagsState,
-    gamePlayState,
-    gridState,
-    playersState
-  } = storeState;
-
-  const playerDetails = _.get(
-    playersState,
-    `details.${playersState.activePlayer}`
-  );
-  // current other occupants
-  const currentOccupants = _.get(gridState, `grid.${grid}.occupants`, []);
-  let thisPlacedRelatives = gamePlayState.placedRelatives;
-
-  if (grid) {
-    // place relative in square
-    store.dispatch(
-      actions.placePeopleInSquare(grid, [
-        ...currentOccupants,
-        {
-          player: playersState.activePlayer,
-          gender: Math.round(Math.random()) ? "male" : "female"
-        }
-      ])
-    );
-    store.dispatch(
-      actions.incrementPlayerPopulation(playersState.activePlayer, 1)
-    );
-    thisPlacedRelatives = [...gamePlayState.placedRelatives, grid];
-    store.dispatch(actions.setPlacedRelatives(thisPlacedRelatives));
-    if (playerDetails.ai) {
-      const idx = gamePlayState.recommendations
-        .map(rec => rec.square)
-        .indexOf(grid);
-      gamePlayState.recommendations.splice(idx, 1);
-      store.dispatch(
-        actions.addRecommendations(
-          randAndArrangeRecommendations(gamePlayState.recommendations)
-        )
-      );
-    }
-    store.dispatch(
-      actions.setCardGrid([...cardsState.grid].filter(val => val !== grid))
-    );
-    store.dispatch(
-      actions.addSnackbar({
-        message: `${playerDetails.name} places a relative at ${
-          grid.split("_")[1]
-        } x ${grid.split("_")[0]}`,
-        type: "success"
-      })
-    );
-  }
-
-  // if enough relatives have been placed, end relative placement
-  if (thisPlacedRelatives.length === flagsState.relativesCount || !grid) {
-    store.dispatch(actions.setRelativesCounter(0));
-    store.dispatch(actions.setPlacedRelatives([]));
-    store.dispatch(actions.addRecommendations([]));
-    store.dispatch(actions.setCardGrid([]));
-    if (flagsState.flags.includes("placing-person")) {
-      store.dispatch(actions.toggleFlags("placing-person"));
-    }
-    store.dispatch(
-      actions.updateInstructions({
-        text: `${_.get(
-          playersState,
-          `details.${playersState.activePlayer}.name`
-        )}: ${constant.DRAW}`,
-        color: _.get(playersState, `details.${playersState.activePlayer}.color`)
-      })
-    );
-  }
-};
+// eslint-disable-next-line import/no-cycle
+import { placeRelatives } from "./placeRelativesLogic";
 
 /**
  * @function placePerson
@@ -211,9 +129,13 @@ export const placePerson = grid => {
           value
         });
       });
-      store.dispatch(
-        actions.addRecommendations(randAndArrangeRecommendations(evaluations))
-      );
+      const orderedEvaluations = randAndArrangeRecommendations(evaluations);
+      store.dispatch(actions.addRecommendations(orderedEvaluations));
+
+      // AI: Place first relative
+      setTimeout(() => {
+        placePerson(orderedEvaluations[0].square);
+      }, 500);
     }
 
     store.dispatch(

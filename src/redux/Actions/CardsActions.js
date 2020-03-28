@@ -61,7 +61,6 @@ export const setCardGridInStore = cards => ({
  * @param {Array} cards
  */
 export const setCardGrid = cards => dispatch => {
-  console.log("setCardGrid; cards:", cards);
   dispatch(setCardGridInStore(cards));
 };
 
@@ -71,7 +70,6 @@ export const setCardGrid = cards => dispatch => {
  * @param {Boolean} stageTwo - whether or not cards for stage one are not includes
  */
 export const generateDeck = stageTwo => (dispatch, getState) => {
-  console.log("stageTwo:", stageTwo);
   const {
     playersState: { players }
   } = getState();
