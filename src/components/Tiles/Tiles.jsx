@@ -30,7 +30,9 @@ const Tiles = props => {
               striped
               color="danger"
               value={(eruptionCount / 6) * 100}
-            />
+            >
+              Initial Eruption
+            </Progress>
           )}
           <ButtonBase
             data-test="tile-pile"

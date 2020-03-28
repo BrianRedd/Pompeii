@@ -261,6 +261,26 @@ const StartGameModal = props => {
                       </IconButton>
                     </div>
                   </Tooltip>
+                  <Tooltip title="Dev Mode: Terror Delay">
+                    <div>
+                      <IconButton
+                        onClick={() =>
+                          formProps.setFieldValue(
+                            "noEruption",
+                            !formProps.values.noEruption
+                          )
+                        }
+                        disabled={formProps.values.startPhase !== 2}
+                      >
+                        {formProps.values.noEruption ||
+                        formProps.values.startPhase !== 2 ? (
+                          <i className="fas fa-exclamation-triangle fa-sm color-grey" />
+                        ) : (
+                          <i className="fas fa-exclamation-triangle fa-sm color-magenta" />
+                        )}
+                      </IconButton>
+                    </div>
+                  </Tooltip>
                 </Row>
               </Col>
             </ModalBody>

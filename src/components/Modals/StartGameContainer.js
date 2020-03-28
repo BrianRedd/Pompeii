@@ -78,7 +78,8 @@ const StartGameContainer = props => {
     if (values.prePopulate || values.startPhase) {
       testMode = {
         active: values.prePopulate,
-        stage: values.startPhase
+        stage: values.startPhase,
+        noEruption: values.noEruption
       };
     }
     let { startPlayer } = values;

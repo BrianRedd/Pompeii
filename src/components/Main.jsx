@@ -173,8 +173,7 @@ Main.propTypes = {
   selectRunner: PropTypes.func,
   runToSquare: PropTypes.func,
   placeRelatives: PropTypes.func,
-  toggleFlags: PropTypes.func,
-  setRecommendationArray: PropTypes.func
+  toggleFlags: PropTypes.func
 };
 
 Main.defaultProps = {
@@ -201,8 +200,7 @@ Main.defaultProps = {
   selectRunner: () => {},
   runToSquare: () => {},
   placeRelatives: () => {},
-  toggleFlags: () => {},
-  setRecommendationArray: () => {}
+  toggleFlags: () => {}
 };
 
 export default Main;

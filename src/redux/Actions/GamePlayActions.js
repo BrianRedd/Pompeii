@@ -4,6 +4,7 @@ import _ from "lodash";
 
 import { ADD_RECOMMENDATIONS } from "../ActionTypes";
 import { generateDeck } from "./CardsActions";
+import { setEruptionCounter } from "./FlagsActions";
 import { addGrid } from "./GridActions";
 import { updateInstructions, setStageInStore } from "./MessageActions";
 import {
@@ -77,11 +78,12 @@ export const gameSetup = (
     await dispatch(setStageInStore(testMode.stage));
   }
   await dispatch(addGrid(gridSquares));
+  await dispatch(setEruptionCounter(testMode.noEruption ? 0 : 6));
   await dispatch(setPlayerArray(playersArray));
   await dispatch(addPlayers(theseDetails));
   await dispatch(setPlayerTurn(parseFloat(startPlayer) - 1));
   await dispatch(addActivePlayer(playersArray[startPlayer]));
-  await dispatch(generateDeck());
+  await dispatch(generateDeck(!!(testMode.stage > 0)));
   await dispatch(generatePile());
   await dispatch(
     updateInstructions({

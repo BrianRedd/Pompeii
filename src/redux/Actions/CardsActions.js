@@ -68,8 +68,10 @@ export const setCardGrid = cards => dispatch => {
 /**
  * @function generateDeck
  * @description generates deck for game
+ * @param {Boolean} stageTwo - whether or not cards for stage one are not includes
  */
-export const generateDeck = () => (dispatch, getState) => {
+export const generateDeck = stageTwo => (dispatch, getState) => {
+  console.log("stageTwo:", stageTwo);
   const {
     playersState: { players }
   } = getState();
@@ -114,8 +116,11 @@ export const generateDeck = () => (dispatch, getState) => {
   const numberOfCards = players.length > 3 ? 10 : 15;
   deck.splice(Math.floor(Math.random(1) * numberOfCards), 0, ad79s.shift());
 
-  // add two hands to end of deck
-  deck = [...deck, ...ad79s, ...hands[5], ...hands[6]];
+  // add two hands to end of deck (if not stage two)
+  if (!stageTwo) {
+    deck = [...deck, ...ad79s, ...hands[5], ...hands[6]];
+  }
+
   dispatch(addDeck(deck));
 
   // pass hands to players

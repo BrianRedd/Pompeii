@@ -181,7 +181,7 @@ export const flagsState = {
     flags: [],
     runCount: 0,
     relativesCount: 0,
-    eruptionCount: 6
+    eruptionCount: 0
   }
 };
 
