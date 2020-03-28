@@ -1,20 +1,14 @@
 /** @module CardsReducer */
 
 import * as actions from "../ActionTypes";
+import * as types from "../../types/types";
 
 /**
  * @constant cardsState
  * @param {Object} state - cards state object
  * @param {Object} action
  */
-const cardsState = (
-  state = {
-    cards: {},
-    deck: [],
-    discard: []
-  },
-  action
-) => {
+const cardsState = (state = types.cardsState.defaults, action) => {
   const { type, payload } = action;
   switch (type) {
     case actions.ADD_CARDS:

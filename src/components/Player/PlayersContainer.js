@@ -153,15 +153,13 @@ const PlayersContainer = props => {
             }
           }
         });
-        const recommendationArray = Object.keys(evaluations).map(evals => {
+        const recommendations = Object.keys(evaluations).map(evals => {
           return {
             square: evals,
             value: evaluations[evals].value
           };
         });
-        setRecommendationArray(
-          randAndArrangeRecommendations(recommendationArray)
-        );
+        setRecommendationArray(randAndArrangeRecommendations(recommendations));
       }
     }
   }, [
@@ -170,7 +168,8 @@ const PlayersContainer = props => {
     cardsState,
     setRecommendationArray,
     gridState,
-    flagsState.relativesCounter
+    flagsState.relativesCounter,
+    activePlayer
   ]);
 
   /**

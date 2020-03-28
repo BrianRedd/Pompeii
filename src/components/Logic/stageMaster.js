@@ -1,6 +1,7 @@
 /** @module stageMaster */
 
 export const stageOne = () => {
+  // choose card to play
   // play card
   // - discard from hand
   // - add to discard pile
@@ -17,6 +18,7 @@ export const stageOne = () => {
 export const stageTwo = () => {
   // increment player turn
   // update instructions
+  // choose card to play
   // play card
   // - discard from hand
   // - add to discard pile

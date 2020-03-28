@@ -51,7 +51,7 @@ const Main = props => {
     placeRelatives,
     toggleFlags,
     activePlayer,
-    recommendationArray,
+    recommendations,
     setRecommendationArray
   } = props;
   // console.log("activePlayer:", activePlayer);
@@ -108,7 +108,7 @@ const Main = props => {
             </div>
           )}
         </Row>
-        <RecommendationHighlighter recommendationArray={recommendationArray} />
+        <RecommendationHighlighter recommendations={recommendations} />
         {(() => {
           if (messageState.stage < 2) {
             return (
@@ -160,7 +160,7 @@ Main.propTypes = {
   cardGrid: PropTypes.arrayOf(PropTypes.string),
   dangerZone: PropTypes.arrayOf(PropTypes.string),
   runZone: PropTypes.arrayOf(PropTypes.string),
-  recommendationArray: PropTypes.arrayOf(PropTypes.object),
+  recommendations: PropTypes.arrayOf(PropTypes.object),
   lavaTile: PropTypes.string,
   activePlayer: PropTypes.string,
   deckEnabled: PropTypes.bool,
@@ -188,7 +188,7 @@ Main.defaultProps = {
   cardGrid: [],
   dangerZone: [],
   runZone: [],
-  recommendationArray: [],
+  recommendations: [],
   lavaTile: "",
   activePlayer: "",
   deckEnabled: false,

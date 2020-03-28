@@ -6,7 +6,7 @@ import * as gridActions from "./Actions/GridActions";
 import * as messageActions from "./Actions/MessageActions";
 import * as playersActions from "./Actions/PlayersActions";
 import * as snackBarActions from "./Actions/SnackbarActions";
-import * as startupActions from "./Actions/StartupActions";
+import * as gamePlayActions from "./Actions/GamePlayActions";
 import * as tileActions from "./Actions/TilesActions";
 
 const actions = {
@@ -16,7 +16,7 @@ const actions = {
   ...messageActions,
   ...playersActions,
   ...snackBarActions,
-  ...startupActions,
+  ...gamePlayActions,
   ...tileActions
 };
 

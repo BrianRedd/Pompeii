@@ -38,3 +38,6 @@ export const SET_RELATIVES_COUNTER = "SET_RELATIVES_COUNTER";
 
 // snackbar actions
 export const ADD_SNACKBAR = "ADD_SNACKBAR";
+
+// game play actions
+export const ADD_RECOMMENDATIONS = "ADD_RECOMMENDATIONS";

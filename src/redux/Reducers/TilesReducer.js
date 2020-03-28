@@ -1,19 +1,14 @@
 /** @module TilesReducer */
 
 import * as actions from "../ActionTypes";
+import * as types from "../../types/types";
 
 /**
  * @constant tileState
  * @param {Object} state - cards state object
  * @param {Object} action
  */
-const tileState = (
-  state = {
-    tiles: {},
-    pile: []
-  },
-  action
-) => {
+const tileState = (state = types.tileState.defaults, action) => {
   const { type, payload } = action;
   const newPile = [...state.pile];
   switch (type) {

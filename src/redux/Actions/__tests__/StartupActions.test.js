@@ -1,10 +1,10 @@
-/** @module StartupActions.test */
+/** @module GamePlayActions.test */
 
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
 
 import * as actionTypes from "../../ActionTypes";
-import * as actions from "../StartupActions";
+import * as actions from "../GamePlayActions";
 
 test("gameSetup", async () => {
   const expectedActions = [

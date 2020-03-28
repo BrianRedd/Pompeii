@@ -34,5 +34,5 @@ test("takeCard", () => {
 });
 
 test("generateDeck", async () => {
-  // tested in StartupActions
+  // tested in GamePlayActions
 });

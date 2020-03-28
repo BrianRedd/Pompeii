@@ -1,6 +1,6 @@
 /** @module MainContainer */
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import _ from "lodash";
@@ -39,6 +39,7 @@ const MainContainer = props => {
   const {
     cardsState,
     flagsState,
+    gamePlayState: { recommendations },
     gridState,
     messageState,
     playersState,
@@ -59,7 +60,8 @@ const MainContainer = props => {
     setRunCounter,
     addSnackbar,
     setRelativesCounter,
-    updateDistanceToExit
+    updateDistanceToExit,
+    addRecommendations
   } = props;
 
   const numberOfEruptionTurns = 6;
@@ -80,7 +82,15 @@ const MainContainer = props => {
   const [runZone, setRunZone] = useState([]);
   const [runFromSquare, setRunFromSquare] = useState();
   const [runner, setRunner] = useState();
-  const [recommendationArray, setRecommendationArray] = useState();
+  // const [recommendations, setRecommendationArrayUseState] = useState();
+
+  const setRecommendationArray = useCallback(
+    array => {
+      console.log("setRecommendationArray:", array);
+      addRecommendations(array);
+    },
+    [addRecommendations]
+  );
 
   /**
    * @function placeRelatives
@@ -107,11 +117,9 @@ const MainContainer = props => {
       thisPlacedRelatives = [...placedRelatives, grid];
       setPlacedRelatives(thisPlacedRelatives);
       if (playerDetails.ai) {
-        const idx = recommendationArray.map(rec => rec.square).indexOf(grid);
-        recommendationArray.splice(idx, 1);
-        setRecommendationArray(
-          randAndArrangeRecommendations(recommendationArray)
-        );
+        const idx = recommendations.map(rec => rec.square).indexOf(grid);
+        recommendations.splice(idx, 1);
+        setRecommendationArray(randAndArrangeRecommendations(recommendations));
       }
       setCardGrid([...cardGrid].filter(val => val !== grid));
       addSnackbar({
@@ -817,7 +825,7 @@ const MainContainer = props => {
         toggleFlags={toggleFlags}
         placeRelatives={placeRelatives}
         activePlayer={activePlayer}
-        recommendationArray={recommendationArray}
+        recommendations={recommendations}
         setRecommendationArray={setRecommendationArray}
       />
     </div>
@@ -827,6 +835,7 @@ const MainContainer = props => {
 MainContainer.propTypes = {
   cardsState: types.cardsState.types,
   flagsState: types.flagsState.types,
+  gamePlayState: types.gamePlayState.types,
   gridState: types.gridState.types,
   messageState: types.messageState.types,
   playersState: types.playersState.types,
@@ -847,12 +856,14 @@ MainContainer.propTypes = {
   setRunCounter: PropTypes.func,
   addSnackbar: PropTypes.func,
   setRelativesCounter: PropTypes.func,
-  updateDistanceToExit: PropTypes.func
+  updateDistanceToExit: PropTypes.func,
+  addRecommendations: PropTypes.func
 };
 
 MainContainer.defaultProps = {
   cardsState: types.cardsState.defaults,
   flagsState: types.flagsState.defaults,
+  gamePlayState: types.gamePlayState.defaults,
   gridState: types.gridState.defaults,
   messageState: types.messageState.defaults,
   playersState: types.playersState.defaults,
@@ -873,7 +884,8 @@ MainContainer.defaultProps = {
   setRunCounter: () => {},
   addSnackbar: () => {},
   setRelativesCounter: () => {},
-  updateDistanceToExit: () => {}
+  updateDistanceToExit: () => {},
+  addRecommendations: () => {}
 };
 
 export const MainContainerTest = MainContainer;

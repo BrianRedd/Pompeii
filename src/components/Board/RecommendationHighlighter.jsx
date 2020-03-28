@@ -12,7 +12,7 @@ import * as constant from "../../data/constants";
  * @returns {React.Component} - Rendered component.
  */
 const RecommendationHighlighter = props => {
-  const { recommendationArray } = props;
+  const { recommendations } = props;
 
   /**
    * @function TopCoordinatesDisplay
@@ -69,7 +69,7 @@ const RecommendationHighlighter = props => {
    * @description generates recommendation components array
    * @returns {Array}
    */
-  const recommendationHighlighter = recommendationArray.map((square, idx) => {
+  const recommendationHighlighter = recommendations.map((square, idx) => {
     const coords = square.square.split("_");
     const row = parseFloat(coords[0]);
     const col = parseFloat(coords[1]);
@@ -98,11 +98,11 @@ const RecommendationHighlighter = props => {
 };
 
 RecommendationHighlighter.propTypes = {
-  recommendationArray: PropTypes.arrayOf(PropTypes.object)
+  recommendations: PropTypes.arrayOf(PropTypes.object)
 };
 
 RecommendationHighlighter.defaultProps = {
-  recommendationArray: []
+  recommendations: []
 };
 
 export default RecommendationHighlighter;

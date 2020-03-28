@@ -193,3 +193,23 @@ export const snackbarState = {
     type: "default"
   }
 };
+
+// game play actions (recommended actions, etc)\
+
+/**
+ * @const gamePlayState
+ * @description Types for gamePlayState Redux store
+ */
+export const gamePlayState = {
+  types: shape({
+    recommendations: arrayOf(
+      shape({
+        square: string,
+        value: number
+      })
+    )
+  }),
+  defaults: {
+    recommendations: []
+  }
+};

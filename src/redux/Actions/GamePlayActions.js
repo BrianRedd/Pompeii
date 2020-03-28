@@ -1,7 +1,8 @@
-/** @module StartupActions */
+/** @module GamePlayActions */
 
 import _ from "lodash";
 
+import { ADD_RECOMMENDATIONS } from "../ActionTypes";
 import { generateDeck } from "./CardsActions";
 import { addGrid } from "./GridActions";
 import { updateInstructions, setStageInStore } from "./MessageActions";
@@ -10,6 +11,16 @@ import { generatePile } from "./TilesActions";
 import { playerColors } from "../../data/playerData";
 import { gridSquares } from "../../data/gridData";
 import * as constant from "../../data/constants";
+
+/**
+ * @function addRecommendations
+ * @description adds initial grid to GamePlayState store
+ * @param {Array} recommendations - array or recommendations
+ */
+export const addRecommendations = recommendations => ({
+  type: ADD_RECOMMENDATIONS,
+  payload: recommendations
+});
 
 /**
  * @function gameSetup
@@ -24,7 +35,6 @@ export const gameSetup = (
   testMode = {}
 ) => async dispatch => {
   const theseDetails = { ...details };
-  console.log("details:", details);
 
   if (testMode.active) {
     // START PRE-POPULATION (TEST)
