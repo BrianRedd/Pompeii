@@ -23,7 +23,14 @@ const mapStateToProps = state => {
  * @returns {React.Component} - Rendered component.
  */
 const TilesContainer = props => {
-  const { playersState, tileState, pileEnabled, drawTile, lavaTile } = props;
+  const {
+    flagsState,
+    playersState,
+    tileState,
+    pileEnabled,
+    drawTile,
+    lavaTile
+  } = props;
 
   return (
     <div data-test="container-tiles" className="deck-container">
@@ -38,22 +45,25 @@ const TilesContainer = props => {
           playersState,
           `details.${playersState.players[playersState.turn]}.color`
         )}
+        eruptionCount={flagsState.eruptionCount}
       />
     </div>
   );
 };
 
 TilesContainer.propTypes = {
-  tileState: types.tileState.types,
+  flagsState: types.flagsState.types,
   playersState: types.playersState.types,
+  tileState: types.tileState.types,
   lavaTile: PropTypes.string,
   pileEnabled: PropTypes.bool,
   drawTile: PropTypes.func
 };
 
 TilesContainer.defaultProps = {
-  tileState: types.tileState.defaults,
+  flagsState: types.flagsState.defaults,
   playersState: types.playersState.defaults,
+  tileState: types.tileState.defaults,
   lavaTile: null,
   pileEnabled: false,
   drawTile: () => {}

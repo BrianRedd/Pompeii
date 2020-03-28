@@ -32,3 +32,13 @@ export const setRelativesCounter = counter => ({
   type: actionTypes.SET_RELATIVES_COUNTER,
   payload: counter
 });
+
+/**
+ * @function setEruptionCounter
+ * @description updates eruption counter within flagState
+ * @param {Number} counter - counter (replacing existing)
+ */
+export const setEruptionCounter = counter => ({
+  type: actionTypes.SET_ERUPTION_COUNTER,
+  payload: counter
+});

@@ -12,7 +12,7 @@ const OccupancySquare = ({
   square,
   playersState,
   performSacrifice,
-  runCounter,
+  runCount,
   selectRunner,
   messageState,
   grid
@@ -45,15 +45,15 @@ const OccupancySquare = ({
           <ButtonBase
             className={`person${
               (playersState.players[playersState.turn] === person.player &&
-                runCounter) ||
+                runCount) ||
               (playersState.players[playersState.turn] !== person.player &&
-                !runCounter)
+                !runCount)
                 ? " highlight"
                 : ""
             }`}
             style={style}
             onClick={() => {
-              if (runCounter) {
+              if (runCount) {
                 selectRunner(person, square);
               } else {
                 performSacrifice(person, square);
@@ -74,7 +74,7 @@ OccupancySquare.propTypes = {
   playersState: types.playersState.types,
   grid: types.gridSquare.types,
   square: PropTypes.string,
-  runCounter: PropTypes.number,
+  runCount: PropTypes.number,
   selectRunner: PropTypes.func,
   performSacrifice: PropTypes.func
 };
@@ -84,7 +84,7 @@ OccupancySquare.defaultProps = {
   playersState: types.playersState.defaults,
   grid: types.gridSquare.defaults,
   square: "",
-  runCounter: 0,
+  runCount: 0,
   selectRunner: () => {},
   performSacrifice: () => {}
 };
@@ -100,7 +100,7 @@ const OccupancyLayer = props => {
     gridState: { grid },
     playersState,
     performSacrifice,
-    runCounter,
+    runCount,
     selectRunner,
     messageState
   } = props;
@@ -127,7 +127,7 @@ const OccupancyLayer = props => {
             square={square}
             playersState={playersState}
             performSacrifice={performSacrifice}
-            runCounter={runCounter}
+            runCount={runCount}
             selectRunner={selectRunner}
             messageState={messageState}
             grid={grid}
@@ -148,7 +148,7 @@ OccupancyLayer.propTypes = {
   gridState: types.gridState.types,
   messageState: types.messageState.types,
   playersState: types.playersState.types,
-  runCounter: PropTypes.number,
+  runCount: PropTypes.number,
   performSacrifice: PropTypes.func,
   selectRunner: PropTypes.func
 };
@@ -157,7 +157,7 @@ OccupancyLayer.defaultProps = {
   gridState: types.gridState.defaults,
   messageState: types.messageState.defaults,
   playersState: types.playersState.defaults,
-  runCounter: 0,
+  runCount: 0,
   performSacrifice: () => {},
   selectRunner: () => {}
 };

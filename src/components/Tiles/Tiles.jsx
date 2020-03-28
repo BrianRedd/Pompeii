@@ -2,7 +2,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { Col, Row } from "reactstrap";
+import { Col, Row, Progress } from "reactstrap";
 import { ButtonBase } from "@material-ui/core";
 
 /**
@@ -11,12 +11,27 @@ import { ButtonBase } from "@material-ui/core";
  * @returns {React.Component} - Rendered component.
  */
 const Tiles = props => {
-  const { deckSizes, pileEnabled, drawTile, lavaTile, playerColor } = props;
+  const {
+    deckSizes,
+    pileEnabled,
+    drawTile,
+    lavaTile,
+    playerColor,
+    eruptionCount
+  } = props;
 
   return (
     <Row data-test="presentation-tiles">
       <Col xs={12}>
         <div data-test="tile-pile-deck" className="text-center tile-pile">
+          {eruptionCount > 0 && (
+            <Progress
+              className="eruption-progress"
+              striped
+              color="danger"
+              value={(eruptionCount / 6) * 100}
+            />
+          )}
           <ButtonBase
             data-test="tile-pile"
             focusRipple
@@ -45,6 +60,7 @@ Tiles.propTypes = {
   }),
   playerColor: PropTypes.string,
   lavaTile: PropTypes.string,
+  eruptionCount: PropTypes.number,
   pileEnabled: PropTypes.bool,
   drawTile: PropTypes.func
 };
@@ -57,6 +73,7 @@ Tiles.defaultProps = {
   },
   playerColor: "",
   lavaTile: null,
+  eruptionCount: 0,
   pileEnabled: false,
   drawTile: () => {}
 };

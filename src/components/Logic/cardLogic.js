@@ -33,13 +33,14 @@ export const chooseCardToPlay = () => {
       id: item
     };
   });
+  // check for AI player
   if (stage < 2 && playerDetails.ai) {
-    // recommendations (ai's only)
     const aiPlayer =
       aiPlayers[
         _.get(playersState, `details.${playersState.activePlayer}.name`)
       ];
     const activePlayerHand = playerDetails.hand;
+    // START recommendations (ai's only)
     if (activePlayerHand.length === 4) {
       const targetSpaces = [];
       activePlayerHand.forEach(card => {
@@ -117,7 +118,9 @@ export const chooseCardToPlay = () => {
         recommendations
       );
       store.dispatch(actions.addRecommendations(updatedRecommendations));
+      helper.AIDetermineCardToPlay();
     }
+    // END recommendations (ai's only)
   }
 };
 

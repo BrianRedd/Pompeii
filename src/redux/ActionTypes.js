@@ -37,6 +37,7 @@ export const TAKE_TILE = "TAKE_TILE";
 export const TOGGLE_FLAGS = "TOGGLE_FLAGS";
 export const SET_RUN_COUNTER = "SET_RUN_COUNTER";
 export const SET_RELATIVES_COUNTER = "SET_RELATIVES_COUNTER";
+export const SET_ERUPTION_COUNTER = "SET_ERUPTION_COUNTER";
 
 // snackbar actions
 export const ADD_SNACKBAR = "ADD_SNACKBAR";

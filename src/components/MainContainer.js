@@ -65,10 +65,11 @@ const MainContainer = props => {
     updateDistanceToExit,
     addRecommendations,
     addActivePlayer,
-    setCardGrid
+    setCardGrid,
+    setEruptionCounter
   } = props;
 
-  const numberOfEruptionTurns = 6;
+  // const numberOfEruptionTurns = 6;
 
   const setActivePlayer = useCallback(
     player => {
@@ -87,15 +88,24 @@ const MainContainer = props => {
   const [placedRelatives, setPlacedRelatives] = useState([]);
   const [lavaTile, setLavaTile] = useState();
   const [dangerZone, setDangerZone] = useState([]);
-  const [initialEruptionCounter, setInitialEruptionCounter] = useState(
-    numberOfEruptionTurns
-  );
+  // const [initialEruptionCounter, setInitialEruptionCounterInState] = useState(
+  //   numberOfEruptionTurns
+  // );
   const [runZone, setRunZone] = useState([]);
   const [runFromSquare, setRunFromSquare] = useState();
   const [runner, setRunner] = useState();
 
-  // const [cardGrid, setCardGridInState] = useState([]);
+  const setInitialEruptionCounter = number => {
+    console.log("setInitialEruptionCounter", number);
+    // setInitialEruptionCounterInState(number);
+    setEruptionCounter(number);
+  };
 
+  /**
+   * @function setCardGridLocal
+   * @description dispatches grid to cardsState.grid (via useCallback)
+   * @param {Array} grid
+   */
   const setCardGridLocal = useCallback(
     grid => {
       console.log("setCardGridLocal > grid:", grid);
@@ -157,7 +167,7 @@ const MainContainer = props => {
     }
 
     // if enough relatives have been placed, end relative placement
-    if (thisPlacedRelatives.length === flagsState.relativesCounter || !grid) {
+    if (thisPlacedRelatives.length === flagsState.relativesCount || !grid) {
       setRelativesCounter(0);
       setPlacedRelatives([]);
       setRecommendationArray([]);
@@ -183,7 +193,7 @@ const MainContainer = props => {
     console.log("placePerson; grid:", grid);
     const playerDetails = _.get(playersState, `details.${activePlayer}`);
     // if number of relatives is set, place relative instead
-    if (flagsState.relativesCounter > 0) {
+    if (flagsState.relativesCount > 0) {
       placeRelatives(grid);
       return;
     }
@@ -212,7 +222,7 @@ const MainContainer = props => {
     if (
       messageState.stage === 1 &&
       currentOccupants.length > 0 &&
-      flagsState.relativesCounter === 0 &&
+      flagsState.relativesCount === 0 &&
       !flagsState.flags.includes("card-wild")
     ) {
       setRelativesCounter(currentOccupants.length);
@@ -592,9 +602,7 @@ const MainContainer = props => {
     });
     if (playerDetails.ai) {
       setRecommendationArray(
-        randAndArrangeRecommendations(
-          helper.runnerRecommendations(activePlayer)
-        )
+        randAndArrangeRecommendations(helper.runnerRecommendations())
       );
     }
   };
@@ -613,8 +621,8 @@ const MainContainer = props => {
     }
     setLavaTile();
     setDangerZone([]);
-    if (initialEruptionCounter) {
-      setInitialEruptionCounter(initialEruptionCounter - 1);
+    if (flagsState.eruptionCount) {
+      setInitialEruptionCounter(flagsState.eruptionCount - 1);
       incrementPlayerTurn();
     } else if (_.get(playersState, `details.${activePlayer}.population`) < 1) {
       incrementPlayerTurn();
@@ -689,7 +697,7 @@ const MainContainer = props => {
     if (playerDetails.ai) {
       setRecommendationArray(
         randAndArrangeRecommendations(
-          helper.runToRecommendations(targetZones, square, activePlayer)
+          helper.runToRecommendations(targetZones, square)
         )
       );
     }
@@ -743,8 +751,8 @@ const MainContainer = props => {
 
     // TODO update distance to exit
 
-    if (initialEruptionCounter) {
-      setInitialEruptionCounter(initialEruptionCounter - 1);
+    if (flagsState.eruptionCount) {
+      setInitialEruptionCounter(flagsState.eruptionCount - 1);
       incrementPlayerTurn();
     } else if (_.get(playersState, `details.${activePlayer}.population`) < 1) {
       incrementPlayerTurn();
@@ -767,7 +775,7 @@ const MainContainer = props => {
       setRunZone([]);
       return;
     }
-    let numberOfRuns = toSquare ? flagsState.runCounter : 0;
+    let numberOfRuns = toSquare ? flagsState.runCount : 0;
 
     if (numberOfRuns) {
       const oldSquareOccupants = _.get(
@@ -810,9 +818,7 @@ const MainContainer = props => {
       incrementPlayerTurn();
     } else if (playerDetails.ai) {
       setRecommendationArray(
-        randAndArrangeRecommendations(
-          helper.runnerRecommendations(activePlayer)
-        )
+        randAndArrangeRecommendations(helper.runnerRecommendations())
       );
     }
   };
@@ -832,7 +838,7 @@ const MainContainer = props => {
         pileEnabled={
           messageState.stage === 2 &&
           !flagsState.flags.includes("placing-lava-tile") &&
-          !flagsState.runCounter
+          !flagsState.runCount
         }
         playPompCard={card => cardLogic.playPompCard(card, setCardGridLocal)}
         cardGrid={cardsState.grid}
@@ -884,7 +890,8 @@ MainContainer.propTypes = {
   updateDistanceToExit: PropTypes.func,
   addRecommendations: PropTypes.func,
   addActivePlayer: PropTypes.func,
-  setCardGrid: PropTypes.func
+  setCardGrid: PropTypes.func,
+  setEruptionCounter: PropTypes.func
 };
 
 MainContainer.defaultProps = {
@@ -914,7 +921,8 @@ MainContainer.defaultProps = {
   updateDistanceToExit: () => {},
   addRecommendations: () => {},
   addActivePlayer: () => {},
-  setCardGrid: () => {}
+  setCardGrid: () => {},
+  setEruptionCounter: () => {}
 };
 
 export const MainContainerTest = MainContainer;

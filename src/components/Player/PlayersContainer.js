@@ -13,7 +13,8 @@ import { chooseCardToPlay } from "../Logic/cardLogic";
 
 const mapStateToProps = state => {
   return {
-    playersState: state.playersState
+    playersState: state.playersState,
+    gamePlayState: state.gamePlayState
   };
 };
 
@@ -52,6 +53,7 @@ const PlayerCards = ({ playersState, playCard, stage }) => {
 const PlayersContainer = props => {
   const {
     playersState,
+    gamePlayState,
     discardCard,
     updatePlayerHand,
     playPompCard,
@@ -60,12 +62,15 @@ const PlayersContainer = props => {
 
   useEffect(() => {
     if (
-      _.get(playersState, `details.${playersState.activePlayer}.hand.length`) >
-      0
+      _.get(
+        playersState,
+        `details.${playersState.activePlayer}.hand.length`
+      ) === 4 &&
+      _.get(gamePlayState, "recommendations.length") === 0
     ) {
       chooseCardToPlay();
     }
-  }, [playersState]);
+  }, [playersState, gamePlayState]);
 
   /**
    * @function playCard
@@ -97,6 +102,7 @@ const PlayersContainer = props => {
 
 PlayersContainer.propTypes = {
   playersState: types.playersState.types,
+  gamePlayState: types.gamePlayState.types,
   stage: PropTypes.number,
   discardCard: PropTypes.func,
   updatePlayerHand: PropTypes.func,
@@ -105,6 +111,7 @@ PlayersContainer.propTypes = {
 
 PlayersContainer.defaultProps = {
   playersState: types.playersState.defaults,
+  gamePlayState: types.gamePlayState.defaults,
   stage: 0,
   discardCard: () => {},
   updatePlayerHand: () => {},

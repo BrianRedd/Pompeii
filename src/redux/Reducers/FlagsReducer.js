@@ -38,12 +38,17 @@ const flagsState = (
     case actions.SET_RUN_COUNTER:
       return {
         ...state,
-        runCounter: payload
+        runCount: payload
       };
     case actions.SET_RELATIVES_COUNTER:
       return {
         ...state,
-        relativesCounter: payload
+        relativesCount: payload
+      };
+    case actions.SET_ERUPTION_COUNTER:
+      return {
+        ...state,
+        eruptionCount: payload
       };
     default:
       return state;

@@ -63,5 +63,5 @@ test("should handle SET_RUN_COUNTER action", () => {
     payload
   };
   const state = Reducer(undefined, action);
-  expect(state.runCounter).toEqual(payload);
+  expect(state.runCount).toEqual(payload);
 });

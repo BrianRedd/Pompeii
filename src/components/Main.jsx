@@ -61,7 +61,7 @@ const Main = props => {
         <Row>
           <BoardContainer
             performSacrifice={performSacrifice}
-            runFlag={flagsState.runCounter}
+            runFlag={flagsState.runCount}
             selectRunner={selectRunner}
             placeRelatives={placeRelatives}
             runToSquare={runToSquare}
@@ -116,7 +116,7 @@ const Main = props => {
               />
             );
           }
-          if (flagsState.runCounter) {
+          if (flagsState.runCount) {
             return (
               <PlacementHighlighter
                 gridArray={runZone}

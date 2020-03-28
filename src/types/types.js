@@ -55,7 +55,7 @@ export const playerDetails = {
   }),
   defaults: {
     player1: {
-      name: "Player 1",
+      name: "",
       hand: [],
       color: "#FFFFFF",
       casualties: 0,
@@ -75,7 +75,7 @@ export const playersState = {
     totalTurns: number
   }),
   defaults: {
-    players: ["player1"],
+    players: [""],
     details: playerDetails.defaults,
     activePlayer: "",
     turn: 0,
@@ -173,13 +173,15 @@ export const tileState = {
 export const flagsState = {
   types: shape({
     flags: arrayOf(string),
-    runCounter: number,
-    relativesCounter: number
+    runCount: number,
+    relativesCount: number,
+    eruptionCount: number
   }),
   defaults: {
     flags: [],
-    runCounter: 0,
-    relativesCounter: 0
+    runCount: 0,
+    relativesCount: 0,
+    eruptionCount: 6
   }
 };
 

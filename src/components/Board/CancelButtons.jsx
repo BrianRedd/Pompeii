@@ -8,7 +8,7 @@ import * as types from "../../types/types";
 
 export const CancelButtons = props => {
   const {
-    flagsState: { flags, runCounter },
+    flagsState: { flags, runCount },
     messageState: { stage },
     placeRelatives,
     runToSquare,
@@ -34,7 +34,7 @@ export const CancelButtons = props => {
           </div>
         </Tooltip>
       )}
-      {runCounter > 0 && (
+      {runCount > 0 && (
         <Tooltip title="Cancel Run">
           <div>
             <IconButton onClick={() => runToSquare(null)}>

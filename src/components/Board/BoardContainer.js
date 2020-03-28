@@ -43,7 +43,7 @@ const BoardContainer = props => {
         gridState={gridState}
         playersState={playersState}
         performSacrifice={performSacrifice}
-        runCounter={flagsState.runCounter}
+        runCount={flagsState.runCount}
         selectRunner={selectRunner}
         messageState={messageState}
       />

@@ -3,6 +3,7 @@
 import _ from "lodash";
 
 import store from "../../redux/configureStore";
+import actions from "../../redux/Actions";
 
 import { aiPlayers } from "../../data/playerData";
 
@@ -77,7 +78,7 @@ const surroundByLavaDFS = (grid, x, y, distance) => {
  * @param {String} tile most recently placed tile location
  * @returns {Array} array of surrounded tiles
  */
-export const checkForSurroundedTiles = (tile, updateDistanceToExit) => {
+export const checkForSurroundedTiles = tile => {
   console.log("checkForSurroundedTiles");
   const { gridState } = store.getState();
   const surroundedTiles = [];
@@ -120,7 +121,9 @@ export const checkForSurroundedTiles = (tile, updateDistanceToExit) => {
         parseFloat(tempGrid[x][y]) !==
           _.get(gridState, `grid.${x}_${y}.distanceToExit`)
       ) {
-        updateDistanceToExit(`${x}_${y}`, tempGrid[x][y]);
+        store.dispatch(
+          actions.updateDistanceToExitInStore(`${x}_${y}`, tempGrid[x][y])
+        );
         console.log("update grid", x, y, "distance to:", tempGrid[x][y]);
       }
     }
@@ -208,13 +211,12 @@ export const squareHotness = square => {
  * @function runnerRecommendations
  * @description set recommendationsArray for running (initial run for your lives and after placement but with
  * run counters left over)
- * @param {String} activePlayer
  * @returns {Array}
  */
-export const runnerRecommendations = activePlayer => {
+export const runnerRecommendations = () => {
   const {
     gridState,
-    playersState: { details, totalTurns }
+    playersState: { activePlayer, details, totalTurns }
   } = store.getState();
   const aiPlayer = aiPlayers[_.get(details, `${activePlayer}.name`)];
   const recommendations = [];
@@ -254,14 +256,10 @@ export const runnerRecommendations = activePlayer => {
  * @param {String} activePlayer
  * @returns {Array}
  */
-export const runToRecommendations = (
-  targetZones,
-  startSquare,
-  activePlayer
-) => {
+export const runToRecommendations = (targetZones, startSquare) => {
   const { gridState, playersState } = store.getState();
   const aiPlayer =
-    aiPlayers[_.get(playersState, `details.${activePlayer}.name`)];
+    aiPlayers[_.get(playersState, `details.${playersState.activePlayer}.name`)];
   const recommendations = [];
   targetZones.forEach(square => {
     if (square !== startSquare) {
@@ -284,4 +282,18 @@ export const runToRecommendations = (
   });
 
   return recommendations;
+};
+
+/**
+ * @function AIDetermineCardToPlay
+ * @description determine which card an AI player should play based on recommendations
+ * @returns {String} card
+ */
+export const AIDetermineCardToPlay = () => {
+  const {
+    gamePlayState,
+    playersState: { activePlayer }
+  } = store.getState();
+  console.log("activePlayer:", activePlayer);
+  console.log("state > recommendations:", gamePlayState.recommendations);
 };

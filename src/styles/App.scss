@@ -78,9 +78,15 @@ $board-width: 1320px;
       border: 1px solid $color-grey;
     }
     .tile-pile {
+      .progress {
+        width: 100%;
+        position: absolute;
+        top: 0px;
+        left: 0px;
+      }
       button {
         margin-top: 45px;
-        margin-bottom: 45px;
+        margin-bottom: 15px;
         border: 2px solid transparent;
       }
     }
