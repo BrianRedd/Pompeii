@@ -6,6 +6,7 @@ import { SnackbarProvider } from "notistack";
 import { Col, Row } from "reactstrap";
 
 import * as types from "../types/types";
+import { playPompCard /* , placePerson */ } from "./Logic/cardLogic";
 
 import BoardContainer from "./Board/BoardContainer";
 import DeckContainer from "./Deck/DeckContainer";
@@ -33,9 +34,7 @@ const Main = props => {
     tileState,
     deckEnabled,
     drawCard,
-    playPompCard,
     cardGrid,
-    placePerson,
     vacancy,
     performSacrifice,
     resolveNoPlaceToPlace,
@@ -51,7 +50,8 @@ const Main = props => {
     placeRelatives,
     toggleFlags,
     activePlayer,
-    recommendations
+    recommendations,
+    placePerson
   } = props;
 
   return (
@@ -164,8 +164,6 @@ Main.propTypes = {
   resolveNoPlaceToPlace: PropTypes.func,
   drawCard: PropTypes.func,
   drawTile: PropTypes.func,
-  playPompCard: PropTypes.func,
-  placePerson: PropTypes.func,
   vacancy: PropTypes.func,
   performSacrifice: PropTypes.func,
   highlightDangerZones: PropTypes.func,
@@ -173,7 +171,8 @@ Main.propTypes = {
   selectRunner: PropTypes.func,
   runToSquare: PropTypes.func,
   placeRelatives: PropTypes.func,
-  toggleFlags: PropTypes.func
+  toggleFlags: PropTypes.func,
+  placePerson: PropTypes.func
 };
 
 Main.defaultProps = {
@@ -191,8 +190,6 @@ Main.defaultProps = {
   resolveNoPlaceToPlace: () => {},
   drawCard: () => {},
   drawTile: () => {},
-  playPompCard: () => {},
-  placePerson: () => {},
   vacancy: () => {},
   performSacrifice: () => {},
   highlightDangerZones: () => {},
@@ -200,7 +197,8 @@ Main.defaultProps = {
   selectRunner: () => {},
   runToSquare: () => {},
   placeRelatives: () => {},
-  toggleFlags: () => {}
+  toggleFlags: () => {},
+  placePerson: () => {}
 };
 
 export default Main;

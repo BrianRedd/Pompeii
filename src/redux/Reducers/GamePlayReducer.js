@@ -16,6 +16,11 @@ const gamePlayState = (state = types.gamePlayState.defaults, action) => {
         ...state,
         recommendations: payload
       };
+    case actions.SET_PLACED_RELATIVES:
+      return {
+        ...state,
+        placedRelatives: payload
+      };
     default:
       return state;
   }

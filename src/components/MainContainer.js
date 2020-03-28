@@ -8,16 +8,11 @@ import _ from "lodash";
 import actions from "../redux/Actions";
 import * as types from "../types/types";
 import * as constant from "../data/constants";
-import {
-  gridByColor,
-  voidLavaSquares,
-  escapeSquares,
-  nextToVentSquares
-} from "../data/gridData";
-import { aiPlayers } from "../data/playerData";
+import { voidLavaSquares, escapeSquares } from "../data/gridData";
 import * as helper from "./Logic/helperFunctions";
 import { randAndArrangeRecommendations } from "../utils/utilsCommon";
 import * as cardLogic from "./Logic/cardLogic";
+import * as placePeopleLogic from "./Logic/placePeopleLogic";
 
 import Main from "./Main";
 
@@ -40,7 +35,7 @@ const MainContainer = props => {
   const {
     cardsState,
     flagsState,
-    gamePlayState: { recommendations },
+    gamePlayState: { recommendations /* , placedRelatives */ },
     gridState,
     messageState,
     playersState,
@@ -56,20 +51,19 @@ const MainContainer = props => {
     updateInstructions,
     placePeopleInSquare,
     incrementStage,
-    incrementPlayerPopulation,
+    // incrementPlayerPopulation,
     incrementPlayerCasualties,
     placeLavaTileOnSquare,
     setRunCounter,
     addSnackbar,
-    setRelativesCounter,
+    // setRelativesCounter,
     updateDistanceToExit,
     addRecommendations,
     addActivePlayer,
-    setCardGrid,
+    // setCardGrid,
+    // setPlacedRelatives,
     setEruptionCounter
   } = props;
-
-  // const numberOfEruptionTurns = 6;
 
   const setActivePlayer = useCallback(
     player => {
@@ -85,35 +79,11 @@ const MainContainer = props => {
     setActivePlayer(_.get(playersState, `players.${playersState.turn}`));
   }, [playersState, setActivePlayer]);
 
-  const [placedRelatives, setPlacedRelatives] = useState([]);
   const [lavaTile, setLavaTile] = useState();
   const [dangerZone, setDangerZone] = useState([]);
-  // const [initialEruptionCounter, setInitialEruptionCounterInState] = useState(
-  //   numberOfEruptionTurns
-  // );
   const [runZone, setRunZone] = useState([]);
   const [runFromSquare, setRunFromSquare] = useState();
   const [runner, setRunner] = useState();
-
-  const setInitialEruptionCounter = number => {
-    console.log("setInitialEruptionCounter", number);
-    // setInitialEruptionCounterInState(number);
-    setEruptionCounter(number);
-  };
-
-  /**
-   * @function setCardGridLocal
-   * @description dispatches grid to cardsState.grid (via useCallback)
-   * @param {Array} grid
-   */
-  const setCardGridLocal = useCallback(
-    grid => {
-      console.log("setCardGridLocal > grid:", grid);
-      setCardGrid(grid);
-      // setCardGridInState(grid);
-    },
-    [setCardGrid]
-  );
 
   /**
    * @function setRecommendationArray
@@ -127,181 +97,6 @@ const MainContainer = props => {
     },
     [addRecommendations]
   );
-
-  /**
-   * @function placeRelatives
-   * @description function when relatives is placed
-   * @param {String} grid - grid where "parent" was placed
-   */
-  const placeRelatives = grid => {
-    console.log("placeRelatives; grid:", grid);
-    const playerDetails = _.get(playersState, `details.${activePlayer}`);
-    // current other occupants
-    const currentOccupants = _.get(gridState, `grid.${grid}.occupants`, []);
-    let thisPlacedRelatives = placedRelatives;
-
-    if (grid) {
-      // place relative in square
-      placePeopleInSquare(grid, [
-        ...currentOccupants,
-        {
-          player: activePlayer,
-          gender: Math.round(Math.random()) ? "male" : "female"
-        }
-      ]);
-      incrementPlayerPopulation(activePlayer, 1);
-      thisPlacedRelatives = [...placedRelatives, grid];
-      setPlacedRelatives(thisPlacedRelatives);
-      if (playerDetails.ai) {
-        const idx = recommendations.map(rec => rec.square).indexOf(grid);
-        recommendations.splice(idx, 1);
-        setRecommendationArray(randAndArrangeRecommendations(recommendations));
-      }
-      setCardGridLocal([...cardsState.grid].filter(val => val !== grid));
-      addSnackbar({
-        message: `${playerDetails.name} places a relative at ${
-          grid.split("_")[1]
-        } x ${grid.split("_")[0]}`,
-        type: "success"
-      });
-    }
-
-    // if enough relatives have been placed, end relative placement
-    if (thisPlacedRelatives.length === flagsState.relativesCount || !grid) {
-      setRelativesCounter(0);
-      setPlacedRelatives([]);
-      setRecommendationArray([]);
-      setCardGridLocal([]);
-      if (flagsState.flags.includes("placing-person")) {
-        toggleFlags("placing-person");
-      }
-      updateInstructions({
-        text: `${_.get(playersState, `details.${activePlayer}.name`)}: ${
-          constant.DRAW
-        }`,
-        color: _.get(playersState, `details.${activePlayer}.color`)
-      });
-    }
-  };
-
-  /**
-   * @function placePerson
-   * @description function when person is placed
-   * @param {String} grid
-   */
-  const placePerson = grid => {
-    console.log("placePerson; grid:", grid);
-    const playerDetails = _.get(playersState, `details.${activePlayer}`);
-    // if number of relatives is set, place relative instead
-    if (flagsState.relativesCount > 0) {
-      placeRelatives(grid);
-      return;
-    }
-
-    // current other occupants
-    const currentOccupants = _.get(gridState, `grid.${grid}.occupants`, []);
-
-    // place person in square
-    placePeopleInSquare(grid, [
-      ...currentOccupants,
-      {
-        player: activePlayer,
-        gender: Math.round(Math.random()) ? "male" : "female"
-      }
-    ]);
-    incrementPlayerPopulation(activePlayer, 1);
-    addSnackbar({
-      message: `${playerDetails.name} places a person at ${
-        grid.split("_")[1]
-      } x ${grid.split("_")[0]}`,
-      type: "success"
-    });
-    setRecommendationArray([]);
-
-    // if there should be relatives, set relative states
-    if (
-      messageState.stage === 1 &&
-      currentOccupants.length > 0 &&
-      flagsState.relativesCount === 0 &&
-      !flagsState.flags.includes("card-wild")
-    ) {
-      setRelativesCounter(currentOccupants.length);
-      setPlacedRelatives([]);
-      const newGridArray = _.uniq([
-        ...cardsState.grid,
-        ...gridByColor.White,
-        ...gridByColor[
-          _.get(gridState, `grid.${grid}.buildingName`, "").split(" ")[0]
-        ]
-      ]).filter(val => val !== grid);
-      setCardGridLocal(newGridArray);
-
-      if (playerDetails.ai) {
-        // placement evaluation/recommendations:
-        const aiPlayer =
-          aiPlayers[_.get(playersState, `details.${activePlayer}.name`)];
-        const evaluations = [];
-        let handCanPlaceHere = [];
-        const playerHand = playerDetails.hand;
-        playerHand.forEach(card => {
-          handCanPlaceHere = [
-            ...handCanPlaceHere,
-            ..._.get(cardsState, `cards.${card}.grid`)
-          ];
-        });
-        newGridArray.forEach(newGrid => {
-          // criteria:
-          // - if empty colored build matching card in hand (capacity - 1)
-          const gridDetail = _.get(gridState, `grid.${newGrid}`);
-          let value = 1;
-          if (nextToVentSquares.includes(newGrid)) {
-            value -= 0.5 * aiPlayer.cautious; // next to vent, reduce delta
-          }
-          value += (5 - gridDetail.distanceToExit) * 0.5; // distance to exit; modified by strategy
-          const availableSpace =
-            gridDetail.buildingCapacity - gridDetail.occupants.length;
-          if (availableSpace > 0 && gridDetail.buildingName === "White") {
-            value += 1 + gridDetail.occupants.length;
-            value += _.uniqBy(
-              gridDetail.occupants.map(occupant => occupant.player)
-            ).length;
-          }
-          if (
-            gridDetail.occupants.length === 0 &&
-            handCanPlaceHere.includes(newGrid)
-          ) {
-            value *= 2;
-          }
-          if (availableSpace < 1) {
-            value = -1;
-          }
-          evaluations.push({
-            square: newGrid,
-            value
-          });
-        });
-        setRecommendationArray(randAndArrangeRecommendations(evaluations));
-      }
-
-      updateInstructions({
-        text: `${playerDetails.name}: ${constant.RELATIVE}`,
-        color: playerDetails.color
-      });
-    } else {
-      // else complete placement
-      setCardGridLocal([]);
-      if (flagsState.flags.includes("placing-person")) {
-        toggleFlags("placing-person");
-      }
-      if (flagsState.flags.includes("card-wild")) {
-        toggleFlags("card-wild");
-      }
-      updateInstructions({
-        text: `${playerDetails.name}: ${constant.DRAW}`,
-        color: playerDetails.color
-      });
-    }
-  };
 
   /**
    * @function resolveAd79
@@ -422,12 +217,14 @@ const MainContainer = props => {
         const targetList = census.filter(person => {
           return person.player === target.player;
         });
-        const rand = Math.floor(Math.random() * targetList.length);
-        performSacrifice(
-          targetList[rand].personObj,
-          targetList[rand].square,
-          true
-        );
+        if (targetList.length > 0) {
+          const rand = Math.floor(Math.random() * targetList.length);
+          performSacrifice(
+            targetList[rand].personObj,
+            targetList[rand].square,
+            true
+          );
+        }
       }, 1000);
     } else if (!flagsState.flags.includes("card-omen")) {
       toggleFlags("card-omen");
@@ -585,7 +382,7 @@ const MainContainer = props => {
     setLavaTile();
     setDangerZone([]);
     if (flagsState.eruptionCount) {
-      setInitialEruptionCounter(flagsState.eruptionCount - 1);
+      setEruptionCounter(flagsState.eruptionCount - 1);
       incrementPlayerTurn();
     } else if (_.get(playersState, `details.${activePlayer}.population`) < 1) {
       incrementPlayerTurn();
@@ -715,7 +512,7 @@ const MainContainer = props => {
     // TODO update distance to exit
 
     if (flagsState.eruptionCount) {
-      setInitialEruptionCounter(flagsState.eruptionCount - 1);
+      setEruptionCounter(flagsState.eruptionCount - 1);
       incrementPlayerTurn();
     } else if (_.get(playersState, `details.${activePlayer}.population`) < 1) {
       incrementPlayerTurn();
@@ -803,9 +600,10 @@ const MainContainer = props => {
           !flagsState.flags.includes("placing-lava-tile") &&
           !flagsState.runCount
         }
-        playPompCard={card => cardLogic.playPompCard(card)}
+        playPompCard={cardLogic.playPompCard}
+        placePerson={placePeopleLogic.placePerson}
+        placeRelatives={placePeopleLogic.placeRelatives}
         cardGrid={cardsState.grid}
-        placePerson={placePerson}
         vacancy={helper.vacancy}
         performSacrifice={performSacrifice}
         drawTile={drawTile}
@@ -818,7 +616,6 @@ const MainContainer = props => {
         runZone={runZone}
         runToSquare={runToSquare}
         toggleFlags={toggleFlags}
-        placeRelatives={placeRelatives}
         activePlayer={activePlayer}
         recommendations={recommendations}
       />
@@ -843,17 +640,14 @@ MainContainer.propTypes = {
   updateInstructions: PropTypes.func,
   placePeopleInSquare: PropTypes.func,
   incrementStage: PropTypes.func,
-  incrementPlayerPopulation: PropTypes.func,
   incrementPlayerCasualties: PropTypes.func,
   incrementPlayerSaved: PropTypes.func,
   placeLavaTileOnSquare: PropTypes.func,
   setRunCounter: PropTypes.func,
   addSnackbar: PropTypes.func,
-  setRelativesCounter: PropTypes.func,
   updateDistanceToExit: PropTypes.func,
   addRecommendations: PropTypes.func,
   addActivePlayer: PropTypes.func,
-  setCardGrid: PropTypes.func,
   setEruptionCounter: PropTypes.func
 };
 
@@ -874,17 +668,14 @@ MainContainer.defaultProps = {
   updateInstructions: () => {},
   placePeopleInSquare: () => {},
   incrementStage: () => {},
-  incrementPlayerPopulation: () => {},
   incrementPlayerCasualties: () => {},
   incrementPlayerSaved: () => {},
   placeLavaTileOnSquare: () => {},
   setRunCounter: () => {},
   addSnackbar: () => {},
-  setRelativesCounter: () => {},
   updateDistanceToExit: () => {},
   addRecommendations: () => {},
   addActivePlayer: () => {},
-  setCardGrid: () => {},
   setEruptionCounter: () => {}
 };
 

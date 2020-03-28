@@ -2,7 +2,7 @@
 
 import _ from "lodash";
 
-import { ADD_RECOMMENDATIONS } from "../ActionTypes";
+import { ADD_RECOMMENDATIONS, SET_PLACED_RELATIVES } from "../ActionTypes";
 import { generateDeck } from "./CardsActions";
 import { setEruptionCounter } from "./FlagsActions";
 import { addGrid } from "./GridActions";
@@ -35,6 +35,25 @@ export const addRecommendationsToStore = recommendations => ({
  */
 export const addRecommendations = recommendations => dispatch => {
   dispatch(addRecommendationsToStore(recommendations));
+};
+
+/**
+ * @function setPlacedRelativesToStore
+ * @description sets relatives array
+ * @param {Array} relatives - array or relatives
+ */
+export const setPlacedRelativesToStore = relatives => ({
+  type: SET_PLACED_RELATIVES,
+  payload: relatives
+});
+
+/**
+ * @function setPlacedRelatives
+ * @description dispatches initial grid to setPlacedRelativesToStore
+ * @param {Array} relatives - array or relatives
+ */
+export const setPlacedRelatives = relatives => dispatch => {
+  dispatch(setPlacedRelativesToStore(relatives));
 };
 
 /**

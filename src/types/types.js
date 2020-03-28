@@ -10,7 +10,14 @@ import {
   shape
 } from "prop-types";
 
-// card types
+/*
+ CARD TYPES
+ ----------*/
+
+/**
+ * @const cards
+ * @description Types for cards Redux store
+ */
 export const cards = {
   types: shape({
     key: object
@@ -20,11 +27,19 @@ export const cards = {
   }
 };
 
+/**
+ * @const deck
+ * @description Types for deck Redux store
+ */
 export const deck = {
   types: arrayOf(string),
   defaults: []
 };
 
+/**
+ * @const cardsState
+ * @description Types for cardsState Redux store
+ */
 export const cardsState = {
   types: shape({
     cards: cards.types,
@@ -40,136 +55,14 @@ export const cardsState = {
   }
 };
 
-// player types
-export const playerDetails = {
-  types: shape({
-    player1: shape({
-      name: string,
-      hand: arrayOf(string),
-      color: string,
-      casualties: number,
-      population: number,
-      saved: number,
-      ai: bool
-    })
-  }),
-  defaults: {
-    player1: {
-      name: "",
-      hand: [],
-      color: "#FFFFFF",
-      casualties: 0,
-      population: 0,
-      saved: 0,
-      ai: false
-    }
-  }
-};
+/*
+ FLAG TYPES
+ ----------*/
 
-export const playersState = {
-  types: shape({
-    players: arrayOf(string),
-    details: playerDetails.types,
-    activePlayer: string,
-    turn: number,
-    totalTurns: number
-  }),
-  defaults: {
-    players: [""],
-    details: playerDetails.defaults,
-    activePlayer: "",
-    turn: 0,
-    totalTurns: 0
-  }
-};
-
-// grid types
-
-export const occupant = {
-  types: shape({
-    player: string,
-    gender: string,
-    lastMoved: number
-  })
-};
-
-export const gridSquare = {
-  types: shape({
-    buildingName: string,
-    buildingCapacity: number,
-    ventName: string,
-    gateName: string,
-    occupants: arrayOf(occupant.types),
-    offSets: arrayOf(arrayOf(number)),
-    distanceToExit: number
-  }),
-  defaults: {
-    buildingName: null,
-    buildingCapacity: null,
-    ventName: null,
-    gateName: null,
-    occupants: [],
-    offSets: [],
-    distanceToExit: 0
-  }
-};
-
-export const gridState = {
-  types: shape({
-    "0_0": gridSquare.types
-  }),
-  defaults: {
-    "0_0": gridSquare.defaults
-  }
-};
-
-// message types
-
-export const messageState = {
-  types: shape({
-    stage: number,
-    instruction: shape({
-      text: string,
-      color: string
-    })
-  }),
-  defaults: {
-    stage: 0,
-    instruction: {
-      text: "",
-      color: ""
-    }
-  }
-};
-
-// tile types
-export const tiles = {
-  types: shape({
-    key: object
-  }),
-  defaults: {
-    key: {}
-  }
-};
-
-export const pile = {
-  types: arrayOf(string),
-  defaults: []
-};
-
-export const tileState = {
-  types: shape({
-    tiles: tiles.types,
-    pile: pile.types
-  }),
-  defaults: {
-    tiles: tiles.defaults,
-    pile: pile.defaults
-  }
-};
-
-// flags types
-
+/**
+ * @const flagsState
+ * @description Types for flagsState Redux store
+ */
 export const flagsState = {
   types: shape({
     flags: arrayOf(string),
@@ -200,7 +93,9 @@ export const snackbarState = {
   }
 };
 
-// game play actions (recommended actions, etc)\
+/*
+ GAME PLAY TYPES
+ ---------------*/
 
 /**
  * @const gamePlayState
@@ -213,9 +108,185 @@ export const gamePlayState = {
         square: string,
         value: number
       })
-    )
+    ),
+    placedRelatives: arrayOf(string)
   }),
   defaults: {
-    recommendations: []
+    recommendations: [],
+    placedRelatives: []
+  }
+};
+
+/*
+ GRID TYPES
+ ----------*/
+
+/**
+ * @const occupant
+ * @description Types for occupant Redux store
+ */
+export const occupant = {
+  types: shape({
+    player: string,
+    gender: string,
+    lastMoved: number
+  })
+};
+
+/**
+ * @const gridSquare
+ * @description Types for gridSquare Redux store
+ */
+export const gridSquare = {
+  types: shape({
+    buildingName: string,
+    buildingCapacity: number,
+    ventName: string,
+    gateName: string,
+    occupants: arrayOf(occupant.types),
+    offSets: arrayOf(arrayOf(number)),
+    distanceToExit: number
+  }),
+  defaults: {
+    buildingName: null,
+    buildingCapacity: null,
+    ventName: null,
+    gateName: null,
+    occupants: [],
+    offSets: [],
+    distanceToExit: 0
+  }
+};
+
+/**
+ * @const gridState
+ * @description Types for gridState Redux store
+ */
+export const gridState = {
+  types: shape({
+    "0_0": gridSquare.types
+  }),
+  defaults: {
+    "0_0": gridSquare.defaults
+  }
+};
+
+/*
+ MESSAGE TYPES
+ -------------*/
+
+/**
+ * @const messageState
+ * @description Types for messageState Redux store
+ */
+export const messageState = {
+  types: shape({
+    stage: number,
+    instruction: shape({
+      text: string,
+      color: string
+    })
+  }),
+  defaults: {
+    stage: 0,
+    instruction: {
+      text: "",
+      color: ""
+    }
+  }
+};
+
+/*
+ PLAYER TYPES
+ ------------*/
+
+/**
+ * @const playerDetails
+ * @description Types for playerDetails Redux store
+ */
+export const playerDetails = {
+  types: shape({
+    player1: shape({
+      name: string,
+      hand: arrayOf(string),
+      color: string,
+      casualties: number,
+      population: number,
+      saved: number,
+      ai: bool
+    })
+  }),
+  defaults: {
+    player1: {
+      name: "",
+      hand: [],
+      color: "#FFFFFF",
+      casualties: 0,
+      population: 0,
+      saved: 0,
+      ai: false
+    }
+  }
+};
+
+/**
+ * @const playersState
+ * @description Types for playersState Redux store
+ */
+export const playersState = {
+  types: shape({
+    players: arrayOf(string),
+    details: playerDetails.types,
+    activePlayer: string,
+    turn: number,
+    totalTurns: number
+  }),
+  defaults: {
+    players: [""],
+    details: playerDetails.defaults,
+    activePlayer: "",
+    turn: 0,
+    totalTurns: 0
+  }
+};
+
+/*
+ TILE TYPES
+ ----------*/
+
+/**
+ * @const tiles
+ * @description Types for tiles Redux store
+ */
+export const tiles = {
+  types: shape({
+    key: object
+  }),
+  defaults: {
+    key: {}
+  }
+};
+
+/**
+ * @const pile
+ * @description Types for pile Redux store
+ */
+export const pile = {
+  types: arrayOf(string),
+  defaults: []
+};
+
+/**
+ * @const tileState
+ * @description Types for tileState Redux store
+ */
+export const tileState = {
+  types: shape({
+    tiles: tiles.types,
+    pile: pile.types
+  }),
+  defaults: {
+    tiles: tiles.defaults,
+    pile: pile.defaults
   }
 };
