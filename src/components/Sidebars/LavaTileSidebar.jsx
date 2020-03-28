@@ -9,6 +9,7 @@ import _ from "lodash";
 
 import actions from "../../redux/Actions";
 import * as types from "../../types/types";
+import * as lavaLogic from "../Logic/lavaLogic";
 
 const mapStateToProps = state => {
   return {
@@ -27,14 +28,7 @@ const mapDispatchToProps = {
  * @returns {React.Component} - Rendered component.
  */
 const LavaTileSidebar = props => {
-  const {
-    flagsState,
-    tileState,
-    // lavaTile,
-    highlightDangerZones,
-    resolveNoPlaceToPlace,
-    toggleFlags
-  } = props;
+  const { flagsState, tileState, resolveNoPlaceToPlace, toggleFlags } = props;
 
   const wilds = _.get(tileState, `tiles.${tileState.lavaTile}.wilds`);
 
@@ -71,7 +65,7 @@ const LavaTileSidebar = props => {
                 <ButtonBase
                   data-test="button-lavatile"
                   onClick={() => {
-                    highlightDangerZones(wilds[0]);
+                    lavaLogic.highlightDangerZones(wilds[0]);
                     if (flagsState.flags.includes("wild-lava-tile")) {
                       toggleFlags("wild-lava-tile");
                     }
@@ -87,7 +81,7 @@ const LavaTileSidebar = props => {
                 <ButtonBase
                   data-test="button-lavatile"
                   onClick={() => {
-                    highlightDangerZones(wilds[1]);
+                    lavaLogic.highlightDangerZones(wilds[1]);
                     if (flagsState.flags.includes("wild-lava-tile")) {
                       toggleFlags("wild-lava-tile");
                     }
@@ -108,18 +102,14 @@ const LavaTileSidebar = props => {
 LavaTileSidebar.propTypes = {
   flagsState: types.flagsState.types,
   tileState: types.tileState.types,
-  lavaTile: PropTypes.string,
   resolveNoPlaceToPlace: PropTypes.func,
-  highlightDangerZones: PropTypes.func,
   toggleFlags: PropTypes.func
 };
 
 LavaTileSidebar.defaultProps = {
   tileState: types.tileState.defaults,
   flagsState: types.flagsState.defaults,
-  lavaTile: "",
   resolveNoPlaceToPlace: () => {},
-  highlightDangerZones: () => {},
   toggleFlags: () => {}
 };
 

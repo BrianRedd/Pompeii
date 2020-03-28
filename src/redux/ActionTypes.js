@@ -22,6 +22,7 @@ export const ADD_GRID = "ADD_GRID";
 export const PLACE_PEOPLE = "PLACE_PEOPLE";
 export const PLACE_LAVA = "PLACE_LAVA";
 export const UPDATE_DISTANCE_TO_EXIT = "UPDATE_DISTANCE_TO_EXIT";
+export const SET_DANGER_ZONE = "SET_DANGER_ZONE";
 
 // message actions
 export const SET_STAGE = "SET_STAGE";

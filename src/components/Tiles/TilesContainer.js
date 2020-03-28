@@ -6,6 +6,7 @@ import PropTypes from "prop-types";
 import _ from "lodash";
 
 import * as types from "../../types/types";
+import * as lavaLogic from "../Logic/lavaLogic";
 
 import Tiles from "./Tiles";
 
@@ -23,14 +24,7 @@ const mapStateToProps = state => {
  * @returns {React.Component} - Rendered component.
  */
 const TilesContainer = props => {
-  const {
-    flagsState,
-    playersState,
-    tileState,
-    pileEnabled,
-    drawTile
-    // lavaTile
-  } = props;
+  const { flagsState, playersState, tileState, pileEnabled } = props;
 
   return (
     <div data-test="container-tiles" className="deck-container">
@@ -38,7 +32,7 @@ const TilesContainer = props => {
         deckSizes={{
           tiles: _.get(tileState, "pile.length", 0)
         }}
-        drawTile={drawTile}
+        drawTile={lavaLogic.drawTile}
         lavaTile={tileState.lavaTile}
         pileEnabled={pileEnabled}
         playerColor={_.get(
@@ -55,18 +49,14 @@ TilesContainer.propTypes = {
   flagsState: types.flagsState.types,
   playersState: types.playersState.types,
   tileState: types.tileState.types,
-  // lavaTile: PropTypes.string,
-  pileEnabled: PropTypes.bool,
-  drawTile: PropTypes.func
+  pileEnabled: PropTypes.bool
 };
 
 TilesContainer.defaultProps = {
   flagsState: types.flagsState.defaults,
   playersState: types.playersState.defaults,
   tileState: types.tileState.defaults,
-  // lavaTile: null,
-  pileEnabled: false,
-  drawTile: () => {}
+  pileEnabled: false
 };
 
 export const TilesContainerTest = TilesContainer;

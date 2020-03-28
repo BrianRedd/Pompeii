@@ -37,6 +37,16 @@ export const placeLavaTileOnSquare = (squareId, tile) => ({
 });
 
 /**
+ * @function setDangerZone
+ * @description updates gridState.dangerZone
+ * @param {Array} zone - array of squares
+ */
+export const setDangerZone = zone => ({
+  type: actionTypes.SET_DANGER_ZONE,
+  payload: zone
+});
+
+/**
  * @function updateDistanceToExitInStore
  * @description updates square's shortest safe distance to exit
  * @param {String} squareId - square Id

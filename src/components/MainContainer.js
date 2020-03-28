@@ -8,7 +8,7 @@ import _ from "lodash";
 import actions from "../redux/Actions";
 import * as types from "../types/types";
 import * as constant from "../data/constants";
-import { voidLavaSquares, escapeSquares } from "../data/gridData";
+import { escapeSquares } from "../data/gridData";
 import * as helper from "./Logic/helperFunctions";
 import { randAndArrangeRecommendations } from "../utils/utilsCommon";
 import { playPompCard } from "./Logic/cardLogic";
@@ -45,7 +45,6 @@ const MainContainer = props => {
     toggleFlags,
     takeCard,
     discardCard,
-    takeTile,
     incrementPlayerTurn,
     incrementPlayerSaved,
     updatePlayerHand,
@@ -60,7 +59,8 @@ const MainContainer = props => {
     addRecommendations,
     addActivePlayer,
     setEruptionCounter,
-    setLavaTile
+    setLavaTile,
+    setDangerZone
   } = props;
 
   /**
@@ -82,8 +82,6 @@ const MainContainer = props => {
     setActivePlayer(_.get(playersState, `players.${playersState.turn}`));
   }, [playersState, setActivePlayer]);
 
-  // const [lavaTile, setLavaTileToState] = useState();
-  const [dangerZone, setDangerZone] = useState([]);
   const [runZone, setRunZone] = useState([]);
   const [runFromSquare, setRunFromSquare] = useState();
   const [runner, setRunner] = useState();
@@ -91,11 +89,11 @@ const MainContainer = props => {
   /**
    * @function setLavaTileLocal
    * @description dispatches action to set lava tile
+   * @param {String} tile
    */
   const setLavaTileLocal = tile => {
     console.log("setLavaTileLocal; tile:", tile);
     setLavaTile(tile);
-    // setLavaTileToState(tile);
   };
 
   /**
@@ -281,88 +279,6 @@ const MainContainer = props => {
   };
 
   /**
-   * @function highlightDangerZones
-   * @description send list of available tiles to highlight component
-   * @param {String} tile - picked lava tile
-   */
-  const highlightDangerZones = tile => {
-    console.log("highlightDangerZones; tile:", tile);
-    setLavaTileLocal(tile);
-
-    if (flagsState.flags.includes("placing-lava-tile")) {
-      toggleFlags("placing-lava-tile");
-    }
-    if (flagsState.flags.includes("lava-tile")) {
-      toggleFlags("lava-tile");
-    }
-
-    const hotZones = [];
-    let homeVent = "";
-    const gridKeys = Object.keys(gridState.grid);
-    gridKeys.forEach(key => {
-      if (_.get(gridState, `grid.${key}.lava`) === tile) {
-        hotZones.push(key);
-      }
-      if (_.get(gridState, `grid.${key}.ventName`) === tile) {
-        homeVent = key;
-      }
-    });
-
-    const playerDetails = _.get(playersState, `details.${activePlayer}`);
-    if (!hotZones.length) {
-      if (playerDetails.ai) {
-        setRecommendationArray([{ square: homeVent, value: 1 }]);
-      }
-      setDangerZone([homeVent]);
-    } else {
-      const warmZones = [];
-      hotZones.forEach(zone => {
-        const coord = zone.split("_");
-        warmZones.push(
-          `${Math.min(parseFloat(coord[0]) + 1, 6)}_${coord[1]}`,
-          `${Math.max(parseFloat(coord[0]) - 1, 0)}_${coord[1]}`,
-          `${coord[0]}_${Math.min(parseFloat(coord[1]) + 1, 10)}`,
-          `${coord[0]}_${Math.max(parseFloat(coord[1]) - 1, 0)}`
-        );
-      });
-      const filteredZones = _.uniqBy(
-        warmZones.filter(zone => {
-          return (
-            !_.get(gridState, `grid.${zone}.lava`) &&
-            !voidLavaSquares.includes(zone)
-          );
-        })
-      );
-      if (filteredZones.length) {
-        if (playerDetails.ai) {
-          // recommendations
-          const evaluations = [];
-          filteredZones.forEach(zone => {
-            let value = 1 + _.get(gridState, `grid.${zone}.occupants.length`);
-            if (
-              _.get(gridState, `grid.${zone}.occupants`)
-                .map(occupant => occupant.player)
-                .includes(activePlayer)
-            ) {
-              value = -2;
-            }
-
-            evaluations.push({
-              square: zone,
-              value
-            });
-          });
-          setRecommendationArray(randAndArrangeRecommendations(evaluations));
-        }
-
-        setDangerZone(filteredZones);
-      } else if (!flagsState.flags.includes("no-place-to-place")) {
-        toggleFlags("no-place-to-place");
-      }
-    }
-  };
-
-  /**
    * @function runForYourLives
    * @description player can now run two of their people
    */
@@ -402,33 +318,6 @@ const MainContainer = props => {
     } else {
       setRunCounter(2);
       runForYourLives();
-    }
-  };
-
-  /**
-   * @function drawTile
-   * @description drawing a tile during stage 3
-   */
-  const drawTile = () => {
-    console.log("drawTile");
-    const tilePile = [...tileState.pile];
-    if (!flagsState.flags.includes("placing-lava-tile")) {
-      toggleFlags("placing-lava-tile");
-    }
-
-    // draw tile
-    const takenTile = tilePile.pop();
-    setLavaTileLocal(takenTile);
-    takeTile();
-
-    const wilds = _.get(tileState, `tiles.${takenTile}.wilds`);
-    if (wilds) {
-      toggleFlags("wild-lava-tile");
-    } else {
-      highlightDangerZones(takenTile);
-    }
-    if (!flagsState.flags.includes("lava-tile")) {
-      toggleFlags("lava-tile");
     }
   };
 
@@ -619,11 +508,8 @@ const MainContainer = props => {
         cardGrid={cardsState.grid}
         vacancy={helper.vacancy}
         performSacrifice={performSacrifice}
-        drawTile={drawTile}
         resolveNoPlaceToPlace={resolveNoPlaceToPlace}
-        // lavaTile={tileState.lavaTile}
-        highlightDangerZones={highlightDangerZones}
-        dangerZone={dangerZone}
+        dangerZone={gridState.dangerZone}
         placeLavaTile={placeLavaTile}
         selectRunner={selectRunner}
         runZone={runZone}
@@ -647,7 +533,6 @@ MainContainer.propTypes = {
   toggleFlags: PropTypes.func,
   takeCard: PropTypes.func,
   discardCard: PropTypes.func,
-  takeTile: PropTypes.func,
   incrementPlayerTurn: PropTypes.func,
   updatePlayerHand: PropTypes.func,
   updateInstructions: PropTypes.func,
@@ -662,7 +547,8 @@ MainContainer.propTypes = {
   addRecommendations: PropTypes.func,
   addActivePlayer: PropTypes.func,
   setEruptionCounter: PropTypes.func,
-  setLavaTile: PropTypes.func
+  setLavaTile: PropTypes.func,
+  setDangerZone: PropTypes.func
 };
 
 MainContainer.defaultProps = {
@@ -676,7 +562,6 @@ MainContainer.defaultProps = {
   toggleFlags: () => {},
   takeCard: () => {},
   discardCard: () => {},
-  takeTile: () => {},
   incrementPlayerTurn: () => {},
   updatePlayerHand: () => {},
   updateInstructions: () => {},
@@ -691,7 +576,8 @@ MainContainer.defaultProps = {
   addRecommendations: () => {},
   addActivePlayer: () => {},
   setEruptionCounter: () => {},
-  setLavaTile: () => {}
+  setLavaTile: () => {},
+  setDangerZone: () => {}
 };
 
 export const MainContainerTest = MainContainer;

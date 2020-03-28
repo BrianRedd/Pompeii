@@ -39,9 +39,6 @@ const Main = props => {
     performSacrifice,
     resolveNoPlaceToPlace,
     pileEnabled,
-    drawTile,
-    // lavaTile,
-    highlightDangerZones,
     dangerZone,
     placeLavaTile,
     selectRunner,
@@ -73,9 +70,7 @@ const Main = props => {
               {(flagsState.flags.includes("wild-lava-tile") ||
                 flagsState.flags.includes("no-place-to-place")) && (
                 <LavaTileSidebar
-                  // lavaTile={lavaTile}
                   tileState={tileState}
-                  highlightDangerZones={highlightDangerZones}
                   resolveNoPlaceToPlace={resolveNoPlaceToPlace}
                 />
               )}
@@ -91,11 +86,7 @@ const Main = props => {
                 !flagsState.flags.includes("card-ad79") &&
                 !flagsState.flags.includes("wild-lava-tile") &&
                 !flagsState.flags.includes("no-place-to-place") && (
-                  <TilesContainer
-                    // lavaTile={lavaTile}
-                    drawTile={drawTile}
-                    pileEnabled={pileEnabled}
-                  />
+                  <TilesContainer pileEnabled={pileEnabled} />
                 )}
               <PlayersContainer
                 playPompCard={playPompCard}
@@ -157,16 +148,13 @@ Main.propTypes = {
   dangerZone: PropTypes.arrayOf(PropTypes.string),
   runZone: PropTypes.arrayOf(PropTypes.string),
   recommendations: PropTypes.arrayOf(PropTypes.object),
-  // lavaTile: PropTypes.string,
   activePlayer: PropTypes.string,
   deckEnabled: PropTypes.bool,
   pileEnabled: PropTypes.bool,
   resolveNoPlaceToPlace: PropTypes.func,
   drawCard: PropTypes.func,
-  drawTile: PropTypes.func,
   vacancy: PropTypes.func,
   performSacrifice: PropTypes.func,
-  highlightDangerZones: PropTypes.func,
   placeLavaTile: PropTypes.func,
   selectRunner: PropTypes.func,
   runToSquare: PropTypes.func,
@@ -183,16 +171,13 @@ Main.defaultProps = {
   dangerZone: [],
   runZone: [],
   recommendations: [],
-  // lavaTile: "",
   activePlayer: "",
   deckEnabled: false,
   pileEnabled: false,
   resolveNoPlaceToPlace: () => {},
   drawCard: () => {},
-  drawTile: () => {},
   vacancy: () => {},
   performSacrifice: () => {},
-  highlightDangerZones: () => {},
   placeLavaTile: () => {},
   selectRunner: () => {},
   runToSquare: () => {},

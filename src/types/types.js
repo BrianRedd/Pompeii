@@ -164,10 +164,16 @@ export const gridSquare = {
  */
 export const gridState = {
   types: shape({
-    "0_0": gridSquare.types
+    grid: shape({
+      "0_0": gridSquare.types
+    }),
+    dangerZone: arrayOf(string)
   }),
   defaults: {
-    "0_0": gridSquare.defaults
+    grid: {
+      "0_0": gridSquare.defaults
+    },
+    dangerZone: []
   }
 };
 

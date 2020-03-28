@@ -8,7 +8,7 @@ import * as types from "../../types/types";
  * @param {Object} state - cards state object
  * @param {Object} action
  */
-const gridState = (state = { grid: types.gridState.defaults }, action) => {
+const gridState = (state = types.gridState.defaults, action) => {
   const { type, payload } = action;
   let newGrid = {};
   switch (type) {
@@ -46,6 +46,11 @@ const gridState = (state = { grid: types.gridState.defaults }, action) => {
           ...state.grid,
           [payload.squareId]: newGrid
         }
+      };
+    case actions.SET_DANGER_ZONE:
+      return {
+        ...state,
+        dangerZone: payload
       };
     default:
       return state;
