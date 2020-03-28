@@ -3,8 +3,13 @@
 import _ from "lodash";
 
 import store from "../../redux/configureStore";
+// import { addRecommendations } from "../../redux/Actions/GamePlayActions";
+// import actions from "../../redux/Actions";
+import * as data from "../../data/gridData";
+import { aiPlayers } from "../../data/playerData";
+import { randAndArrangeRecommendations } from "../../utils/utilsCommon";
 
-export const chooseCardToPlay = () => {
+export const chooseCardToPlay = addRecommendations => {
   const storeState = store.getState();
   const {
     playersState,
@@ -17,6 +22,9 @@ export const chooseCardToPlay = () => {
     playersState,
     `details.${playersState.players[playersState.turn]}`
   );
+  console.log("playersState.activePlayer:", playersState.activePlayer);
+  console.log("stage:", stage);
+  console.log("playerDetails:", playerDetails);
   const gridArray = Object.keys(gridState.grid).map(item => {
     return {
       ...gridState.grid[item],
@@ -26,8 +34,12 @@ export const chooseCardToPlay = () => {
   if (stage < 2 && playerDetails.ai) {
     // recommendations (ai's only)
     const aiPlayer =
-      aiPlayers[_.get(playersState, `details.${activePlayer}.name`)];
+      aiPlayers[
+        _.get(playersState, `details.${playersState.activePlayer}.name`)
+      ];
+    console.log("aiPlayer:", aiPlayer);
     const activePlayerHand = playerDetails.hand;
+    console.log("activePlayerHand:", activePlayerHand);
     if (activePlayerHand.length === 4) {
       const targetSpaces = [];
       activePlayerHand.forEach(card => {
@@ -43,6 +55,7 @@ export const chooseCardToPlay = () => {
         );
         let fullOccupancy = 0;
         // stage 1
+        console.log("stage 1");
         if (stage === 0) {
           delta = gridState.grid[target].buildingCapacity; // + building capacity
           fullBuilding.forEach(room => {
@@ -64,6 +77,7 @@ export const chooseCardToPlay = () => {
           }
         }
         // stage 2
+        console.log("stage 2");
         if (stage === 1) {
           delta =
             gridState.grid[target].buildingCapacity -
@@ -102,7 +116,16 @@ export const chooseCardToPlay = () => {
           value: evaluations[evals].value
         };
       });
-      setRecommendationArray(randAndArrangeRecommendations(recommendations));
+      const updatedRecommendations = randAndArrangeRecommendations(
+        recommendations
+      );
+      console.log("cardLogic > addRecommendations:", recommendations);
+      console.log(
+        "cardLogic > updatedRecommendations:",
+        updatedRecommendations
+      );
+      console.log("addRecommendations:", addRecommendations);
+      addRecommendations(updatedRecommendations);
     }
   }
 };

@@ -18,14 +18,24 @@ import { gridSquares } from "../../data/gridData";
 import * as constant from "../../data/constants";
 
 /**
- * @function addRecommendations
+ * @function addRecommendationsToStore
  * @description adds initial grid to GamePlayState store
  * @param {Array} recommendations - array or recommendations
  */
-export const addRecommendations = recommendations => ({
+export const addRecommendationsToStore = recommendations => ({
   type: ADD_RECOMMENDATIONS,
   payload: recommendations
 });
+
+/**
+ * @function addRecommendations
+ * @description dispatches initial grid to addRecommendationsToStore
+ * @param {Array} recommendations - array or recommendations
+ */
+export const addRecommendations = recommendations => dispatch => {
+  console.log("GamePlayActions > addRecommendations:", recommendations);
+  dispatch(addRecommendationsToStore(recommendations));
+};
 
 /**
  * @function gameSetup
