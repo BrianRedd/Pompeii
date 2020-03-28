@@ -283,10 +283,12 @@ export const pile = {
 export const tileState = {
   types: shape({
     tiles: tiles.types,
-    pile: pile.types
+    pile: pile.types,
+    lavaTile: string
   }),
   defaults: {
     tiles: tiles.defaults,
-    pile: pile.defaults
+    pile: pile.defaults,
+    lavaTile: ""
   }
 };

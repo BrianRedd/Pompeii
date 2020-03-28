@@ -59,9 +59,15 @@ const MainContainer = props => {
     updateDistanceToExit,
     addRecommendations,
     addActivePlayer,
-    setEruptionCounter
+    setEruptionCounter,
+    setLavaTile
   } = props;
 
+  /**
+   * @function setActivePlayer
+   * @description dispatches addActivePlayer action within useCallback
+   * @param {String} player
+   */
   const setActivePlayer = useCallback(
     player => {
       if (player !== playersState.activePlayer) {
@@ -76,11 +82,21 @@ const MainContainer = props => {
     setActivePlayer(_.get(playersState, `players.${playersState.turn}`));
   }, [playersState, setActivePlayer]);
 
-  const [lavaTile, setLavaTile] = useState();
+  // const [lavaTile, setLavaTileToState] = useState();
   const [dangerZone, setDangerZone] = useState([]);
   const [runZone, setRunZone] = useState([]);
   const [runFromSquare, setRunFromSquare] = useState();
   const [runner, setRunner] = useState();
+
+  /**
+   * @function setLavaTileLocal
+   * @description dispatches action to set lava tile
+   */
+  const setLavaTileLocal = tile => {
+    console.log("setLavaTileLocal; tile:", tile);
+    setLavaTile(tile);
+    // setLavaTileToState(tile);
+  };
 
   /**
    * @function setRecommendationArray
@@ -271,7 +287,7 @@ const MainContainer = props => {
    */
   const highlightDangerZones = tile => {
     console.log("highlightDangerZones; tile:", tile);
-    setLavaTile(tile);
+    setLavaTileLocal(tile);
 
     if (flagsState.flags.includes("placing-lava-tile")) {
       toggleFlags("placing-lava-tile");
@@ -376,7 +392,7 @@ const MainContainer = props => {
     if (flagsState.flags.includes("placing-lava-tile")) {
       toggleFlags("placing-lava-tile");
     }
-    setLavaTile();
+    setLavaTileLocal();
     setDangerZone([]);
     if (flagsState.eruptionCount) {
       setEruptionCounter(flagsState.eruptionCount - 1);
@@ -402,7 +418,7 @@ const MainContainer = props => {
 
     // draw tile
     const takenTile = tilePile.pop();
-    setLavaTile(takenTile);
+    setLavaTileLocal(takenTile);
     takeTile();
 
     const wilds = _.get(tileState, `tiles.${takenTile}.wilds`);
@@ -482,8 +498,8 @@ const MainContainer = props => {
    * @param {String} square
    */
   const placeLavaTile = square => {
-    console.log("placeLavaTile:", lavaTile, square);
-    placeLavaTileOnSquare(square, lavaTile);
+    console.log("placeLavaTile:", tileState.lavaTile, square);
+    placeLavaTileOnSquare(square, tileState.lavaTile);
 
     _.get(gridState, `grid.${square}.occupants`, []).forEach(person => {
       incrementPlayerCasualties(person.player, 1);
@@ -493,7 +509,7 @@ const MainContainer = props => {
     if (flagsState.flags.includes("placing-lava-tile")) {
       toggleFlags("placing-lava-tile");
     }
-    setLavaTile();
+    setLavaTileLocal();
     setDangerZone([]);
     setRecommendationArray([]);
 
@@ -605,7 +621,7 @@ const MainContainer = props => {
         performSacrifice={performSacrifice}
         drawTile={drawTile}
         resolveNoPlaceToPlace={resolveNoPlaceToPlace}
-        lavaTile={lavaTile}
+        // lavaTile={tileState.lavaTile}
         highlightDangerZones={highlightDangerZones}
         dangerZone={dangerZone}
         placeLavaTile={placeLavaTile}
@@ -645,7 +661,8 @@ MainContainer.propTypes = {
   updateDistanceToExit: PropTypes.func,
   addRecommendations: PropTypes.func,
   addActivePlayer: PropTypes.func,
-  setEruptionCounter: PropTypes.func
+  setEruptionCounter: PropTypes.func,
+  setLavaTile: PropTypes.func
 };
 
 MainContainer.defaultProps = {
@@ -673,7 +690,8 @@ MainContainer.defaultProps = {
   updateDistanceToExit: () => {},
   addRecommendations: () => {},
   addActivePlayer: () => {},
-  setEruptionCounter: () => {}
+  setEruptionCounter: () => {},
+  setLavaTile: () => {}
 };
 
 export const MainContainerTest = MainContainer;

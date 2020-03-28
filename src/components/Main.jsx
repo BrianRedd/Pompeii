@@ -40,7 +40,7 @@ const Main = props => {
     resolveNoPlaceToPlace,
     pileEnabled,
     drawTile,
-    lavaTile,
+    // lavaTile,
     highlightDangerZones,
     dangerZone,
     placeLavaTile,
@@ -73,7 +73,7 @@ const Main = props => {
               {(flagsState.flags.includes("wild-lava-tile") ||
                 flagsState.flags.includes("no-place-to-place")) && (
                 <LavaTileSidebar
-                  lavaTile={lavaTile}
+                  // lavaTile={lavaTile}
                   tileState={tileState}
                   highlightDangerZones={highlightDangerZones}
                   resolveNoPlaceToPlace={resolveNoPlaceToPlace}
@@ -92,7 +92,7 @@ const Main = props => {
                 !flagsState.flags.includes("wild-lava-tile") &&
                 !flagsState.flags.includes("no-place-to-place") && (
                   <TilesContainer
-                    lavaTile={lavaTile}
+                    // lavaTile={lavaTile}
                     drawTile={drawTile}
                     pileEnabled={pileEnabled}
                   />
@@ -157,7 +157,7 @@ Main.propTypes = {
   dangerZone: PropTypes.arrayOf(PropTypes.string),
   runZone: PropTypes.arrayOf(PropTypes.string),
   recommendations: PropTypes.arrayOf(PropTypes.object),
-  lavaTile: PropTypes.string,
+  // lavaTile: PropTypes.string,
   activePlayer: PropTypes.string,
   deckEnabled: PropTypes.bool,
   pileEnabled: PropTypes.bool,
@@ -183,7 +183,7 @@ Main.defaultProps = {
   dangerZone: [],
   runZone: [],
   recommendations: [],
-  lavaTile: "",
+  // lavaTile: "",
   activePlayer: "",
   deckEnabled: false,
   pileEnabled: false,

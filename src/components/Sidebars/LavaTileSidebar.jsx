@@ -30,13 +30,13 @@ const LavaTileSidebar = props => {
   const {
     flagsState,
     tileState,
-    lavaTile,
+    // lavaTile,
     highlightDangerZones,
     resolveNoPlaceToPlace,
     toggleFlags
   } = props;
 
-  const wilds = _.get(tileState, `tiles.${lavaTile}.wilds`);
+  const wilds = _.get(tileState, `tiles.${tileState.lavaTile}.wilds`);
 
   return (
     <React.Fragment>
@@ -45,13 +45,16 @@ const LavaTileSidebar = props => {
           data-test="sidebar-lavatile"
           className="w-100 text-center deck-container"
         >
-          <h4 className="text-danger">{`No Place For ${lavaTile} To Be Placed!`}</h4>
+          <h4 className="text-danger">{`No Place For ${tileState.lavaTile} To Be Placed!`}</h4>
           <figure>
             <ButtonBase
               data-test="button-continue"
               onClick={resolveNoPlaceToPlace}
             >
-              <img alt={lavaTile} src={`/assets/tiles/${lavaTile}.png`} />
+              <img
+                alt={tileState.lavaTile}
+                src={`/assets/tiles/${tileState.lavaTile}.png`}
+              />
             </ButtonBase>
             <figcaption>(Click to Continue)</figcaption>
           </figure>

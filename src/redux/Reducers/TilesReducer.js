@@ -28,6 +28,11 @@ const tileState = (state = types.tileState.defaults, action) => {
         ...state,
         pile: newPile
       };
+    case actions.SET_LAVA_TILE:
+      return {
+        ...state,
+        lavaTile: payload
+      };
     default:
       return state;
   }

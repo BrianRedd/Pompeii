@@ -28,8 +28,8 @@ const TilesContainer = props => {
     playersState,
     tileState,
     pileEnabled,
-    drawTile,
-    lavaTile
+    drawTile
+    // lavaTile
   } = props;
 
   return (
@@ -39,7 +39,7 @@ const TilesContainer = props => {
           tiles: _.get(tileState, "pile.length", 0)
         }}
         drawTile={drawTile}
-        lavaTile={lavaTile}
+        lavaTile={tileState.lavaTile}
         pileEnabled={pileEnabled}
         playerColor={_.get(
           playersState,
@@ -55,7 +55,7 @@ TilesContainer.propTypes = {
   flagsState: types.flagsState.types,
   playersState: types.playersState.types,
   tileState: types.tileState.types,
-  lavaTile: PropTypes.string,
+  // lavaTile: PropTypes.string,
   pileEnabled: PropTypes.bool,
   drawTile: PropTypes.func
 };
@@ -64,7 +64,7 @@ TilesContainer.defaultProps = {
   flagsState: types.flagsState.defaults,
   playersState: types.playersState.defaults,
   tileState: types.tileState.defaults,
-  lavaTile: null,
+  // lavaTile: null,
   pileEnabled: false,
   drawTile: () => {}
 };

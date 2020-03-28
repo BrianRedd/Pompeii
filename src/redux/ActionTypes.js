@@ -45,3 +45,4 @@ export const ADD_SNACKBAR = "ADD_SNACKBAR";
 export const ADD_TILES = "ADD_TILES";
 export const ADD_TILE_PILE = "ADD_TILE_PILE";
 export const TAKE_TILE = "TAKE_TILE";
+export const SET_LAVA_TILE = "SET_LAVA_TILE";

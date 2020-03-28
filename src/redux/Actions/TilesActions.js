@@ -34,6 +34,16 @@ export const takeTile = () => ({
 });
 
 /**
+ * @function setLavaTile
+ * @description set lava tile in store
+ * @param {String} tile
+ */
+export const setLavaTile = tile => ({
+  type: actionTypes.SET_LAVA_TILE,
+  payload: tile
+});
+
+/**
  * @function generatePile
  * @description generates tile pile for game
  */
