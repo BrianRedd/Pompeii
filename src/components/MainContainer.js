@@ -43,6 +43,7 @@ const MainContainer = props => {
     gridState,
     messageState,
     playersState,
+    playersState: { activePlayer },
     tileState,
     toggleFlags,
     takeCard,
@@ -61,16 +62,25 @@ const MainContainer = props => {
     addSnackbar,
     setRelativesCounter,
     updateDistanceToExit,
-    addRecommendations
+    addRecommendations,
+    addActivePlayer
   } = props;
 
   const numberOfEruptionTurns = 6;
 
-  const [activePlayer, setActivePlayer] = useState();
+  const setActivePlayer = useCallback(
+    player => {
+      if (player !== playersState.activePlayer) {
+        console.log("playersState:", playersState.activePlayer);
+        addActivePlayer(player);
+      }
+    },
+    [playersState, addActivePlayer]
+  );
 
   useEffect(() => {
     setActivePlayer(_.get(playersState, `players.${playersState.turn}`));
-  }, [playersState]);
+  }, [playersState, setActivePlayer]);
 
   const [cardGrid, setCardGrid] = useState([]);
   const [placedRelatives, setPlacedRelatives] = useState([]);
@@ -82,8 +92,12 @@ const MainContainer = props => {
   const [runZone, setRunZone] = useState([]);
   const [runFromSquare, setRunFromSquare] = useState();
   const [runner, setRunner] = useState();
-  // const [recommendations, setRecommendationArrayUseState] = useState();
 
+  /**
+   * @function setRecommendationArray
+   * @description dispatches action to add recommendations to state
+   * @param {Array} array
+   */
   const setRecommendationArray = useCallback(
     array => {
       console.log("setRecommendationArray:", array);
@@ -857,7 +871,8 @@ MainContainer.propTypes = {
   addSnackbar: PropTypes.func,
   setRelativesCounter: PropTypes.func,
   updateDistanceToExit: PropTypes.func,
-  addRecommendations: PropTypes.func
+  addRecommendations: PropTypes.func,
+  addActivePlayer: PropTypes.func
 };
 
 MainContainer.defaultProps = {
@@ -885,7 +900,8 @@ MainContainer.defaultProps = {
   addSnackbar: () => {},
   setRelativesCounter: () => {},
   updateDistanceToExit: () => {},
-  addRecommendations: () => {}
+  addRecommendations: () => {},
+  addActivePlayer: () => {}
 };
 
 export const MainContainerTest = MainContainer;

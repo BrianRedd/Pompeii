@@ -88,6 +88,11 @@ const playersState = (state = types.playersState.defaults, action) => {
         turn: payload,
         totalTurns
       };
+    case actions.SET_ACTIVE_PLAYER:
+      return {
+        ...state,
+        activePlayer: payload
+      };
     default:
       return state;
   }

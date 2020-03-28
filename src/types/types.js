@@ -68,12 +68,14 @@ export const playersState = {
   types: shape({
     players: arrayOf(string),
     details: playerDetails.types,
+    activePlayer: string,
     turn: number,
     totalTurns: number
   }),
   defaults: {
     players: ["player1"],
     details: playerDetails.defaults,
+    activePlayer: "",
     turn: 0,
     totalTurns: 0
   }

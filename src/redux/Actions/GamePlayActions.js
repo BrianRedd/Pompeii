@@ -6,7 +6,12 @@ import { ADD_RECOMMENDATIONS } from "../ActionTypes";
 import { generateDeck } from "./CardsActions";
 import { addGrid } from "./GridActions";
 import { updateInstructions, setStageInStore } from "./MessageActions";
-import { setPlayerArray, addPlayers, setPlayerTurn } from "./PlayersActions";
+import {
+  setPlayerArray,
+  addPlayers,
+  setPlayerTurn,
+  addActivePlayer
+} from "./PlayersActions";
 import { generatePile } from "./TilesActions";
 import { playerColors } from "../../data/playerData";
 import { gridSquares } from "../../data/gridData";
@@ -36,9 +41,10 @@ export const gameSetup = (
 ) => async dispatch => {
   const theseDetails = { ...details };
 
+  const playersArray = Object.keys(theseDetails);
+
   if (testMode.active) {
     // START PRE-POPULATION (TEST)
-    const playersArray = Object.keys(theseDetails);
     const gridKeys = Object.keys(gridSquares);
     gridKeys.forEach(grid => {
       const potentialPop = _.get(gridSquares, `${grid}.buildingCapacity`, 0);
@@ -62,9 +68,10 @@ export const gameSetup = (
     await dispatch(setStageInStore(testMode.stage));
   }
   await dispatch(addGrid(gridSquares));
-  await dispatch(setPlayerArray(Object.keys(theseDetails)));
+  await dispatch(setPlayerArray(playersArray));
   await dispatch(addPlayers(theseDetails));
   await dispatch(setPlayerTurn(parseFloat(startPlayer) - 1));
+  await dispatch(addActivePlayer(playersArray[startPlayer]));
   await dispatch(generateDeck());
   await dispatch(generatePile());
   await dispatch(

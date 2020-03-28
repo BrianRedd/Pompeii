@@ -74,6 +74,16 @@ export const incrementPlayerCasualtiesInStore = (playerId, casualties) => ({
 });
 
 /**
+ * @function addActivePlayer
+ * @description updates active player in PlayersState store
+ * @param {String} playerId
+ */
+export const addActivePlayer = playerId => ({
+  type: actionTypes.SET_ACTIVE_PLAYER,
+  payload: playerId
+});
+
+/**
  * @function incrementPlayerCasualties
  * @description adds/updates single player casualties with snackbar
  * @param {String} playerId
@@ -175,6 +185,7 @@ export const incrementPlayerTurn = () => (dispatch, getState) => {
   // get next player
   const nextPlayer = (playersState.turn + 1) % playersState.players.length;
   dispatch(setPlayerTurn(nextPlayer));
+  dispatch(addActivePlayer(playersState.players[nextPlayer]));
   dispatch(
     updateInstructions({
       text: `${_.get(

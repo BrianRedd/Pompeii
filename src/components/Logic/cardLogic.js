@@ -1,6 +1,18 @@
 /** @module cardLogic */
 
+import _ from "lodash";
+
+import store from "../../redux/configureStore";
+
 export const chooseCardToPlay = () => {
+  const storeState = store.getState();
+  const {
+    playersState,
+    gridState,
+    cardsState,
+    messageState: { stage }
+  } = storeState;
+
   const playerDetails = _.get(
     playersState,
     `details.${playersState.players[playersState.turn]}`
@@ -90,9 +102,7 @@ export const chooseCardToPlay = () => {
           value: evaluations[evals].value
         };
       });
-      setRecommendationArray(
-        randAndArrangeRecommendations(recommendations)
-      );
+      setRecommendationArray(randAndArrangeRecommendations(recommendations));
     }
   }
 };
