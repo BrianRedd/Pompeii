@@ -5,7 +5,6 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import _ from "lodash";
 
-import actions from "../../redux/Actions";
 import * as types from "../../types/types";
 
 import Player from "./Player";
@@ -16,11 +15,6 @@ const mapStateToProps = state => {
     playersState: state.playersState,
     gamePlayState: state.gamePlayState
   };
-};
-
-const mapDispatchToProps = {
-  discardCard: actions.discardCard,
-  updatePlayerHand: actions.updatePlayerHand
 };
 
 /**
@@ -51,14 +45,7 @@ const PlayerCards = ({ playersState, playCard, stage }) => {
  * @returns {React.Component} - Rendered component.
  */
 const PlayersContainer = props => {
-  const {
-    playersState,
-    gamePlayState,
-    discardCard,
-    updatePlayerHand,
-    playPompCard,
-    stage
-  } = props;
+  const { playersState, gamePlayState, playPompCard, stage } = props;
 
   useEffect(() => {
     if (
@@ -81,9 +68,6 @@ const PlayersContainer = props => {
   const playCard = (player, cardIdx) => {
     const thisHand = [...playersState.details[player].hand];
     const cardId = thisHand[cardIdx];
-    thisHand.splice(cardIdx, 1);
-    discardCard(cardId);
-    updatePlayerHand(player, thisHand);
     playPompCard(cardId);
   };
 
@@ -104,8 +88,6 @@ PlayersContainer.propTypes = {
   playersState: types.playersState.types,
   gamePlayState: types.gamePlayState.types,
   stage: PropTypes.number,
-  discardCard: PropTypes.func,
-  updatePlayerHand: PropTypes.func,
   playPompCard: PropTypes.func
 };
 
@@ -113,10 +95,8 @@ PlayersContainer.defaultProps = {
   playersState: types.playersState.defaults,
   gamePlayState: types.gamePlayState.defaults,
   stage: 0,
-  discardCard: () => {},
-  updatePlayerHand: () => {},
   playPompCard: () => {}
 };
 
 export const PlayersContainerTest = PlayersContainer;
-export default connect(mapStateToProps, mapDispatchToProps)(PlayersContainer);
+export default connect(mapStateToProps)(PlayersContainer);

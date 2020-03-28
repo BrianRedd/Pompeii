@@ -303,43 +303,6 @@ const MainContainer = props => {
     }
   };
 
-  // /**
-  //  * @function playPompCard
-  //  * @description when player plays pompeii card
-  //  * @param {String} card
-  //  */
-  // const playPompCard = card => {
-  //   console.log("playPompCard; card:", card);
-  //   let gridHighlights = cardsState.cards[card].grid.filter(val =>
-  //     helper.vacancy(val)
-  //   );
-
-  //   if (!gridHighlights.length) {
-  //     gridHighlights = _.uniqBy([
-  //       ...gridByColor.White,
-  //       ...gridByColor.Grey,
-  //       ...gridByColor.Purple,
-  //       ...gridByColor.Turquoise,
-  //       ...gridByColor.Brown
-  //     ]).filter(val => helper.vacancy(val));
-  //     if (!flagsState.flags.includes("card-wild")) {
-  //       toggleFlags("card-wild");
-  //     }
-  //   }
-
-  //   if (!flagsState.flags.includes("placing-person")) {
-  //     toggleFlags("placing-person");
-  //   }
-
-  //   setCardGridLocal(gridHighlights);
-  //   updateInstructions({
-  //     text: `${_.get(playersState, `details.${activePlayer}.name`)}: ${
-  //       constant.PLACE
-  //     }`,
-  //     color: _.get(playersState, `details.${activePlayer}.color`)
-  //   });
-  // };
-
   /**
    * @function resolveAd79
    * @description resolve AD 79 card when drawn
@@ -840,7 +803,7 @@ const MainContainer = props => {
           !flagsState.flags.includes("placing-lava-tile") &&
           !flagsState.runCount
         }
-        playPompCard={card => cardLogic.playPompCard(card, setCardGridLocal)}
+        playPompCard={card => cardLogic.playPompCard(card)}
         cardGrid={cardsState.grid}
         placePerson={placePerson}
         vacancy={helper.vacancy}

@@ -291,9 +291,21 @@ export const runToRecommendations = (targetZones, startSquare) => {
  */
 export const AIDetermineCardToPlay = () => {
   const {
+    cardsState: { cards },
     gamePlayState,
-    playersState: { activePlayer }
+    playersState
   } = store.getState();
-  console.log("activePlayer:", activePlayer);
-  console.log("state > recommendations:", gamePlayState.recommendations);
+  const playSquare = _.get(gamePlayState, "recommendations[0].square");
+  const playerHand = _.get(
+    playersState,
+    `details.${playersState.activePlayer}.hand`
+  );
+  let playThisCard = "";
+  playerHand.forEach(card => {
+    if (cards[card].grid.includes(playSquare)) {
+      playThisCard = card;
+    }
+  });
+  console.log("***playThisCard:", playThisCard);
+  return playThisCard;
 };

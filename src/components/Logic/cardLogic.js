@@ -11,6 +11,55 @@ import * as helper from "./helperFunctions";
 import actions from "../../redux/Actions";
 
 /**
+ * @function playPompCard
+ * @description when player plays pompeii card
+ * @param {String} card
+ */
+export const playPompCard = card => {
+  console.log("playPompCard; card:", card);
+  const storeState = store.getState();
+  const { cardsState, flagsState, playersState } = storeState;
+
+  store.dispatch(actions.discardCard(card));
+  const thisHand = [...playersState.details[playersState.activePlayer].hand];
+  const cardIdx = thisHand.indexOf(card);
+  thisHand.splice(cardIdx, 1);
+  store.dispatch(actions.updatePlayerHand(playersState.activePlayer, thisHand));
+
+  let gridHighlights = cardsState.cards[card].grid.filter(val =>
+    helper.vacancy(val)
+  );
+
+  if (!gridHighlights.length) {
+    gridHighlights = _.uniqBy([
+      ...data.gridByColor.White,
+      ...data.gridByColor.Grey,
+      ...data.gridByColor.Purple,
+      ...data.gridByColor.Turquoise,
+      ...data.gridByColor.Brown
+    ]).filter(val => helper.vacancy(val));
+    if (!flagsState.flags.includes("card-wild")) {
+      store.dispatch(actions.toggleFlags("card-wild"));
+    }
+  }
+
+  if (!flagsState.flags.includes("placing-person")) {
+    store.dispatch(actions.toggleFlags("placing-person"));
+  }
+
+  store.dispatch(actions.setCardGrid(gridHighlights));
+  store.dispatch(
+    actions.updateInstructions({
+      text: `${_.get(
+        playersState,
+        `details.${playersState.activePlayer}.name`
+      )}: ${constant.PLACE}`,
+      color: _.get(playersState, `details.${playersState.activePlayer}.color`)
+    })
+  );
+};
+
+/**
  * @function chooseCardToPlay
  * @description based on player hand and AI strategy, set play recommendations
  */
@@ -118,51 +167,11 @@ export const chooseCardToPlay = () => {
         recommendations
       );
       store.dispatch(actions.addRecommendations(updatedRecommendations));
-      helper.AIDetermineCardToPlay();
+      const playThisCard = helper.AIDetermineCardToPlay();
+      if (playThisCard) {
+        playPompCard(playThisCard);
+      }
     }
     // END recommendations (ai's only)
   }
-};
-
-/**
- * @function playPompCard
- * @description when player plays pompeii card
- * @param {String} card
- */
-export const playPompCard = card => {
-  console.log("playPompCard; card:", card);
-  const storeState = store.getState();
-  const { cardsState, flagsState, playersState } = storeState;
-
-  let gridHighlights = cardsState.cards[card].grid.filter(val =>
-    helper.vacancy(val)
-  );
-
-  if (!gridHighlights.length) {
-    gridHighlights = _.uniqBy([
-      ...data.gridByColor.White,
-      ...data.gridByColor.Grey,
-      ...data.gridByColor.Purple,
-      ...data.gridByColor.Turquoise,
-      ...data.gridByColor.Brown
-    ]).filter(val => helper.vacancy(val));
-    if (!flagsState.flags.includes("card-wild")) {
-      store.dispatch(actions.toggleFlags("card-wild"));
-    }
-  }
-
-  if (!flagsState.flags.includes("placing-person")) {
-    store.dispatch(actions.toggleFlags("placing-person"));
-  }
-
-  store.dispatch(actions.setCardGrid(gridHighlights));
-  store.dispatch(
-    actions.updateInstructions({
-      text: `${_.get(
-        playersState,
-        `details.${playersState.activePlayer}.name`
-      )}: ${constant.PLACE}`,
-      color: _.get(playersState, `details.${playersState.activePlayer}.color`)
-    })
-  );
 };

@@ -6,7 +6,7 @@ import { IconButton, Tooltip } from "@material-ui/core";
 
 import * as types from "../../types/types";
 
-export const CancelButtons = props => {
+const CancelButtons = props => {
   const {
     flagsState: { flags, runCount },
     messageState: { stage },

@@ -33,7 +33,7 @@ PeopleIcons.defaultProps = {
   type: "fa fa-male"
 };
 
-const HandCards = ({ hand, myTurn, playCard }) => {
+const HandCards = ({ hand, ai, myTurn, playCard }) => {
   if (hand.length > 0) {
     const handCards = hand.map((card, idx) => {
       const key = `${card}-${idx}`;
@@ -49,7 +49,7 @@ const HandCards = ({ hand, myTurn, playCard }) => {
             (hand.includes("OMEN") && card !== "OMEN")
           }
         >
-          {myTurn ? <Card cardId={card} /> : <CardBack />}
+          {myTurn && !ai ? <Card cardId={card} /> : <CardBack />}
         </ButtonBase>
       );
     });
@@ -60,12 +60,14 @@ const HandCards = ({ hand, myTurn, playCard }) => {
 
 HandCards.propTypes = {
   hand: PropTypes.arrayOf(PropTypes.string),
+  ai: PropTypes.bool,
   myTurn: PropTypes.bool,
   playCard: PropTypes.func
 };
 
 HandCards.defaultProps = {
   hand: [],
+  ai: false,
   myTurn: false,
   playCard: () => {}
 };
@@ -109,7 +111,12 @@ const Player = props => {
         {stage < 2 && <span>Casualites: {details.casualties}</span>}
       </legend>
       {stage < 2 ? (
-        <HandCards hand={details.hand} myTurn={myTurn} playCard={playCard} />
+        <HandCards
+          hand={details.hand}
+          ai={details.ai}
+          myTurn={myTurn}
+          playCard={playCard}
+        />
       ) : (
         <div style={{ color: `rgb(${details.color})` }} className="p-2">
           <Row className="ml-4 mr-4">
