@@ -3,12 +3,13 @@
 import _ from "lodash";
 
 import store from "../../redux/configureStore";
+import actions from "../../redux/Actions";
 import * as data from "../../data/gridData";
 import { aiPlayers } from "../../data/playerData";
 import * as constant from "../../data/constants";
 import { randAndArrangeRecommendations } from "../../utils/utilsCommon";
 import * as helper from "./helperFunctions";
-import actions from "../../redux/Actions";
+import * as placePeopleLogic from "./placePeopleLogic";
 
 /**
  * @function playPompCard
@@ -18,7 +19,7 @@ import actions from "../../redux/Actions";
 export const playPompCard = card => {
   console.log("playPompCard; card:", card);
   const storeState = store.getState();
-  const { cardsState, flagsState, playersState } = storeState;
+  const { cardsState, gamePlayState, flagsState, playersState } = storeState;
 
   store.dispatch(actions.discardCard(card));
   const thisHand = [...playersState.details[playersState.activePlayer].hand];
@@ -57,6 +58,15 @@ export const playPompCard = card => {
       color: _.get(playersState, `details.${playersState.activePlayer}.color`)
     })
   );
+  // AI: Place person
+  if (playersState.details[playersState.activePlayer].ai) {
+    setTimeout(() => {
+      console.log("I'm an AI!");
+      placePeopleLogic.placePerson(
+        _.get(gamePlayState, "recommendations[0].square")
+      );
+    }, 1000);
+  }
 };
 
 /**
@@ -167,6 +177,7 @@ export const chooseCardToPlay = () => {
         recommendations
       );
       store.dispatch(actions.addRecommendations(updatedRecommendations));
+      // AI: play card
       const playThisCard = helper.AIDetermineCardToPlay();
       if (playThisCard) {
         playPompCard(playThisCard);

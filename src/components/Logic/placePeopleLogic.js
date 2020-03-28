@@ -100,12 +100,11 @@ export const placeRelatives = grid => {
  * @param {String} grid
  */
 export const placePerson = grid => {
-  console.log("***placePerson; grid:", grid);
+  console.log("placePerson; grid:", grid);
   const storeState = store.getState();
   const {
     cardsState,
     flagsState,
-    // gamePlayState,
     gridState,
     messageState,
     playersState

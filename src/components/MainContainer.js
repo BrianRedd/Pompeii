@@ -35,7 +35,7 @@ const MainContainer = props => {
   const {
     cardsState,
     flagsState,
-    gamePlayState: { recommendations /* , placedRelatives */ },
+    gamePlayState: { recommendations },
     gridState,
     messageState,
     playersState,
@@ -51,17 +51,13 @@ const MainContainer = props => {
     updateInstructions,
     placePeopleInSquare,
     incrementStage,
-    // incrementPlayerPopulation,
     incrementPlayerCasualties,
     placeLavaTileOnSquare,
     setRunCounter,
     addSnackbar,
-    // setRelativesCounter,
     updateDistanceToExit,
     addRecommendations,
     addActivePlayer,
-    // setCardGrid,
-    // setPlacedRelatives,
     setEruptionCounter
   } = props;
 
