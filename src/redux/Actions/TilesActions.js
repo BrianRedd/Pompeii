@@ -1,7 +1,7 @@
 /** @module TilesActions */
 
 import * as actionTypes from "../ActionTypes";
-import { tileDictionary } from "../../data/tileData";
+import { tileDictionary, wildTileDictionary } from "../../data/tileData";
 import { shuffle } from "../../utils/utilsCommon";
 
 /**
@@ -46,15 +46,23 @@ export const setLavaTile = tile => ({
 /**
  * @function generatePile
  * @description generates tile pile for game
+ * @param {Boolean} wilds - are wild tiles includes
  */
-export const generatePile = () => dispatch => {
+export const generatePile = wilds => dispatch => {
   // pull tiles from tileDictionary
-  dispatch(addTiles(tileDictionary));
+  let tiles = tileDictionary;
+  if (wilds) {
+    tiles = {
+      ...tiles,
+      ...wildTileDictionary
+    }
+  }
+  dispatch(addTiles(tiles));
 
   // populate pile arrays
   let pile = [];
-  Object.keys(tileDictionary).forEach(tile => {
-    for (let i = 0; i < tileDictionary[tile].count; i += 1) {
+  Object.keys(tiles).forEach(tile => {
+    for (let i = 0; i < tiles[tile].count; i += 1) {
       pile.push(tile);
     }
   });

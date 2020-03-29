@@ -42,6 +42,7 @@ const HumanOrAI = ({ formProps, name }) => {
             onChange={checked => {
               formProps.setFieldValue(`${name}AI`, !checked);
               formProps.setFieldValue(name, "");
+              formProps.setFieldValue("wildLava", false);
             }}
           />
         </div>
@@ -215,6 +216,33 @@ const StartGameModal = props => {
                 </Row>
               </Col>
               <hr />
+              {!formProps.values.player1AI &&
+                !formProps.values.player2AI &&
+                !formProps.values.player3AI &&
+                !formProps.values.player4AI && (
+                  <React.Fragment>
+                    <Col xs={12}>
+                      <Row className="form-group">
+                        <Label xs={8}>
+                          Wild Lava Tiles (human players only):
+                        </Label>
+                        <Col xs={4}>
+                          <BootstrapSwitchButton
+                            checked={formProps.values.wildLava}
+                            onlabel="Wild Lava"
+                            offlabel="No Wild Lava"
+                            onstyle="warning"
+                            width={135}
+                            onChange={checked => {
+                              formProps.setFieldValue("wildLava", checked);
+                            }}
+                          />
+                        </Col>
+                      </Row>
+                    </Col>
+                    <hr />
+                  </React.Fragment>
+                )}
               <Col xs={12}>
                 <Row className="justify-content-end">
                   <Tooltip

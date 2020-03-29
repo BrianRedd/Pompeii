@@ -71,19 +71,19 @@ export const saveGameSettings = relatives => ({
  * @description takes start game values and dispatches initial game store values
  * @param {Object} details playerState details object
  * @param {Number} startPlayer which player starts
- * @param {Object} testMode testMode object
+ * @param {Object} gameSettings gameSettings object
  */
 export const gameSetup = (
   details,
   startPlayer,
-  testMode = {}
+  gameSettings = {}
 ) => async dispatch => {
   const theseDetails = { ...details };
-  console.log("testMode:", testMode);
+  console.log("gameSettings:", gameSettings);
 
   const playersArray = Object.keys(theseDetails);
 
-  if (testMode.prePopulate) {
+  if (gameSettings.prePopulate) {
     // START PRE-POPULATION (TEST)
     const gridKeys = Object.keys(gridSquares);
     gridKeys.forEach(grid => {
@@ -104,18 +104,18 @@ export const gameSetup = (
     // END PRE-POPULATION (TEST)
   }
 
-  if (testMode.startPhase > 0) {
-    await dispatch(setStageInStore(testMode.startPhase));
+  if (gameSettings.startPhase > 0) {
+    await dispatch(setStageInStore(gameSettings.startPhase));
   }
-  await dispatch(saveGameSettings(testMode));
+  await dispatch(saveGameSettings(gameSettings));
   await dispatch(addGrid(gridSquares));
-  await dispatch(setEruptionCounter(testMode.noEruption ? 0 : 6));
+  await dispatch(setEruptionCounter(gameSettings.noEruption ? 0 : 6));
   await dispatch(setPlayerArray(playersArray));
   await dispatch(addPlayers(theseDetails));
   await dispatch(setPlayerTurn(parseFloat(startPlayer) - 1));
   await dispatch(addActivePlayer(playersArray[startPlayer]));
-  await dispatch(generateDeck(!!(testMode.stage > 0)));
-  await dispatch(generatePile());
+  await dispatch(generateDeck(!!(gameSettings.stage > 0)));
+  await dispatch(generatePile(gameSettings.wildLava));
   await dispatch(
     updateInstructions({
       text: `${details[`player${startPlayer}`].name}: ${constant.PLAY}`,

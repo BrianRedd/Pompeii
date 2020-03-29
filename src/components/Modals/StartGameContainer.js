@@ -46,6 +46,7 @@ const StartGameContainer = props => {
     player3AI: false,
     player4AI: false,
     startPlayer: 0,
+    wildLava: false,
     prePopulate: false,
     startPhase: 0,
     noEruption: false,
@@ -63,6 +64,7 @@ const StartGameContainer = props => {
    * @description After reading statistics, continue
    */
   const commitStartGame = values => {
+    console.log("commitStartGame; values:", values);
     localStorage.setItem("pompeii", JSON.stringify(values));
     const details = {};
     for (let i = 1; i <= parseFloat(values.numberOfPlayers); i += 1) {
@@ -76,11 +78,12 @@ const StartGameContainer = props => {
         ai: values[`player${i}AI`]
       };
     }
-    const testMode = {
+    const gameSettings = {
       prePopulate: values.prePopulate,
       startPhase: values.startPhase,
       noEruption: values.noEruption,
-      showStrategyValues: values.showStrategyValues
+      showStrategyValues: values.showStrategyValues,
+      wildLava: values.wildLava
     };
     let { startPlayer } = values;
     if (parseFloat(startPlayer) === 0) {
@@ -88,7 +91,7 @@ const StartGameContainer = props => {
         Math.random() * parseFloat(values.numberOfPlayers)
       );
     }
-    gameSetup(details, startPlayer, testMode);
+    gameSetup(details, startPlayer, gameSettings);
     toggleFlags(startGame);
   };
 
