@@ -2,7 +2,7 @@
 
 import _ from "lodash";
 
-import { ADD_RECOMMENDATIONS, SET_PLACED_RELATIVES } from "../ActionTypes";
+import * as actionTypes from "../ActionTypes";
 import { generateDeck } from "./CardsActions";
 import { setEruptionCounter } from "./FlagsActions";
 import { addGrid } from "./GridActions";
@@ -24,7 +24,7 @@ import * as constant from "../../data/constants";
  * @param {Array} recommendations - array or recommendations
  */
 export const addRecommendationsToStore = recommendations => ({
-  type: ADD_RECOMMENDATIONS,
+  type: actionTypes.ADD_RECOMMENDATIONS,
   payload: recommendations
 });
 
@@ -43,7 +43,7 @@ export const addRecommendations = recommendations => dispatch => {
  * @param {Array} relatives - array or relatives
  */
 export const setPlacedRelativesToStore = relatives => ({
-  type: SET_PLACED_RELATIVES,
+  type: actionTypes.SET_PLACED_RELATIVES,
   payload: relatives
 });
 
@@ -55,6 +55,16 @@ export const setPlacedRelativesToStore = relatives => ({
 export const setPlacedRelatives = relatives => dispatch => {
   dispatch(setPlacedRelativesToStore(relatives));
 };
+
+/**
+ * @function saveGameSettings
+ * @description saves dev-level game settings
+ * @param {Object} settings
+ */
+export const saveGameSettings = relatives => ({
+  type: actionTypes.SAVE_GAME_SETTINGS,
+  payload: relatives
+});
 
 /**
  * @function gameSetup
@@ -69,10 +79,11 @@ export const gameSetup = (
   testMode = {}
 ) => async dispatch => {
   const theseDetails = { ...details };
+  console.log("testMode:", testMode);
 
   const playersArray = Object.keys(theseDetails);
 
-  if (testMode.active) {
+  if (testMode.prePopulate) {
     // START PRE-POPULATION (TEST)
     const gridKeys = Object.keys(gridSquares);
     gridKeys.forEach(grid => {
@@ -93,9 +104,10 @@ export const gameSetup = (
     // END PRE-POPULATION (TEST)
   }
 
-  if (testMode.stage > 0) {
-    await dispatch(setStageInStore(testMode.stage));
+  if (testMode.startPhase > 0) {
+    await dispatch(setStageInStore(testMode.startPhase));
   }
+  await dispatch(saveGameSettings(testMode));
   await dispatch(addGrid(gridSquares));
   await dispatch(setEruptionCounter(testMode.noEruption ? 0 : 6));
   await dispatch(setPlayerArray(playersArray));

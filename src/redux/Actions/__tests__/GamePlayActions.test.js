@@ -8,6 +8,7 @@ import * as actions from "../GamePlayActions";
 
 test("gameSetup", async () => {
   const expectedActions = [
+    actionTypes.SAVE_GAME_SETTINGS,
     actionTypes.ADD_GRID,
     actionTypes.SET_ERUPTION_COUNTER,
     actionTypes.SET_PLAYERS_ARRAY,

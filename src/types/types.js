@@ -103,6 +103,12 @@ export const snackbarState = {
  */
 export const gamePlayState = {
   types: shape({
+    gameSettings: shape({
+      prePopulate: bool,
+      startPhase: number,
+      noEruption: bool,
+      showStrategyValues: bool
+    }),
     recommendations: arrayOf(
       shape({
         square: string,
@@ -112,6 +118,12 @@ export const gamePlayState = {
     placedRelatives: arrayOf(string)
   }),
   defaults: {
+    getSettings: {
+      prePopulate: false,
+      startPhase: 0,
+      noEruption: false,
+      showStrategyValues: false
+    },
     recommendations: [],
     placedRelatives: []
   }

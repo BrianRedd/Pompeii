@@ -47,7 +47,9 @@ const StartGameContainer = props => {
     player4AI: false,
     startPlayer: 0,
     prePopulate: false,
-    startPhase: 0
+    startPhase: 0,
+    noEruption: false,
+    showStrategyValues: false
   };
   if (localStorage.getItem("pompeii")) {
     initialValues = {
@@ -74,14 +76,12 @@ const StartGameContainer = props => {
         ai: values[`player${i}AI`]
       };
     }
-    let testMode = {};
-    if (values.prePopulate || values.startPhase) {
-      testMode = {
-        active: values.prePopulate,
-        stage: values.startPhase,
-        noEruption: values.noEruption
-      };
-    }
+    const testMode = {
+      prePopulate: values.prePopulate,
+      startPhase: values.startPhase,
+      noEruption: values.noEruption,
+      showStrategyValues: values.showStrategyValues
+    };
     let { startPlayer } = values;
     if (parseFloat(startPlayer) === 0) {
       startPlayer = Math.ceil(

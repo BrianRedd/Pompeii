@@ -37,7 +37,7 @@ const Tiles = props => {
           <ButtonBase
             data-test="tile-pile"
             focusRipple
-            disabled={!pileEnabled}
+            disabled={!pileEnabled || lavaTile}
             onClick={() => drawTile()}
             style={pileEnabled ? { borderColor: `rgb(${playerColor})` } : {}}
           >

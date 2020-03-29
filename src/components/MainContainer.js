@@ -38,7 +38,7 @@ const MainContainer = props => {
   const {
     cardsState,
     flagsState,
-    gamePlayState: { recommendations },
+    gamePlayState,
     gridState,
     messageState,
     playersState,
@@ -412,7 +412,9 @@ const MainContainer = props => {
     <div data-test="container-main">
       <Main
         flagsState={flagsState}
+        gamePlayState={gamePlayState}
         messageState={messageState}
+        playersState={playersState}
         tileState={tileState}
         drawCard={drawCard}
         deckEnabled={
@@ -439,7 +441,6 @@ const MainContainer = props => {
         runToSquare={runToSquare}
         toggleFlags={toggleFlags}
         activePlayer={activePlayer}
-        recommendations={recommendations}
       />
     </div>
   );

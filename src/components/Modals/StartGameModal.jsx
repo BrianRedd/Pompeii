@@ -217,7 +217,11 @@ const StartGameModal = props => {
               <hr />
               <Col xs={12}>
                 <Row className="justify-content-end">
-                  <Tooltip title="Dev Mode: Pre-populate Board">
+                  <Tooltip
+                    title={`Dev Mode: Pre-populate Board ${
+                      formProps.values.prePopulate ? "ON" : "OFF"
+                    }`}
+                  >
                     <div>
                       <IconButton
                         onClick={() =>
@@ -236,7 +240,7 @@ const StartGameModal = props => {
                     </div>
                   </Tooltip>
                   <Tooltip
-                    title={`Dev Mode: Phase ${formProps.values.startPhase}`}
+                    title={`Dev Mode: Phase ${formProps.values.startPhase + 1}`}
                   >
                     <div>
                       <IconButton
@@ -269,7 +273,11 @@ const StartGameModal = props => {
                       </IconButton>
                     </div>
                   </Tooltip>
-                  <Tooltip title="Dev Mode: Terror Delay">
+                  <Tooltip
+                    title={`Dev Mode: Terror Delay ${
+                      formProps.values.noEruption ? "OFF" : "ON"
+                    }`}
+                  >
                     <div>
                       <IconButton
                         onClick={() =>
@@ -280,11 +288,32 @@ const StartGameModal = props => {
                         }
                         disabled={formProps.values.startPhase !== 2}
                       >
-                        {formProps.values.noEruption ||
-                        formProps.values.startPhase !== 2 ? (
-                          <i className="fas fa-exclamation-triangle fa-sm color-grey" />
+                        {formProps.values.noEruption ? (
+                          <i className="far fa-grimace fa-sm color-magenta" />
                         ) : (
-                          <i className="fas fa-exclamation-triangle fa-sm color-magenta" />
+                          <i className="far fa-surprise fa-sm color-grey" />
+                        )}
+                      </IconButton>
+                    </div>
+                  </Tooltip>
+                  <Tooltip
+                    title={`Dev Mode: Show Strategy Values ${
+                      formProps.values.showStrategyValues ? "ON" : "OFF"
+                    }`}
+                  >
+                    <div>
+                      <IconButton
+                        onClick={() =>
+                          formProps.setFieldValue(
+                            "showStrategyValues",
+                            !formProps.values.showStrategyValues
+                          )
+                        }
+                      >
+                        {formProps.values.showStrategyValues ? (
+                          <i className="fas fa-eye fa-sm color-magenta" />
+                        ) : (
+                          <i className="fas fa-eye-slash fa-sm color-grey" />
                         )}
                       </IconButton>
                     </div>

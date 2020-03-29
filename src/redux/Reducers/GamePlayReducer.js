@@ -21,6 +21,11 @@ const gamePlayState = (state = types.gamePlayState.defaults, action) => {
         ...state,
         placedRelatives: payload
       };
+    case actions.SAVE_GAME_SETTINGS:
+      return {
+        ...state,
+        gameSettings: payload
+      };
     default:
       return state;
   }

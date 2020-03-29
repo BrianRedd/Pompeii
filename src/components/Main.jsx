@@ -4,9 +4,10 @@ import React from "react";
 import PropTypes from "prop-types";
 import { SnackbarProvider } from "notistack";
 import { Col, Row } from "reactstrap";
+import _ from "lodash";
 
 import * as types from "../types/types";
-import { playPompCard /* , placePerson */ } from "./Logic/cardLogic";
+import { playPompCard } from "./Logic/cardLogic";
 
 import BoardContainer from "./Board/BoardContainer";
 import DeckContainer from "./Deck/DeckContainer";
@@ -30,7 +31,9 @@ import RecommendationHighlighter from "./Board/RecommendationHighlighter";
 const Main = props => {
   const {
     flagsState,
+    gamePlayState,
     messageState,
+    playersState,
     tileState,
     deckEnabled,
     drawCard,
@@ -47,7 +50,6 @@ const Main = props => {
     placeRelatives,
     toggleFlags,
     activePlayer,
-    recommendations,
     placePerson
   } = props;
 
@@ -101,9 +103,20 @@ const Main = props => {
             </div>
           )}
         </Row>
-        <RecommendationHighlighter recommendations={recommendations} />
+        {(_.get(gamePlayState, "gameSettings.showStrategyValues") ||
+          messageState.stage === 2) && (
+          <RecommendationHighlighter
+            recommendations={_.get(gamePlayState, "recommendations", [])}
+          />
+        )}
         {(() => {
-          if (messageState.stage < 2) {
+          if (
+            messageState.stage < 2 &&
+            !(
+              _.get(playersState, `details.${playersState.activePlayer}.ai`) ||
+              _.get(gamePlayState, "gameSettings.showStrategyValues")
+            )
+          ) {
             return (
               <PlacementHighlighter
                 gridArray={cardGrid}
@@ -128,10 +141,7 @@ const Main = props => {
           return (
             <PlacementHighlighter
               gridArray={dangerZone}
-              selectSquare={val => {
-                console.log("selectSquare > placeLavaTile:", val);
-                placeLavaTile(val);
-              }}
+              selectSquare={placeLavaTile}
               validation={() => {
                 return true;
               }}
@@ -149,12 +159,13 @@ const Main = props => {
 
 Main.propTypes = {
   flagsState: types.flagsState.types,
+  gamePlayState: types.gamePlayState.types,
   messageState: types.messageState.types,
+  playersState: types.playersState.types,
   tileState: types.tileState.types,
   cardGrid: PropTypes.arrayOf(PropTypes.string),
   dangerZone: PropTypes.arrayOf(PropTypes.string),
   runZone: PropTypes.arrayOf(PropTypes.string),
-  recommendations: PropTypes.arrayOf(PropTypes.object),
   activePlayer: PropTypes.string,
   deckEnabled: PropTypes.bool,
   pileEnabled: PropTypes.bool,
@@ -172,12 +183,13 @@ Main.propTypes = {
 
 Main.defaultProps = {
   flagsState: types.flagsState.defaults,
+  gamePlayState: types.gamePlayState.defaults,
   messageState: types.messageState.defaults,
+  playersState: types.playersState.defaults,
   tileState: types.tileState.defaults,
   cardGrid: [],
   dangerZone: [],
   runZone: [],
-  recommendations: [],
   activePlayer: "",
   deckEnabled: false,
   pileEnabled: false,
