@@ -47,6 +47,36 @@ export const setDangerZone = zone => ({
 });
 
 /**
+ * @function setRunZone
+ * @description updates gridState.runZone
+ * @param {Array} zone - array of squares
+ */
+export const setRunZone = zone => ({
+  type: actionTypes.SET_RUN_ZONE,
+  payload: zone
+});
+
+/**
+ * @function setRunFromSquare
+ * @description updates gridState.runFromSquare
+ * @param {String} square - squares
+ */
+export const setRunFromSquare = square => ({
+  type: actionTypes.SET_RUN_FROM_SQUARE,
+  payload: square
+});
+
+/**
+ * @function setRunner
+ * @description updates gridState.runner
+ * @param {Object} runner - runner personObj
+ */
+export const setRunner = runner => ({
+  type: actionTypes.SET_RUNNER,
+  payload: runner
+});
+
+/**
  * @function updateDistanceToExitInStore
  * @description updates square's shortest safe distance to exit
  * @param {String} squareId - square Id

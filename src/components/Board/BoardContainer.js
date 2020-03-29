@@ -31,7 +31,6 @@ const BoardContainer = props => {
     gridState,
     playersState,
     performSacrifice,
-    selectRunner,
     placeRelatives,
     runToSquare,
     toggleFlags
@@ -44,7 +43,6 @@ const BoardContainer = props => {
         playersState={playersState}
         performSacrifice={performSacrifice}
         runCount={flagsState.runCount}
-        selectRunner={selectRunner}
         messageState={messageState}
       />
       <CancelButtons
@@ -64,7 +62,6 @@ BoardContainer.propTypes = {
   messageState: types.messageState.types,
   playersState: types.playersState.types,
   performSacrifice: PropTypes.func,
-  selectRunner: PropTypes.func,
   placeRelatives: PropTypes.func,
   runToSquare: PropTypes.func,
   toggleFlags: PropTypes.func
@@ -76,7 +73,6 @@ BoardContainer.defaultProps = {
   messageState: types.messageState.defaults,
   playersState: types.playersState.defaults,
   performSacrifice: () => {},
-  selectRunner: () => {},
   placeRelatives: () => {},
   runToSquare: () => {},
   toggleFlags: () => {}

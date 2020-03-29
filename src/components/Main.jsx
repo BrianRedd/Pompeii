@@ -32,6 +32,7 @@ const Main = props => {
   const {
     flagsState,
     gamePlayState,
+    gridState,
     messageState,
     playersState,
     tileState,
@@ -44,12 +45,9 @@ const Main = props => {
     pileEnabled,
     dangerZone,
     placeLavaTile,
-    selectRunner,
-    runZone,
     runToSquare,
     placeRelatives,
     toggleFlags,
-    activePlayer,
     placePerson
   } = props;
 
@@ -67,7 +65,6 @@ const Main = props => {
           <BoardContainer
             performSacrifice={performSacrifice}
             runFlag={flagsState.runCount}
-            selectRunner={selectRunner}
             placeRelatives={placeRelatives}
             runToSquare={runToSquare}
             toggleFlags={toggleFlags}
@@ -122,19 +119,19 @@ const Main = props => {
                 gridArray={cardGrid}
                 selectSquare={placePerson}
                 validation={vacancy}
-                activePlayer={activePlayer}
+                activePlayer={playersState.activePlayer}
               />
             );
           }
           if (flagsState.runCount) {
             return (
               <PlacementHighlighter
-                gridArray={runZone}
+                gridArray={gridState.runZone}
                 selectSquare={runToSquare}
                 validation={() => {
                   return true;
                 }}
-                activePlayer={activePlayer}
+                activePlayer={playersState.activePlayer}
               />
             );
           }
@@ -145,7 +142,7 @@ const Main = props => {
               validation={() => {
                 return true;
               }}
-              activePlayer={activePlayer}
+              activePlayer={playersState.activePlayer}
             />
           );
         })()}
@@ -160,13 +157,12 @@ const Main = props => {
 Main.propTypes = {
   flagsState: types.flagsState.types,
   gamePlayState: types.gamePlayState.types,
+  gridState: types.gridState.types,
   messageState: types.messageState.types,
   playersState: types.playersState.types,
   tileState: types.tileState.types,
   cardGrid: PropTypes.arrayOf(PropTypes.string),
   dangerZone: PropTypes.arrayOf(PropTypes.string),
-  runZone: PropTypes.arrayOf(PropTypes.string),
-  activePlayer: PropTypes.string,
   deckEnabled: PropTypes.bool,
   pileEnabled: PropTypes.bool,
   resolveNoPlaceToPlace: PropTypes.func,
@@ -174,7 +170,6 @@ Main.propTypes = {
   vacancy: PropTypes.func,
   performSacrifice: PropTypes.func,
   placeLavaTile: PropTypes.func,
-  selectRunner: PropTypes.func,
   runToSquare: PropTypes.func,
   placeRelatives: PropTypes.func,
   toggleFlags: PropTypes.func,
@@ -184,13 +179,12 @@ Main.propTypes = {
 Main.defaultProps = {
   flagsState: types.flagsState.defaults,
   gamePlayState: types.gamePlayState.defaults,
+  gridState: types.gridState.defaults,
   messageState: types.messageState.defaults,
   playersState: types.playersState.defaults,
   tileState: types.tileState.defaults,
   cardGrid: [],
   dangerZone: [],
-  runZone: [],
-  activePlayer: "",
   deckEnabled: false,
   pileEnabled: false,
   resolveNoPlaceToPlace: () => {},
@@ -198,7 +192,6 @@ Main.defaultProps = {
   vacancy: () => {},
   performSacrifice: () => {},
   placeLavaTile: () => {},
-  selectRunner: () => {},
   runToSquare: () => {},
   placeRelatives: () => {},
   toggleFlags: () => {},

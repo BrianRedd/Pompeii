@@ -1,6 +1,6 @@
 /** @module MainContainer */
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useEffect, useCallback } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import _ from "lodash";
@@ -55,12 +55,13 @@ const MainContainer = props => {
     incrementStage,
     incrementPlayerCasualties,
     setRunCounter,
-    addSnackbar,
     addRecommendations,
     addActivePlayer,
     setEruptionCounter,
     setLavaTile,
-    setDangerZone
+    setDangerZone,
+    setRunZone,
+    setRunner
   } = props;
 
   /**
@@ -81,20 +82,6 @@ const MainContainer = props => {
   useEffect(() => {
     setActivePlayer(_.get(playersState, `players.${playersState.turn}`));
   }, [playersState, setActivePlayer]);
-
-  const [runZone, setRunZone] = useState([]);
-  const [runFromSquare, setRunFromSquare] = useState();
-  const [runner, setRunner] = useState();
-
-  /**
-   * @function setLavaTileLocal
-   * @description dispatches action to set lava tile
-   * @param {String} tile
-   */
-  const setLavaTileLocal = tile => {
-    console.log("setLavaTileLocal; tile:", tile);
-    setLavaTile(tile);
-  };
 
   /**
    * @function setRecommendationArray
@@ -290,7 +277,7 @@ const MainContainer = props => {
     if (flagsState.flags.includes("placing-lava-tile")) {
       toggleFlags("placing-lava-tile");
     }
-    setLavaTileLocal();
+    setLavaTile();
     setDangerZone([]);
     if (flagsState.eruptionCount) {
       setEruptionCounter(flagsState.eruptionCount - 1);
@@ -304,50 +291,6 @@ const MainContainer = props => {
   };
 
   /**
-   * @function selectRunner
-   * @description select person to run
-   * @param {Object} person - person object
-   * @param {String} square - square
-   */
-  const selectRunner = (person, square) => {
-    console.log("selectRunner; person:", person, "square:", square);
-    const playerDetails = _.get(playersState, `details.${activePlayer}`);
-    setRunner(person);
-
-    setRunFromSquare(square);
-    if (person.player !== activePlayer) {
-      addSnackbar({
-        message: "Not your person!",
-        type: "warning"
-      });
-      return;
-    }
-    if (
-      person.lastMoved === playersState.totalTurns &&
-      playerDetails.population !== 1
-    ) {
-      addSnackbar({
-        message: "Already ran this person this turn!",
-        type: "warning"
-      });
-      return;
-    }
-
-    const pop = _.get(gridState, `grid.${square}.occupants.length`);
-
-    const targetZones = helper.calculateRunZones(square, pop + 1);
-
-    setRunZone(targetZones);
-    if (playerDetails.ai) {
-      setRecommendationArray(
-        randAndArrangeRecommendations(
-          helper.runToRecommendations(targetZones, square)
-        )
-      );
-    }
-  };
-
-  /**
    * @function runToSquare
    * @description handle person running from one square to another
    * @param {String} toSquare
@@ -356,7 +299,7 @@ const MainContainer = props => {
     setRecommendationArray([]);
     const playerDetails = _.get(playersState, `details.${activePlayer}`);
     console.log("runToSquare; toSquare:", toSquare);
-    if (toSquare === runFromSquare) {
+    if (toSquare === gridState.runFromSquare) {
       setRunZone([]);
       return;
     }
@@ -365,13 +308,13 @@ const MainContainer = props => {
     if (numberOfRuns) {
       const oldSquareOccupants = _.get(
         gridState,
-        `grid.${runFromSquare}.occupants`
+        `grid.${gridState.runFromSquare}.occupants`
       );
       const oldSquareIdx = oldSquareOccupants
         .map(person => person.player)
         .indexOf(activePlayer);
       oldSquareOccupants.splice(oldSquareIdx, 1);
-      placePeopleInSquare(runFromSquare, oldSquareOccupants);
+      placePeopleInSquare(gridState.runFromSquare, oldSquareOccupants);
 
       if (escapeSquares.includes(toSquare)) {
         incrementPlayerSaved(activePlayer, 1);
@@ -385,7 +328,7 @@ const MainContainer = props => {
         );
         newSquareOccupants.push({
           player: activePlayer,
-          gender: runner.gender,
+          gender: _.get(gridState, "runner.gender"),
           lastMoved:
             oldSquareOccupants.length > 0 ? playersState.totalTurns : undefined
         });
@@ -413,6 +356,7 @@ const MainContainer = props => {
       <Main
         flagsState={flagsState}
         gamePlayState={gamePlayState}
+        gridState={gridState}
         messageState={messageState}
         playersState={playersState}
         tileState={tileState}
@@ -436,11 +380,8 @@ const MainContainer = props => {
         resolveNoPlaceToPlace={resolveNoPlaceToPlace}
         dangerZone={gridState.dangerZone}
         placeLavaTile={placeLavaTile}
-        selectRunner={selectRunner}
-        runZone={runZone}
         runToSquare={runToSquare}
         toggleFlags={toggleFlags}
-        activePlayer={activePlayer}
       />
     </div>
   );
@@ -465,12 +406,13 @@ MainContainer.propTypes = {
   incrementPlayerCasualties: PropTypes.func,
   incrementPlayerSaved: PropTypes.func,
   setRunCounter: PropTypes.func,
-  addSnackbar: PropTypes.func,
   addRecommendations: PropTypes.func,
   addActivePlayer: PropTypes.func,
   setEruptionCounter: PropTypes.func,
   setLavaTile: PropTypes.func,
-  setDangerZone: PropTypes.func
+  setDangerZone: PropTypes.func,
+  setRunZone: PropTypes.func,
+  setRunner: PropTypes.func
 };
 
 MainContainer.defaultProps = {
@@ -492,12 +434,13 @@ MainContainer.defaultProps = {
   incrementPlayerCasualties: () => {},
   incrementPlayerSaved: () => {},
   setRunCounter: () => {},
-  addSnackbar: () => {},
   addRecommendations: () => {},
   addActivePlayer: () => {},
   setEruptionCounter: () => {},
   setLavaTile: () => {},
-  setDangerZone: () => {}
+  setDangerZone: () => {},
+  setRunZone: () => {},
+  setRunner: () => {}
 };
 
 export const MainContainerTest = MainContainer;

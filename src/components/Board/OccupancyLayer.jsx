@@ -6,6 +6,7 @@ import { ButtonBase, Tooltip } from "@material-ui/core";
 import _ from "lodash";
 
 import * as types from "../../types/types";
+import { selectRunner } from "../Logic/runnerLogic";
 import * as constant from "../../data/constants";
 
 const OccupancySquare = ({
@@ -13,7 +14,6 @@ const OccupancySquare = ({
   playersState,
   performSacrifice,
   runCount,
-  selectRunner,
   messageState,
   grid
 }) => {
@@ -149,8 +149,7 @@ OccupancyLayer.propTypes = {
   messageState: types.messageState.types,
   playersState: types.playersState.types,
   runCount: PropTypes.number,
-  performSacrifice: PropTypes.func,
-  selectRunner: PropTypes.func
+  performSacrifice: PropTypes.func
 };
 
 OccupancyLayer.defaultProps = {
@@ -158,8 +157,7 @@ OccupancyLayer.defaultProps = {
   messageState: types.messageState.defaults,
   playersState: types.playersState.defaults,
   runCount: 0,
-  performSacrifice: () => {},
-  selectRunner: () => {}
+  performSacrifice: () => {}
 };
 
 export default OccupancyLayer;

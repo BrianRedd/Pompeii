@@ -23,6 +23,9 @@ export const PLACE_PEOPLE = "PLACE_PEOPLE";
 export const PLACE_LAVA = "PLACE_LAVA";
 export const UPDATE_DISTANCE_TO_EXIT = "UPDATE_DISTANCE_TO_EXIT";
 export const SET_DANGER_ZONE = "SET_DANGER_ZONE";
+export const SET_RUN_ZONE = "SET_RUN_ZONE";
+export const SET_RUN_FROM_SQUARE = "SET_RUN_FROM_SQUARE";
+export const SET_RUNNER = "SET_RUNNER";
 
 // message actions
 export const SET_STAGE = "SET_STAGE";

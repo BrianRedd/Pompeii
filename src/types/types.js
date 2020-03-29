@@ -78,21 +78,6 @@ export const flagsState = {
   }
 };
 
-/**
- * @const snackbarState
- * @description Types for snackbarState Redux store
- */
-export const snackbarState = {
-  types: shape({
-    message: string,
-    type: oneOf(["info", "warning", "default", "error", "success"])
-  }),
-  defaults: {
-    message: null,
-    type: "default"
-  }
-};
-
 /*
  GAME PLAY TYPES
  ---------------*/
@@ -142,7 +127,8 @@ export const occupant = {
     player: string,
     gender: string,
     lastMoved: number
-  })
+  }),
+  defaults: {}
 };
 
 /**
@@ -179,13 +165,19 @@ export const gridState = {
     grid: shape({
       "0_0": gridSquare.types
     }),
-    dangerZone: arrayOf(string)
+    dangerZone: arrayOf(string),
+    runZone: arrayOf(string),
+    runFromSquare: string,
+    runner: occupant.types
   }),
   defaults: {
     grid: {
       "0_0": gridSquare.defaults
     },
-    dangerZone: []
+    dangerZone: [],
+    runZone: [],
+    runFromSquare: "",
+    runner: occupant.defaults
   }
 };
 
@@ -265,6 +257,25 @@ export const playersState = {
     activePlayer: "",
     turn: 0,
     totalTurns: 0
+  }
+};
+
+/*
+ SNACKBAR TYPES
+ --------------*/
+
+/**
+ * @const snackbarState
+ * @description Types for snackbarState Redux store
+ */
+export const snackbarState = {
+  types: shape({
+    message: string,
+    type: oneOf(["info", "warning", "default", "error", "success"])
+  }),
+  defaults: {
+    message: null,
+    type: "default"
   }
 };
 

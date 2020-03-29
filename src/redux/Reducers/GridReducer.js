@@ -52,6 +52,21 @@ const gridState = (state = types.gridState.defaults, action) => {
         ...state,
         dangerZone: payload
       };
+    case actions.SET_RUN_ZONE:
+      return {
+        ...state,
+        runZone: payload
+      };
+    case actions.SET_RUN_FROM_SQUARE:
+      return {
+        ...state,
+        runFromSquare: payload
+      };
+    case actions.SET_RUNNER:
+      return {
+        ...state,
+        runner: payload
+      };
     default:
       return state;
   }
