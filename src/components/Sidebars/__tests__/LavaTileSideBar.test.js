@@ -24,22 +24,22 @@ test("renders without error", () => {
   expect(component.length).toBe(1);
 });
 
-describe("wilds tiles", () => {
-  let wrapper;
-  let button;
-  beforeEach(() => {
-    wrapper = commonSetup(TestedComponent, defaultProps);
-    button = findByTestAttr(wrapper, "button-lavatile");
-  });
-  test("renders without error", () => {
-    expect(button.length).toBe(2);
-  });
-  test("clicking tile selected appropriate highlight and updates flag", () => {
-    button.at(0).simulate("click");
-    expect(mockHighlight).toHaveBeenCalledWith("w1");
-    expect(mockToggle).toHaveBeenCalled();
-  });
-});
+// describe("wilds tiles", () => {
+//   let wrapper;
+//   let button;
+//   beforeEach(() => {
+//     wrapper = commonSetup(TestedComponent, defaultProps);
+//     button = findByTestAttr(wrapper, "button-lavatile");
+//   });
+//   test("renders without error", () => {
+//     expect(button.length).toBe(2);
+//   });
+//   test("clicking tile selected appropriate highlight and updates flag", () => {
+//     button.at(0).simulate("click");
+//     expect(mockHighlight).toHaveBeenCalledWith("w1");
+//     expect(mockToggle).toHaveBeenCalled();
+//   });
+// });
 
 describe("no place to place tile", () => {
   let wrapper;

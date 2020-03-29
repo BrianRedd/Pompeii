@@ -4,9 +4,7 @@ import * as actionTypes from "../../ActionTypes";
 import * as types from "../../../types/types";
 import Reducer from "../GridReducer";
 
-const defaultState = {
-  grid: types.gridState.defaults
-};
+const defaultState = types.gridState.defaults;
 
 test("should return initial state", () => {
   expect(Reducer(undefined, { type: "", payload: "" })).toEqual(defaultState);
@@ -47,6 +45,7 @@ test("should handle PLACE_PEOPLE action", () => {
       buildingCapacity: null,
       occupants: [{ gender: "neuter", player: "tester" }],
       offSets: [],
+      distanceToExit: 0,
       ventName: null,
       gateName: null
     }

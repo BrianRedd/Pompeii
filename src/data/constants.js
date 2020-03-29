@@ -2,7 +2,7 @@
 
 // board
 export const Y_OFFSET = 121;
-export const X_OFFSET = 58;
+export const X_OFFSET = 71;
 export const WHITE = "White";
 
 // messages

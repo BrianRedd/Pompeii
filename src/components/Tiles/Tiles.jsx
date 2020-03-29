@@ -48,7 +48,9 @@ const Tiles = props => {
             )}
           </ButtonBase>
         </div>
-        <div className="text-center">Lava Tiles ({deckSizes.tiles})</div>
+        <div className="text-center font-weight-bold">
+          Lava Tiles ({deckSizes.tiles})
+        </div>
       </Col>
     </Row>
   );

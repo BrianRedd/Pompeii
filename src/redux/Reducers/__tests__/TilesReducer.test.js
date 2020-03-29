@@ -1,12 +1,10 @@
 /** TilesReducer.test */
 
 import * as actionTypes from "../../ActionTypes";
+import * as types from "../../../types/types";
 import Reducer from "../TilesReducer";
 
-const defaultState = {
-  tiles: {},
-  pile: []
-};
+const defaultState = types.tileState.defaults;
 
 test("should return initial state", () => {
   expect(Reducer(undefined, { type: "", payload: "" })).toEqual(defaultState);

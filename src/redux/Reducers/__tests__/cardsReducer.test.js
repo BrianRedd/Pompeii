@@ -1,13 +1,10 @@
 /** CardsReducer.test */
 
 import * as actionTypes from "../../ActionTypes";
+import * as types from "../../../types/types";
 import Reducer from "../CardsReducer";
 
-const defaultState = {
-  cards: {},
-  deck: [],
-  discard: []
-};
+const defaultState = types.cardsState.defaults;
 
 test("should return initial state", () => {
   expect(Reducer(undefined, { type: "", payload: "" })).toEqual(defaultState);

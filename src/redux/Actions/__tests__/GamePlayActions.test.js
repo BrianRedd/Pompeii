@@ -9,9 +9,11 @@ import * as actions from "../GamePlayActions";
 test("gameSetup", async () => {
   const expectedActions = [
     actionTypes.ADD_GRID,
+    actionTypes.SET_ERUPTION_COUNTER,
     actionTypes.SET_PLAYERS_ARRAY,
     actionTypes.ADD_PLAYERS,
     actionTypes.SET_PLAYER_TURN,
+    actionTypes.SET_ACTIVE_PLAYER,
     actionTypes.ADD_CARDS,
     actionTypes.ADD_DECK,
     actionTypes.UPDATE_PLAYER_HAND,
@@ -25,7 +27,28 @@ test("gameSetup", async () => {
       details: { player1: { hand: [] } }
     }
   });
-  await store.dispatch(actions.gameSetup()).then(() => {
+  const details = {
+    player1: {
+      name: "Player 1",
+      hand: [],
+      color: "0, 0, 0",
+      casualties: 0,
+      population: 0,
+      saved: 0,
+      ai: false
+    },
+    player2: {
+      name: "Player 2",
+      hand: [],
+      color: "0, 0, 0",
+      casualties: 0,
+      population: 0,
+      saved: 0,
+      ai: true
+    }
+  };
+  const startPlayer = 1;
+  await store.dispatch(actions.gameSetup(details, startPlayer)).then(() => {
     const theseActions = store.getActions().map(a => a.type);
     expect(theseActions).toEqual(expectedActions);
   });

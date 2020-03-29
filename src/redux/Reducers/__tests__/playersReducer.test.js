@@ -58,7 +58,7 @@ test("should handle UPDATE_PLAYER_HAND action", () => {
   expect(state.details).toEqual({
     player1: {
       ...types.playerDetails.defaults.player1,
-      name: "Player 1",
+      name: "",
       color: "#FFFFFF",
       hand: ["card_1", "card_2"]
     }

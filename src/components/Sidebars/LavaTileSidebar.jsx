@@ -33,12 +33,9 @@ const LavaTileSidebar = props => {
   const wilds = _.get(tileState, `tiles.${tileState.lavaTile}.wilds`);
 
   return (
-    <React.Fragment>
-      {flagsState.flags.includes("no-place-to-place") ? (
-        <div
-          data-test="sidebar-lavatile"
-          className="w-100 text-center deck-container"
-        >
+    <div data-test="sidebar-lavatile">
+      {flagsState.flags.includes("no-place-to-place") && (
+        <div className="w-100 text-center deck-container">
           <h4 className="text-danger">{`No Place For ${tileState.lavaTile} To Be Placed!`}</h4>
           <figure>
             <ButtonBase
@@ -53,49 +50,48 @@ const LavaTileSidebar = props => {
             <figcaption>(Click to Continue)</figcaption>
           </figure>
         </div>
-      ) : (
-        <div
-          data-test="sidebar-lavatile"
-          className="w-100 text-center deck-container"
-        >
-          <h4 className="text-danger">Wild Lava Tile Drawn (Pick Type)!</h4>
-          <Row>
-            <Col>
-              <figure>
-                <ButtonBase
-                  data-test="button-lavatile"
-                  onClick={() => {
-                    lavaLogic.highlightDangerZones(wilds[0]);
-                    if (flagsState.flags.includes("wild-lava-tile")) {
-                      toggleFlags("wild-lava-tile");
-                    }
-                  }}
-                >
-                  <img alt={wilds[0]} src={`/assets/tiles/${wilds[0]}.png`} />
-                </ButtonBase>
-                <figcaption>{`(Click to Place ${wilds[0]})`}</figcaption>
-              </figure>
-            </Col>
-            <Col>
-              <figure>
-                <ButtonBase
-                  data-test="button-lavatile"
-                  onClick={() => {
-                    lavaLogic.highlightDangerZones(wilds[1]);
-                    if (flagsState.flags.includes("wild-lava-tile")) {
-                      toggleFlags("wild-lava-tile");
-                    }
-                  }}
-                >
-                  <img alt={wilds[1]} src={`/assets/tiles/${wilds[1]}.png`} />
-                </ButtonBase>
-                <figcaption>{`(Click to Place ${wilds[1]})`}</figcaption>
-              </figure>
-            </Col>
-          </Row>
-        </div>
       )}
-    </React.Fragment>
+      {!flagsState.flags.includes("no-place-to-place") &&
+        _.get(wilds, "length") === 2 && (
+          <div className="w-100 text-center deck-container">
+            <h4 className="text-danger">Wild Lava Tile Drawn (Pick Type)!</h4>
+            <Row>
+              <Col>
+                <figure>
+                  <ButtonBase
+                    data-test="button-lavatile"
+                    onClick={() => {
+                      lavaLogic.highlightDangerZones(wilds[0]);
+                      if (flagsState.flags.includes("wild-lava-tile")) {
+                        toggleFlags("wild-lava-tile");
+                      }
+                    }}
+                  >
+                    <img alt={wilds[0]} src={`/assets/tiles/${wilds[0]}.png`} />
+                  </ButtonBase>
+                  <figcaption>{`(Click to Place ${wilds[0]})`}</figcaption>
+                </figure>
+              </Col>
+              <Col>
+                <figure>
+                  <ButtonBase
+                    data-test="button-lavatile"
+                    onClick={() => {
+                      lavaLogic.highlightDangerZones(wilds[1]);
+                      if (flagsState.flags.includes("wild-lava-tile")) {
+                        toggleFlags("wild-lava-tile");
+                      }
+                    }}
+                  >
+                    <img alt={wilds[1]} src={`/assets/tiles/${wilds[1]}.png`} />
+                  </ButtonBase>
+                  <figcaption>{`(Click to Place ${wilds[1]})`}</figcaption>
+                </figure>
+              </Col>
+            </Row>
+          </div>
+        )}
+    </div>
   );
 };
 

@@ -85,7 +85,6 @@ const Player = props => {
       data-test="presentation-player"
       className="mt-3"
       style={{
-        backgroundColor: myTurn ? `rgba(${details.color}, 0.3)` : "transparent",
         height: myTurn
           ? "230px"
           : `${Math.min(
@@ -110,43 +109,52 @@ const Player = props => {
         {stage < 2 && <span>Population: {details.population}</span>}
         {stage < 2 && <span>Casualites: {details.casualties}</span>}
       </legend>
-      {stage < 2 ? (
-        <HandCards
-          hand={details.hand}
-          ai={details.ai}
-          myTurn={myTurn}
-          playCard={playCard}
-        />
-      ) : (
-        <div style={{ color: `rgb(${details.color})` }} className="p-2">
-          <Row className="ml-4 mr-4">
-            <Col xs={4}>
-              <h6 className="d-flex justify-content-center">Saved</h6>
-              <PeopleIcons
-                number={details.saved}
-                color={details.color}
-                type="fas fa-grin-alt"
-              />
-            </Col>
-            <Col xs={4}>
-              <h6 className="d-flex justify-content-center">Population</h6>
-              <PeopleIcons
-                number={details.population}
-                color={details.color}
-                type="fas fa-male"
-              />
-            </Col>
-            <Col xs={4}>
-              <h6 className="d-flex justify-content-center">Casualites</h6>
-              <PeopleIcons
-                number={details.casualties}
-                color={details.color}
-                type="fas fa-dizzy"
-              />
-            </Col>
-          </Row>
-        </div>
-      )}
+      <div
+        style={{
+          backgroundColor: myTurn
+            ? `rgba(${details.color}, 0.3)`
+            : "transparent"
+        }}
+        className="my-turn-highlight"
+      >
+        {stage < 2 ? (
+          <HandCards
+            hand={details.hand}
+            ai={details.ai}
+            myTurn={myTurn}
+            playCard={playCard}
+          />
+        ) : (
+          <div style={{ color: `rgb(${details.color})` }} className="p-2">
+            <Row className="ml-4 mr-4">
+              <Col xs={4}>
+                <h6 className="d-flex justify-content-center">Saved</h6>
+                <PeopleIcons
+                  number={details.saved}
+                  color={details.color}
+                  type="fas fa-grin-alt"
+                />
+              </Col>
+              <Col xs={4}>
+                <h6 className="d-flex justify-content-center">Population</h6>
+                <PeopleIcons
+                  number={details.population}
+                  color={details.color}
+                  type="fas fa-male"
+                />
+              </Col>
+              <Col xs={4}>
+                <h6 className="d-flex justify-content-center">Casualites</h6>
+                <PeopleIcons
+                  number={details.casualties}
+                  color={details.color}
+                  type="fas fa-dizzy"
+                />
+              </Col>
+            </Row>
+          </div>
+        )}
+      </div>
     </fieldset>
   );
 };

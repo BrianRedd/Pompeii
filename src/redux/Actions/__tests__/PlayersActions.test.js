@@ -143,6 +143,10 @@ describe("incrementPlayerTurn", () => {
         payload: 1
       },
       {
+        type: "SET_ACTIVE_PLAYER",
+        payload: "player2"
+      },
+      {
         type: "UPDATE_INSTRUCTIONS",
         payload: {
           text: `Player 2: ${constant.PLAY}`,
@@ -169,6 +173,10 @@ describe("incrementPlayerTurn", () => {
       {
         type: "SET_PLAYER_TURN",
         payload: 0
+      },
+      {
+        type: "SET_ACTIVE_PLAYER",
+        payload: "player1"
       },
       {
         type: "UPDATE_INSTRUCTIONS",

@@ -55,6 +55,12 @@ const Main = props => {
     <SnackbarProvider maxSnack={3}>
       <SnackbarNotifier />
       <Col data-test="presentation-main" className="main-container">
+        {messageState.stage === 2 && (
+          <React.Fragment>
+            <div className="volcano-bg" />
+            <div className="eruption flashit" />
+          </React.Fragment>
+        )}
         <Row>
           <BoardContainer
             performSacrifice={performSacrifice}

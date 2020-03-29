@@ -24,12 +24,19 @@ const Board = props => {
       >
         {stageData[messageState.stage].text}
       </Alert>
-      <Alert color="default" className="justify-content-center m-0 p-1 row">
-        <span style={{ color: _.get(messageState, "instruction.color") }}>
+      <Alert className="justify-content-center m-0 p-1 row instructions">
+        <span
+          className="font-weight-bold"
+          style={{ color: `rgb(${_.get(messageState, "instruction.color")})` }}
+        >
           {_.get(messageState, "instruction.text")}
         </span>
       </Alert>
-      <img alt="Board" src="/assets/Board-grid.png" />
+      <img
+        className={`${messageState.stage === 2 ? "eruption-fade" : ""}`}
+        alt="Board"
+        src="/assets/Board-grid.png"
+      />
     </div>
   );
 };

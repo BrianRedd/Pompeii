@@ -235,12 +235,15 @@ const StartGameModal = props => {
                   >
                     <div>
                       <IconButton
-                        onClick={() =>
+                        onClick={() => {
+                          const nextPhase =
+                            (formProps.values.startPhase + 1) % 3;
+                          formProps.setFieldValue("startPhase", nextPhase);
                           formProps.setFieldValue(
-                            "startPhase",
-                            (formProps.values.startPhase + 1) % 3
-                          )
-                        }
+                            "prePopulate",
+                            !!(nextPhase > 0)
+                          );
+                        }}
                       >
                         {(() => {
                           switch (formProps.values.startPhase) {
