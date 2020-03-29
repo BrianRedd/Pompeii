@@ -14,6 +14,8 @@ import { randAndArrangeRecommendations } from "../utils/utilsCommon";
 import { playPompCard } from "./Logic/cardLogic";
 import { placePerson } from "./Logic/placePeopleLogic";
 import { placeRelatives } from "./Logic/placeRelativesLogic";
+import { placeLavaTile } from "./Logic/lavaLogic";
+import { runForYourLives } from "./Logic/runnerLogic";
 
 import Main from "./Main";
 
@@ -52,10 +54,8 @@ const MainContainer = props => {
     placePeopleInSquare,
     incrementStage,
     incrementPlayerCasualties,
-    placeLavaTileOnSquare,
     setRunCounter,
     addSnackbar,
-    updateDistanceToExit,
     addRecommendations,
     addActivePlayer,
     setEruptionCounter,
@@ -279,24 +279,6 @@ const MainContainer = props => {
   };
 
   /**
-   * @function runForYourLives
-   * @description player can now run two of their people
-   */
-  const runForYourLives = async () => {
-    console.log("runForYourLives");
-    const playerDetails = _.get(playersState, `details.${activePlayer}`);
-    await updateInstructions({
-      text: `${playerDetails.name}: ${constant.RUN}`,
-      color: playerDetails.color
-    });
-    if (playerDetails.ai) {
-      setRecommendationArray(
-        randAndArrangeRecommendations(helper.runnerRecommendations())
-      );
-    }
-  };
-
-  /**
    * @function resolveNoPlaceToPlace
    * @description continue from no place to place
    */
@@ -362,65 +344,6 @@ const MainContainer = props => {
           helper.runToRecommendations(targetZones, square)
         )
       );
-    }
-  };
-
-  /**
-   * @function burnSurroundedTiles
-   * @description if tiles are surrounded by lava, burn 'em all
-   * @param {Array} tiles
-   */
-  const burnSurroundedTiles = tiles => {
-    tiles.forEach(tile => {
-      placeLavaTileOnSquare(tile, "Lava");
-
-      _.get(gridState, `grid.${tile}.occupants`, []).forEach(person => {
-        incrementPlayerCasualties(person.player, 1);
-      });
-      placePeopleInSquare(tile, []);
-    });
-  };
-
-  /**
-   * @function placeLavaTile
-   * @description placing tile in highlight area
-   * @param {String} square
-   */
-  const placeLavaTile = square => {
-    console.log("placeLavaTile:", tileState.lavaTile, square);
-    placeLavaTileOnSquare(square, tileState.lavaTile);
-
-    _.get(gridState, `grid.${square}.occupants`, []).forEach(person => {
-      incrementPlayerCasualties(person.player, 1);
-    });
-    placePeopleInSquare(square, []);
-
-    if (flagsState.flags.includes("placing-lava-tile")) {
-      toggleFlags("placing-lava-tile");
-    }
-    setLavaTileLocal();
-    setDangerZone([]);
-    setRecommendationArray([]);
-
-    // check for tiles surrounded by lava
-    const tilesSurroundedByLava = helper.checkForSurroundedTiles(
-      square,
-      updateDistanceToExit
-    );
-    if (tilesSurroundedByLava.length > 0) {
-      burnSurroundedTiles(tilesSurroundedByLava);
-    }
-
-    // TODO update distance to exit
-
-    if (flagsState.eruptionCount) {
-      setEruptionCounter(flagsState.eruptionCount - 1);
-      incrementPlayerTurn();
-    } else if (_.get(playersState, `details.${activePlayer}.population`) < 1) {
-      incrementPlayerTurn();
-    } else {
-      setRunCounter(2);
-      runForYourLives();
     }
   };
 
@@ -540,10 +463,8 @@ MainContainer.propTypes = {
   incrementStage: PropTypes.func,
   incrementPlayerCasualties: PropTypes.func,
   incrementPlayerSaved: PropTypes.func,
-  placeLavaTileOnSquare: PropTypes.func,
   setRunCounter: PropTypes.func,
   addSnackbar: PropTypes.func,
-  updateDistanceToExit: PropTypes.func,
   addRecommendations: PropTypes.func,
   addActivePlayer: PropTypes.func,
   setEruptionCounter: PropTypes.func,
@@ -569,10 +490,8 @@ MainContainer.defaultProps = {
   incrementStage: () => {},
   incrementPlayerCasualties: () => {},
   incrementPlayerSaved: () => {},
-  placeLavaTileOnSquare: () => {},
   setRunCounter: () => {},
   addSnackbar: () => {},
-  updateDistanceToExit: () => {},
   addRecommendations: () => {},
   addActivePlayer: () => {},
   setEruptionCounter: () => {},

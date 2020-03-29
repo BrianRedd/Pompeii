@@ -123,6 +123,7 @@ const Main = props => {
             <PlacementHighlighter
               gridArray={dangerZone}
               selectSquare={val => {
+                console.log("selectSquare > placeLavaTile:", val);
                 placeLavaTile(val);
               }}
               validation={() => {

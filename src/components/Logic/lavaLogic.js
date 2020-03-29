@@ -6,6 +6,74 @@ import store from "../../redux/configureStore";
 import actions from "../../redux/Actions";
 import * as data from "../../data/gridData";
 import * as utils from "../../utils/utilsCommon";
+import * as helper from "./helperFunctions";
+import { runForYourLives } from "./runnerLogic";
+
+/**
+ * @function burnSurroundedTiles
+ * @description if tiles are surrounded by lava, burn 'em all
+ * @param {Array} tiles
+ */
+export const burnSurroundedTiles = tiles => {
+  console.log("burnSurroundedTiled");
+  const storeState = store.getState();
+  const { gridState } = storeState;
+
+  tiles.forEach(tile => {
+    store.dispatch(actions.placeLavaTileOnSquare(tile, "Lava"));
+
+    _.get(gridState, `grid.${tile}.occupants`, []).forEach(person => {
+      store.dispatch(actions.incrementPlayerCasualties(person.player, 1));
+    });
+    store.dispatch(actions.placePeopleInSquare(tile, []));
+  });
+};
+
+/**
+ * @function placeLavaTile
+ * @description placing tile in highlight area
+ * @param {String} square
+ */
+export const placeLavaTile = square => {
+  const storeState = store.getState();
+  const { flagsState, gridState, playersState, tileState } = storeState;
+
+  console.log("placeLavaTile:", tileState.lavaTile, square);
+  store.dispatch(actions.placeLavaTileOnSquare(square, tileState.lavaTile));
+
+  _.get(gridState, `grid.${square}.occupants`, []).forEach(person => {
+    store.dispatch(actions.incrementPlayerCasualties(person.player, 1));
+  });
+  store.dispatch(actions.placePeopleInSquare(square, []));
+
+  if (flagsState.flags.includes("placing-lava-tile")) {
+    store.dispatch(actions.toggleFlags("placing-lava-tile"));
+  }
+  store.dispatch(actions.setLavaTile());
+  store.dispatch(actions.setDangerZone([]));
+  store.dispatch(actions.addRecommendations([]));
+
+  // check for tiles surrounded by lava
+  const tilesSurroundedByLava = helper.checkForSurroundedTiles(
+    square,
+    store.dispatch(actions.updateDistanceToExit)
+  );
+  if (tilesSurroundedByLava.length > 0) {
+    burnSurroundedTiles(tilesSurroundedByLava);
+  }
+
+  if (flagsState.eruptionCount) {
+    store.dispatch(actions.setEruptionCounter(flagsState.eruptionCount - 1));
+    store.dispatch(actions.incrementPlayerTurn());
+  } else if (
+    _.get(playersState, `details.${playersState.activePlayer}.population`) < 1
+  ) {
+    store.dispatch(actions.incrementPlayerTurn());
+  } else {
+    store.dispatch(actions.setRunCounter(2));
+    runForYourLives();
+  }
+};
 
 /**
  * @function highlightDangerZones
@@ -28,6 +96,7 @@ export const highlightDangerZones = tile => {
 
   const hotZones = [];
   let homeVent = "";
+  let recommendations = [];
   const gridKeys = Object.keys(gridState.grid);
   gridKeys.forEach(key => {
     if (_.get(gridState, `grid.${key}.lava`) === tile) {
@@ -46,6 +115,17 @@ export const highlightDangerZones = tile => {
     if (playerDetails.ai) {
       store.dispatch(
         actions.addRecommendations([{ square: homeVent, value: 1 }])
+      );
+      recommendations = [{ square: homeVent, value: 1 }];
+      placeLavaTile(recommendations[0].square);
+      store.dispatch(
+        actions.addSnackbar({
+          message: `${_.get(
+            playersState,
+            `details.${playersState.activePlayer}.name`
+          )} places ${tile} lava at ${recommendations[0].square}`,
+          type: "warning"
+        })
       );
     }
     store.dispatch(actions.setDangerZone([homeVent]));
@@ -90,10 +170,23 @@ export const highlightDangerZones = tile => {
         const sortedEvaluations = utils.randAndArrangeRecommendations(
           evaluations
         );
+        recommendations = sortedEvaluations;
         store.dispatch(actions.addRecommendations(sortedEvaluations));
       }
 
       store.dispatch(actions.setDangerZone(filteredZones));
+      if (playerDetails.ai) {
+        placeLavaTile(recommendations[0].square);
+        store.dispatch(
+          actions.addSnackbar({
+            message: `${_.get(
+              playersState,
+              `details.${playersState.activePlayer}.name`
+            )} places ${tile} lava at ${recommendations[0].square}`,
+            type: "warning"
+          })
+        );
+      }
     } else if (!flagsState.flags.includes("no-place-to-place")) {
       store.dispatch(actions.toggleFlags("no-place-to-place"));
     }
