@@ -12,7 +12,8 @@ import {
   Row
 } from "reactstrap";
 import { Formik, Field, Form } from "formik";
-import { IconButton, Button, ButtonBase, Tooltip } from "@material-ui/core";
+import { IconButton, Button, Tooltip } from "@material-ui/core";
+import BootstrapSwitchButton from "bootstrap-switch-button-react";
 
 import { aiPlayers } from "../../data/playerData";
 
@@ -28,19 +29,23 @@ import "./styles/modals.scss";
 const HumanOrAI = ({ formProps, name }) => {
   return (
     <Col xs={2}>
-      <ButtonBase
-        className="form-control"
-        onClick={() => {
-          formProps.setFieldValue(`${name}AI`, !formProps.values[`${name}AI`]);
-          formProps.setFieldValue(name, "");
-        }}
+      <Tooltip
+        title={`${formProps.values[`${name}AI`] ? "AI" : "Human"} Player`}
       >
-        {formProps.values[`${name}AI`] ? (
-          <i className="fas fa-robot" />
-        ) : (
-          <i className="fas fa-user" />
-        )}
-      </ButtonBase>
+        <div>
+          <BootstrapSwitchButton
+            checked={!formProps.values[`${name}AI`]}
+            onlabel={<i className="fas fa-user" />}
+            onstyle="light"
+            offstyle="light"
+            offlabel={<i className="fas fa-robot" />}
+            onChange={checked => {
+              formProps.setFieldValue(`${name}AI`, !checked);
+              formProps.setFieldValue(name, "");
+            }}
+          />
+        </div>
+      </Tooltip>
     </Col>
   );
 };
