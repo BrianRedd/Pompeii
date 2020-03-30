@@ -79,7 +79,6 @@ export const gameSetup = (
   gameSettings = {}
 ) => async dispatch => {
   const theseDetails = { ...details };
-  console.log("gameSettings:", gameSettings);
 
   const playersArray = Object.keys(theseDetails);
 

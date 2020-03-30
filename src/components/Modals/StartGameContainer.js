@@ -64,7 +64,6 @@ const StartGameContainer = props => {
    * @description After reading statistics, continue
    */
   const commitStartGame = values => {
-    console.log("commitStartGame; values:", values);
     localStorage.setItem("pompeii", JSON.stringify(values));
     const details = {};
     for (let i = 1; i <= parseFloat(values.numberOfPlayers); i += 1) {

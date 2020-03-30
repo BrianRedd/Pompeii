@@ -72,7 +72,6 @@ const MainContainer = props => {
   const setActivePlayer = useCallback(
     player => {
       if (player !== playersState.activePlayer) {
-        console.log("playersState:", playersState.activePlayer);
         addActivePlayer(player);
       }
     },
