@@ -8,6 +8,7 @@ import _ from "lodash";
 
 import * as types from "../types/types";
 import { playPompCard } from "./Logic/cardLogic";
+import { runToSquare } from "./Logic/runnerLogic";
 
 import BoardContainer from "./Board/BoardContainer";
 import DeckContainer from "./Deck/DeckContainer";
@@ -45,7 +46,7 @@ const Main = props => {
     pileEnabled,
     dangerZone,
     placeLavaTile,
-    runToSquare,
+    // runToSquare,
     placeRelatives,
     toggleFlags,
     placePerson
@@ -66,7 +67,7 @@ const Main = props => {
             performSacrifice={performSacrifice}
             runFlag={flagsState.runCount}
             placeRelatives={placeRelatives}
-            runToSquare={runToSquare}
+            // runToSquare={runToSquare}
             toggleFlags={toggleFlags}
           />
           {!flagsState.flags.includes("game-start") && (
@@ -170,7 +171,7 @@ Main.propTypes = {
   vacancy: PropTypes.func,
   performSacrifice: PropTypes.func,
   placeLavaTile: PropTypes.func,
-  runToSquare: PropTypes.func,
+  // runToSquare: PropTypes.func,
   placeRelatives: PropTypes.func,
   toggleFlags: PropTypes.func,
   placePerson: PropTypes.func
@@ -192,7 +193,7 @@ Main.defaultProps = {
   vacancy: () => {},
   performSacrifice: () => {},
   placeLavaTile: () => {},
-  runToSquare: () => {},
+  // runToSquare: () => {},
   placeRelatives: () => {},
   toggleFlags: () => {},
   placePerson: () => {}

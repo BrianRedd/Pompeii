@@ -8,9 +8,9 @@ import _ from "lodash";
 import actions from "../redux/Actions";
 import * as types from "../types/types";
 import * as constant from "../data/constants";
-import { escapeSquares } from "../data/gridData";
+// import { escapeSquares } from "../data/gridData";
 import * as helper from "./Logic/helperFunctions";
-import { randAndArrangeRecommendations } from "../utils/utilsCommon";
+// import { randAndArrangeRecommendations } from "../utils/utilsCommon";
 import { playPompCard } from "./Logic/cardLogic";
 import { placePerson } from "./Logic/placePeopleLogic";
 import { placeRelatives } from "./Logic/placeRelativesLogic";
@@ -48,7 +48,7 @@ const MainContainer = props => {
     takeCard,
     discardCard,
     incrementPlayerTurn,
-    incrementPlayerSaved,
+    // incrementPlayerSaved,
     updatePlayerHand,
     updateInstructions,
     placePeopleInSquare,
@@ -59,9 +59,9 @@ const MainContainer = props => {
     addActivePlayer,
     setEruptionCounter,
     setLavaTile,
-    setDangerZone,
-    setRunZone,
-    setRunner
+    setDangerZone
+    // setRunZone,
+    // setRunner
   } = props;
 
   /**
@@ -289,66 +289,66 @@ const MainContainer = props => {
     }
   };
 
-  /**
-   * @function runToSquare
-   * @description handle person running from one square to another
-   * @param {String} toSquare
-   */
-  const runToSquare = toSquare => {
-    setRecommendationArray([]);
-    const playerDetails = _.get(playersState, `details.${activePlayer}`);
-    console.log("runToSquare; toSquare:", toSquare);
-    if (toSquare === gridState.runFromSquare) {
-      setRunZone([]);
-      return;
-    }
-    let numberOfRuns = toSquare ? flagsState.runCount : 0;
+  // /**
+  //  * @function runToSquare
+  //  * @description handle person running from one square to another
+  //  * @param {String} toSquare
+  //  */
+  // const runToSquare = toSquare => {
+  //   setRecommendationArray([]);
+  //   const playerDetails = _.get(playersState, `details.${activePlayer}`);
+  //   console.log("runToSquare; toSquare:", toSquare);
+  //   if (toSquare === gridState.runFromSquare) {
+  //     setRunZone([]);
+  //     return;
+  //   }
+  //   let numberOfRuns = toSquare ? flagsState.runCount : 0;
 
-    if (numberOfRuns) {
-      const oldSquareOccupants = _.get(
-        gridState,
-        `grid.${gridState.runFromSquare}.occupants`
-      );
-      const oldSquareIdx = oldSquareOccupants
-        .map(person => person.player)
-        .indexOf(activePlayer);
-      oldSquareOccupants.splice(oldSquareIdx, 1);
-      placePeopleInSquare(gridState.runFromSquare, oldSquareOccupants);
+  //   if (numberOfRuns) {
+  //     const oldSquareOccupants = _.get(
+  //       gridState,
+  //       `grid.${gridState.runFromSquare}.occupants`
+  //     );
+  //     const oldSquareIdx = oldSquareOccupants
+  //       .map(person => person.player)
+  //       .indexOf(activePlayer);
+  //     oldSquareOccupants.splice(oldSquareIdx, 1);
+  //     placePeopleInSquare(gridState.runFromSquare, oldSquareOccupants);
 
-      if (escapeSquares.includes(toSquare)) {
-        incrementPlayerSaved(activePlayer, 1);
-        if (playerDetails.population === 1) {
-          numberOfRuns = 1;
-        }
-      } else {
-        const newSquareOccupants = _.get(
-          gridState,
-          `grid.${toSquare}.occupants`
-        );
-        newSquareOccupants.push({
-          player: activePlayer,
-          gender: _.get(gridState, "runner.gender"),
-          lastMoved:
-            oldSquareOccupants.length > 0 ? playersState.totalTurns : undefined
-        });
-      }
+  //     if (escapeSquares.includes(toSquare)) {
+  //       incrementPlayerSaved(activePlayer, 1);
+  //       if (playerDetails.population === 1) {
+  //         numberOfRuns = 1;
+  //       }
+  //     } else {
+  //       const newSquareOccupants = _.get(
+  //         gridState,
+  //         `grid.${toSquare}.occupants`
+  //       );
+  //       newSquareOccupants.push({
+  //         player: activePlayer,
+  //         gender: _.get(gridState, "runner.gender"),
+  //         lastMoved:
+  //           oldSquareOccupants.length > 0 ? playersState.totalTurns : undefined
+  //       });
+  //     }
 
-      numberOfRuns -= 1;
-    }
-    if (playerDetails.population < 1) {
-      numberOfRuns = 0;
-    }
-    setRunCounter(numberOfRuns);
-    setRunZone([]);
-    setRunner();
-    if (!numberOfRuns) {
-      incrementPlayerTurn();
-    } else if (playerDetails.ai) {
-      setRecommendationArray(
-        randAndArrangeRecommendations(helper.runnerRecommendations())
-      );
-    }
-  };
+  //     numberOfRuns -= 1;
+  //   }
+  //   if (playerDetails.population < 1) {
+  //     numberOfRuns = 0;
+  //   }
+  //   setRunCounter(numberOfRuns);
+  //   setRunZone([]);
+  //   setRunner();
+  //   if (!numberOfRuns) {
+  //     incrementPlayerTurn();
+  //   } else if (playerDetails.ai) {
+  //     setRecommendationArray(
+  //       randAndArrangeRecommendations(helper.runnerRecommendations())
+  //     );
+  //   }
+  // };
 
   return (
     <div data-test="container-main">
@@ -379,7 +379,7 @@ const MainContainer = props => {
         resolveNoPlaceToPlace={resolveNoPlaceToPlace}
         dangerZone={gridState.dangerZone}
         placeLavaTile={placeLavaTile}
-        runToSquare={runToSquare}
+        // runToSquare={runToSquare}
         toggleFlags={toggleFlags}
       />
     </div>
@@ -403,15 +403,15 @@ MainContainer.propTypes = {
   placePeopleInSquare: PropTypes.func,
   incrementStage: PropTypes.func,
   incrementPlayerCasualties: PropTypes.func,
-  incrementPlayerSaved: PropTypes.func,
+  // incrementPlayerSaved: PropTypes.func,
   setRunCounter: PropTypes.func,
   addRecommendations: PropTypes.func,
   addActivePlayer: PropTypes.func,
   setEruptionCounter: PropTypes.func,
   setLavaTile: PropTypes.func,
-  setDangerZone: PropTypes.func,
-  setRunZone: PropTypes.func,
-  setRunner: PropTypes.func
+  setDangerZone: PropTypes.func
+  // setRunZone: PropTypes.func,
+  // setRunner: PropTypes.func
 };
 
 MainContainer.defaultProps = {
@@ -431,15 +431,15 @@ MainContainer.defaultProps = {
   placePeopleInSquare: () => {},
   incrementStage: () => {},
   incrementPlayerCasualties: () => {},
-  incrementPlayerSaved: () => {},
+  // incrementPlayerSaved: () => {},
   setRunCounter: () => {},
   addRecommendations: () => {},
   addActivePlayer: () => {},
   setEruptionCounter: () => {},
   setLavaTile: () => {},
-  setDangerZone: () => {},
-  setRunZone: () => {},
-  setRunner: () => {}
+  setDangerZone: () => {}
+  // setRunZone: () => {},
+  // setRunner: () => {}
 };
 
 export const MainContainerTest = MainContainer;

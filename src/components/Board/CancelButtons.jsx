@@ -5,13 +5,14 @@ import PropTypes from "prop-types";
 import { IconButton, Tooltip } from "@material-ui/core";
 
 import * as types from "../../types/types";
+import { runToSquare } from "../Logic/runnerLogic";
 
 const CancelButtons = props => {
   const {
     flagsState: { flags, runCount },
     messageState: { stage },
     placeRelatives,
-    runToSquare,
+    // runToSquare,
     toggleFlags
   } = props;
 
@@ -52,7 +53,7 @@ CancelButtons.propTypes = {
   flagsState: types.flagsState.types,
   messageState: types.messageState.types,
   placeRelatives: PropTypes.func,
-  runToSquare: PropTypes.func,
+  // runToSquare: PropTypes.func,
   toggleFlags: PropTypes.func
 };
 
@@ -60,7 +61,7 @@ CancelButtons.defaultProps = {
   flagsState: types.flagsState.defaults,
   messageState: types.messageState.defaults,
   placeRelatives: () => {},
-  runToSquare: () => {},
+  // runToSquare: () => {},
   toggleFlags: () => {}
 };
 

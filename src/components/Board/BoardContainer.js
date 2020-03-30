@@ -32,7 +32,7 @@ const BoardContainer = props => {
     playersState,
     performSacrifice,
     placeRelatives,
-    runToSquare,
+    // runToSquare,
     toggleFlags
   } = props;
   return (
@@ -48,7 +48,7 @@ const BoardContainer = props => {
       <CancelButtons
         flagsState={flagsState}
         placeRelatives={placeRelatives}
-        runToSquare={runToSquare}
+        // runToSquare={runToSquare}
         toggleFlags={toggleFlags}
         messageState={messageState}
       />
@@ -63,7 +63,7 @@ BoardContainer.propTypes = {
   playersState: types.playersState.types,
   performSacrifice: PropTypes.func,
   placeRelatives: PropTypes.func,
-  runToSquare: PropTypes.func,
+  // runToSquare: PropTypes.func,
   toggleFlags: PropTypes.func
 };
 
@@ -74,7 +74,7 @@ BoardContainer.defaultProps = {
   playersState: types.playersState.defaults,
   performSacrifice: () => {},
   placeRelatives: () => {},
-  runToSquare: () => {},
+  // runToSquare: () => {},
   toggleFlags: () => {}
 };
 
