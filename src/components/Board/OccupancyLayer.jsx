@@ -75,7 +75,6 @@ OccupancySquare.propTypes = {
   grid: types.gridSquare.types,
   square: PropTypes.string,
   runCount: PropTypes.number,
-  selectRunner: PropTypes.func,
   performSacrifice: PropTypes.func
 };
 
@@ -85,7 +84,6 @@ OccupancySquare.defaultProps = {
   grid: types.gridSquare.defaults,
   square: "",
   runCount: 0,
-  selectRunner: () => {},
   performSacrifice: () => {}
 };
 
@@ -101,7 +99,6 @@ const OccupancyLayer = props => {
     playersState,
     performSacrifice,
     runCount,
-    selectRunner,
     messageState
   } = props;
 
@@ -120,7 +117,11 @@ const OccupancyLayer = props => {
         }}
       >
         {_.get(grid, `${square}.lava`) && (
-          <img alt="Lava" src={`/assets/tiles/${grid[square].lava}.png`} />
+          <img
+            alt="Lava"
+            className="lava-tile"
+            src={`/assets/tiles/${grid[square].lava}.png`}
+          />
         )}
         {_.get(grid, `${square}.occupants.length`) > 0 && (
           <OccupancySquare

@@ -77,6 +77,19 @@ export const runToSquare = toSquare => {
         utils.randAndArrangeRecommendations(helper.runnerRecommendations())
       )
     );
+    const sortedRecommendations = utils.randAndArrangeRecommendations(
+      helper.runnerRecommendations()
+    );
+    const selectedSquare = sortedRecommendations[0].square;
+    const census = _.get(gridState, `grid.${selectedSquare}.occupants`);
+    let selectedOccupant = "";
+    census.forEach(occupant => {
+      if (occupant.player === playersState.activePlayer) {
+        selectedOccupant = occupant;
+      }
+    });
+    // eslint-disable-next-line no-use-before-define
+    selectRunner(selectedOccupant, selectedSquare);
   }
 };
 
@@ -126,15 +139,26 @@ export const selectRunner = (person, square) => {
 
   store.dispatch(actions.setRunZone(targetZones));
   if (playerDetails.ai) {
-    const sortedRecommendations = utils.randAndArrangeRecommendations(
-      helper.runToRecommendations(targetZones, square)
-    );
-    store.dispatch(actions.addRecommendations(sortedRecommendations));
-    console.log(
-      "AI: going to send to runToSquare",
-      sortedRecommendations[0].square
-    );
-    runToSquare(sortedRecommendations[0].square);
+    setTimeout(() => {
+      const sortedRecommendations = utils.randAndArrangeRecommendations(
+        helper.runToRecommendations(targetZones, square)
+      );
+      store.dispatch(actions.addRecommendations(sortedRecommendations));
+      console.log(
+        "AI: going to send to runToSquare",
+        sortedRecommendations[0].square
+      );
+      store.dispatch(
+        actions.addSnackbar({
+          message: `${_.get(
+            playersState,
+            `details.${playersState.activePlayer}.name`
+          )} ran a person from ${square} to ${sortedRecommendations[0].square}`,
+          type: "success"
+        })
+      );
+      runToSquare(sortedRecommendations[0].square);
+    }, 750);
   }
 };
 
@@ -143,7 +167,6 @@ export const selectRunner = (person, square) => {
  * @description player can now run two of their people
  */
 export const runForYourLives = async () => {
-  console.log("runForYourLives");
   const storeState = store.getState();
   const { gridState, playersState } = storeState;
 
@@ -158,20 +181,20 @@ export const runForYourLives = async () => {
     })
   );
   if (playerDetails.ai) {
-    const sortedRecommendations = utils.randAndArrangeRecommendations(
-      helper.runnerRecommendations()
-    );
-    store.dispatch(actions.addRecommendations(sortedRecommendations));
-    const selectedSquare = sortedRecommendations[0].square;
-    const census = _.get(gridState, `grid.${selectedSquare}.occupants`);
-    let selectedOccupant = "";
-    census.forEach(occupant => {
-      if (occupant.player === playersState.activePlayer) {
-        selectedOccupant = occupant;
-      }
-    });
     setTimeout(() => {
-      selectRunner(selectedOccupant, selectedSquare);
-    }, 100);
+      const sortedRecommendations = utils.randAndArrangeRecommendations(
+        helper.runnerRecommendations()
+      );
+      store.dispatch(actions.addRecommendations(sortedRecommendations));
+      const startSquare = sortedRecommendations[0].square;
+      const census = _.get(gridState, `grid.${startSquare}.occupants`);
+      let selectedOccupant = "";
+      census.forEach(occupant => {
+        if (occupant.player === playersState.activePlayer) {
+          selectedOccupant = occupant;
+        }
+      });
+      selectRunner(selectedOccupant, startSquare);
+    }, 750);
   }
 };

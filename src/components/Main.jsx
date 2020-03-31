@@ -46,7 +46,6 @@ const Main = props => {
     pileEnabled,
     dangerZone,
     placeLavaTile,
-    // runToSquare,
     placeRelatives,
     toggleFlags,
     placePerson
@@ -67,7 +66,6 @@ const Main = props => {
             performSacrifice={performSacrifice}
             runFlag={flagsState.runCount}
             placeRelatives={placeRelatives}
-            // runToSquare={runToSquare}
             toggleFlags={toggleFlags}
           />
           {!flagsState.flags.includes("game-start") && (
@@ -101,12 +99,12 @@ const Main = props => {
             </div>
           )}
         </Row>
-        {(_.get(gamePlayState, "gameSettings.showStrategyValues") ||
-          messageState.stage === 2) && (
-          <RecommendationHighlighter
-            recommendations={_.get(gamePlayState, "recommendations", [])}
-          />
-        )}
+        {_.get(gamePlayState, "gameSettings.showStrategyValues") &&
+          messageState.stage === 2 && (
+            <RecommendationHighlighter
+              recommendations={_.get(gamePlayState, "recommendations", [])}
+            />
+          )}
         {(() => {
           if (
             messageState.stage < 2 &&
@@ -124,7 +122,13 @@ const Main = props => {
               />
             );
           }
-          if (flagsState.runCount) {
+          if (
+            flagsState.runCount &&
+            !(
+              _.get(playersState, `details.${playersState.activePlayer}.ai`) ||
+              _.get(gamePlayState, "gameSettings.showStrategyValues")
+            )
+          ) {
             return (
               <PlacementHighlighter
                 gridArray={gridState.runZone}
@@ -136,16 +140,24 @@ const Main = props => {
               />
             );
           }
-          return (
-            <PlacementHighlighter
-              gridArray={dangerZone}
-              selectSquare={placeLavaTile}
-              validation={() => {
-                return true;
-              }}
-              activePlayer={playersState.activePlayer}
-            />
-          );
+          if (
+            !(
+              _.get(playersState, `details.${playersState.activePlayer}.ai`) ||
+              _.get(gamePlayState, "gameSettings.showStrategyValues")
+            )
+          ) {
+            return (
+              <PlacementHighlighter
+                gridArray={dangerZone}
+                selectSquare={placeLavaTile}
+                validation={() => {
+                  return true;
+                }}
+                activePlayer={playersState.activePlayer}
+              />
+            );
+          }
+          return <div />;
         })()}
       </Col>
       {flagsState.flags.includes("game-over") && <GameOverContainer />}
@@ -171,7 +183,6 @@ Main.propTypes = {
   vacancy: PropTypes.func,
   performSacrifice: PropTypes.func,
   placeLavaTile: PropTypes.func,
-  // runToSquare: PropTypes.func,
   placeRelatives: PropTypes.func,
   toggleFlags: PropTypes.func,
   placePerson: PropTypes.func
@@ -193,7 +204,6 @@ Main.defaultProps = {
   vacancy: () => {},
   performSacrifice: () => {},
   placeLavaTile: () => {},
-  // runToSquare: () => {},
   placeRelatives: () => {},
   toggleFlags: () => {},
   placePerson: () => {}
