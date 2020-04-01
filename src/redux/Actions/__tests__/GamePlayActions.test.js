@@ -34,7 +34,7 @@ test("gameSetup", async () => {
       hand: [],
       color: "0, 0, 0",
       casualties: 0,
-      population: 0,
+      population: [],
       saved: 0,
       ai: false
     },
@@ -43,7 +43,7 @@ test("gameSetup", async () => {
       hand: [],
       color: "0, 0, 0",
       casualties: 0,
-      population: 0,
+      population: [],
       saved: 0,
       ai: true
     }

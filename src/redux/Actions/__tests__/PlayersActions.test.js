@@ -63,7 +63,7 @@ test("updatePlayerHand", () => {
 
 test("incrementPlayerPopulation", () => {
   const playerId = "player1";
-  const population = 1;
+  const population = [{ id: 2 }];
   const expectedAction = {
     type: actionTypes.INCREMENT_PLAYER_POPULATION,
     payload: {

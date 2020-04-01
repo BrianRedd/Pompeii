@@ -68,16 +68,19 @@ test("should handle UPDATE_PLAYER_HAND action", () => {
 test("should handle INCREMENT_PLAYER_POPULATION action", () => {
   const payload = {
     playerId: "player1",
-    population: 1
+    population: [{ id: "1" }]
   };
   const action = {
     type: actionTypes.INCREMENT_PLAYER_POPULATION,
     payload
   };
-  const state = Reducer({ details: { player1: { population: 1 } } }, action);
+  const state = Reducer(
+    { details: { player1: { personObj: { id: "2" } } } },
+    action
+  );
   expect(state.details).toEqual({
     player1: {
-      population: 2
+      population: [{ id: "1" }, { id: "2" }]
     }
   });
 });

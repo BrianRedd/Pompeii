@@ -55,11 +55,11 @@ export const updatePlayerHand = (playerId, hand) => ({
  * @function incrementPlayerPopulation
  * @description adds/updates single player population to PlayersState store
  * @param {String} playerId
- * @param {Object} population - player population increase
+ * @param {Object} personObj - person
  */
-export const incrementPlayerPopulation = (playerId, population) => ({
+export const incrementPlayerPopulation = (playerId, personObj) => ({
   type: actionTypes.INCREMENT_PLAYER_POPULATION,
-  payload: { playerId, population }
+  payload: { playerId, personObj }
 });
 
 /**
@@ -163,9 +163,18 @@ export const incrementPlayerTurn = () => (dispatch, getState) => {
   // game over?
   // out of tiles
   // no people left on board
+  const census = [];
+  Object.values(playersState.details).forEach(arr => {
+    console.log(arr);
+    census.concat(arr.population);
+  });
+  console.log("census:", census);
   if (
-    pile.length === 0 ||
-    _.sum(Object.values(playersState.details).map(arr => arr.population)) === 0
+    pile.length === // TODO
+    0 /* ||
+    _.sum(
+      Object.values(playersState.details).map(arr => arr.population.length)
+    ) === 0 */
   ) {
     const gridArray = Object.keys(grid);
     gridArray.forEach(square => {

@@ -48,7 +48,7 @@ export const runToSquare = toSquare => {
       store.dispatch(
         actions.incrementPlayerSaved(playersState.activePlayer, 1)
       );
-      if (playerDetails.population === 1) {
+      if (playerDetails.population.length === 1) {
         numberOfRuns = 1;
       }
     } else {
@@ -63,7 +63,7 @@ export const runToSquare = toSquare => {
 
     numberOfRuns -= 1;
   }
-  if (playerDetails.population < 1) {
+  if (playerDetails.population.length < 1) {
     numberOfRuns = 0;
   }
   store.dispatch(actions.setRunCounter(numberOfRuns));
@@ -122,7 +122,7 @@ export const selectRunner = (person, square) => {
   }
   if (
     person.lastMoved === playersState.totalTurns &&
-    playerDetails.population !== 1
+    playerDetails.population.length !== 1
   ) {
     store.dispatch(
       actions.addSnackbar({

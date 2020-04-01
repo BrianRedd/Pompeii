@@ -43,17 +43,18 @@ export const placePerson = grid => {
   const currentOccupants = _.get(gridState, `grid.${grid}.occupants`, []);
 
   // place person in square
+  const personObj = {
+    id: `P${playersState.players.indexOf(playersState.activePlayer)}-${
+      playersState.details[playersState.activePlayer].population.length
+    }`,
+    player: playersState.activePlayer,
+    gender: Math.round(Math.random()) ? "male" : "female"
+  };
   store.dispatch(
-    actions.placePeopleInSquare(grid, [
-      ...currentOccupants,
-      {
-        player: playersState.activePlayer,
-        gender: Math.round(Math.random()) ? "male" : "female"
-      }
-    ])
+    actions.placePeopleInSquare(grid, [...currentOccupants, personObj])
   );
   store.dispatch(
-    actions.incrementPlayerPopulation(playersState.activePlayer, 1)
+    actions.incrementPlayerPopulation(playersState.activePlayer, personObj)
   );
   store.dispatch(
     actions.addSnackbar({

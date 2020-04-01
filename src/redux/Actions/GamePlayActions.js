@@ -92,11 +92,14 @@ export const gameSetup = (
       for (let i = 0; i < actualPop; i += 1) {
         const player =
           playersArray[Math.floor(Math.random() * playersArray.length)];
-        occupants.push({
+        const personObj = {
+          id: `P${i}-${theseDetails[player].population.length}`,
           player,
           gender: Math.floor(Math.random() * 2) === 1 ? "male" : "female"
-        });
-        theseDetails[player].population += 1;
+        };
+        occupants.push(personObj);
+        theseDetails[player].population.push(personObj); // TODO
+        console.log("theseDetails:", theseDetails);
       }
       gridSquares[grid].occupants = occupants;
     });

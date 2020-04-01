@@ -195,8 +195,8 @@ const MainContainer = props => {
           .filter(player => player.player !== activePlayer)
           .sort((a, b) =>
             // TODO if chaotic, perhaps a 0-1 to this comparison
-            a.population - a.casualties * 0.1 <
-            b.population - b.casualties * 0.1
+            a.population.length - a.casualties * 0.1 <
+            b.population.length - b.casualties * 0.1
               ? 1
               : -1
           );
@@ -281,74 +281,15 @@ const MainContainer = props => {
     if (flagsState.eruptionCount) {
       setEruptionCounter(flagsState.eruptionCount - 1);
       incrementPlayerTurn();
-    } else if (_.get(playersState, `details.${activePlayer}.population`) < 1) {
+    } else if (
+      _.get(playersState, `details.${activePlayer}.population.length`) < 1
+    ) {
       incrementPlayerTurn();
     } else {
       setRunCounter(2);
       runForYourLives();
     }
   };
-
-  // /**
-  //  * @function runToSquare
-  //  * @description handle person running from one square to another
-  //  * @param {String} toSquare
-  //  */
-  // const runToSquare = toSquare => {
-  //   setRecommendationArray([]);
-  //   const playerDetails = _.get(playersState, `details.${activePlayer}`);
-  //   console.log("runToSquare; toSquare:", toSquare);
-  //   if (toSquare === gridState.runFromSquare) {
-  //     setRunZone([]);
-  //     return;
-  //   }
-  //   let numberOfRuns = toSquare ? flagsState.runCount : 0;
-
-  //   if (numberOfRuns) {
-  //     const oldSquareOccupants = _.get(
-  //       gridState,
-  //       `grid.${gridState.runFromSquare}.occupants`
-  //     );
-  //     const oldSquareIdx = oldSquareOccupants
-  //       .map(person => person.player)
-  //       .indexOf(activePlayer);
-  //     oldSquareOccupants.splice(oldSquareIdx, 1);
-  //     placePeopleInSquare(gridState.runFromSquare, oldSquareOccupants);
-
-  //     if (escapeSquares.includes(toSquare)) {
-  //       incrementPlayerSaved(activePlayer, 1);
-  //       if (playerDetails.population === 1) {
-  //         numberOfRuns = 1;
-  //       }
-  //     } else {
-  //       const newSquareOccupants = _.get(
-  //         gridState,
-  //         `grid.${toSquare}.occupants`
-  //       );
-  //       newSquareOccupants.push({
-  //         player: activePlayer,
-  //         gender: _.get(gridState, "runner.gender"),
-  //         lastMoved:
-  //           oldSquareOccupants.length > 0 ? playersState.totalTurns : undefined
-  //       });
-  //     }
-
-  //     numberOfRuns -= 1;
-  //   }
-  //   if (playerDetails.population < 1) {
-  //     numberOfRuns = 0;
-  //   }
-  //   setRunCounter(numberOfRuns);
-  //   setRunZone([]);
-  //   setRunner();
-  //   if (!numberOfRuns) {
-  //     incrementPlayerTurn();
-  //   } else if (playerDetails.ai) {
-  //     setRecommendationArray(
-  //       randAndArrangeRecommendations(helper.runnerRecommendations())
-  //     );
-  //   }
-  // };
 
   return (
     <div data-test="container-main">

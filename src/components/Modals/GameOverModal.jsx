@@ -42,7 +42,7 @@ const PlayerStats = ({ details, winner }) => {
         </Row>
         <Row>
           <Col xs={6}>Population:</Col>
-          <Col xs={6}>{details[player].population}</Col>
+          <Col xs={6}>{details[player].population.length}</Col>
         </Row>
       </Col>
     );

@@ -19,7 +19,7 @@ const OccupancySquare = ({
 }) => {
   const occupancySquare = _.get(grid, `${square}.occupants`, []).map(
     (person, idx) => {
-      const key = `${person.player}-${person.gender}-${idx}`;
+      const key = `${person.id}`;
       const color = `rgb(${_.get(
         playersState,
         `details.${person.player}.color`
@@ -43,7 +43,7 @@ const OccupancySquare = ({
       return (
         <Tooltip key={key} title={`${playerName}`} placement="top" arrow>
           <ButtonBase
-            className={`person${
+            className={`person ${person.id}${
               (playersState.players[playersState.turn] === person.player &&
                 runCount) ||
               (playersState.players[playersState.turn] !== person.player &&

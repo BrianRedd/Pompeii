@@ -124,6 +124,7 @@ export const gamePlayState = {
  */
 export const occupant = {
   types: shape({
+    id: string,
     player: string,
     gender: string,
     lastMoved: number
@@ -221,7 +222,7 @@ export const playerDetails = {
       hand: arrayOf(string),
       color: string,
       casualties: number,
-      population: number,
+      population: arrayOf(object),
       saved: number,
       ai: bool
     })
@@ -232,7 +233,7 @@ export const playerDetails = {
       hand: [],
       color: "#FFFFFF",
       casualties: 0,
-      population: 0,
+      population: [],
       saved: 0,
       ai: false
     }

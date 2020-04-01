@@ -4,6 +4,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { ButtonBase } from "@material-ui/core";
 import { Col, Row } from "reactstrap";
+import _ from "lodash";
 
 import * as types from "../../types/types";
 
@@ -106,7 +107,9 @@ const Player = props => {
             <i className="fas fa-user ml-1 fa-xs" />
           )}
         </span>
-        {stage < 2 && <span>Population: {details.population}</span>}
+        {stage < 2 && (
+          <span>Population: {_.get(details, "population", []).length}</span>
+        )}
         {stage < 2 && <span>Casualites: {details.casualties}</span>}
       </legend>
       <div
@@ -138,7 +141,7 @@ const Player = props => {
               <Col xs={4}>
                 <h6 className="d-flex justify-content-center">Population</h6>
                 <PeopleIcons
-                  number={details.population}
+                  number={details.population.length}
                   color={details.color}
                   type="fas fa-male"
                 />

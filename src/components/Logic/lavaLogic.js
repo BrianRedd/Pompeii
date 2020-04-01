@@ -66,7 +66,8 @@ export const placeLavaTile = square => {
     store.dispatch(actions.setEruptionCounter(flagsState.eruptionCount - 1));
     store.dispatch(actions.incrementPlayerTurn());
   } else if (
-    _.get(playersState, `details.${playersState.activePlayer}.population`) < 1
+    _.get(playersState, `details.${playersState.activePlayer}.population`, [])
+      .length < 1
   ) {
     store.dispatch(actions.incrementPlayerTurn());
   } else {
