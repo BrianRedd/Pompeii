@@ -39,9 +39,12 @@ const GameOverContainer = props => {
         code: player,
         name: _.get(playersState, `details.${player}.name`),
         victoryPoints:
-          parseFloat(_.get(playersState, `details.${player}.saved`)) * 100 +
+          parseFloat(_.get(playersState, `details.${player}.saved.length`, 0)) *
+            100 +
           99 -
-          parseFloat(_.get(playersState, `details.${player}.casualties`))
+          parseFloat(
+            _.get(playersState, `details.${player}.casualties.length`, 0)
+          )
       };
     });
     setRankings(

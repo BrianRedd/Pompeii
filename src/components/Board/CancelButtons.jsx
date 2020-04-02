@@ -12,7 +12,6 @@ const CancelButtons = props => {
     flagsState: { flags, runCount },
     messageState: { stage },
     placeRelatives,
-    // runToSquare,
     toggleFlags
   } = props;
 
@@ -53,7 +52,6 @@ CancelButtons.propTypes = {
   flagsState: types.flagsState.types,
   messageState: types.messageState.types,
   placeRelatives: PropTypes.func,
-  // runToSquare: PropTypes.func,
   toggleFlags: PropTypes.func
 };
 
@@ -61,7 +59,6 @@ CancelButtons.defaultProps = {
   flagsState: types.flagsState.defaults,
   messageState: types.messageState.defaults,
   placeRelatives: () => {},
-  // runToSquare: () => {},
   toggleFlags: () => {}
 };
 

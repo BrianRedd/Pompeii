@@ -2,7 +2,7 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import { ButtonBase } from "@material-ui/core";
+import { ButtonBase, Tooltip } from "@material-ui/core";
 import { Col, Row } from "reactstrap";
 import _ from "lodash";
 
@@ -10,28 +10,54 @@ import * as types from "../../types/types";
 
 import Card, { CardBack } from "../Helpers/Card";
 
-const PeopleIcons = ({ number, color, type }) => {
-  const peopleIcons = [];
-  for (let i = 0; i < number; i += 1) {
-    peopleIcons.push(
-      <div key={i} className="person">
-        <span className={`${type} fa-lg`} style={{ color: `rgb(${color})` }} />
-      </div>
+// const PeopleIcons = ({ number, color, type }) => {
+//   const peopleIcons = [];
+//   for (let i = 0; i < number; i += 1) {
+//     peopleIcons.push(
+//       <div key={i} className="person">
+//         <span className={`${type} fa-lg`} style={{ color: `rgb(${color})` }} />
+//       </div>
+//     );
+//   }
+//   return <div>{peopleIcons}</div>;
+// };
+
+// PeopleIcons.propTypes = {
+//   number: PropTypes.number,
+//   color: PropTypes.string,
+//   type: PropTypes.string
+// };
+
+// PeopleIcons.defaultProps = {
+//   number: 0,
+//   color: "255, 255, 255",
+//   type: "fa fa-male"
+// };
+
+const PopulationIcons = ({ population, color }) => {
+  const populationIcons = population.map(person => {
+    return (
+      <Tooltip key={person.id} title={person.id}>
+        <div className="person">
+          <span
+            className={`fa fa-${person.gender} fa-lg`}
+            style={{ color: `rgb(${color})` }}
+          />
+        </div>
+      </Tooltip>
     );
-  }
-  return <div>{peopleIcons}</div>;
+  });
+  return <div>{populationIcons}</div>;
 };
 
-PeopleIcons.propTypes = {
-  number: PropTypes.number,
-  color: PropTypes.string,
-  type: PropTypes.string
+PopulationIcons.propTypes = {
+  population: PropTypes.arrayOf(PropTypes.object),
+  color: PropTypes.string
 };
 
-PeopleIcons.defaultProps = {
-  number: 0,
-  color: "255, 255, 255",
-  type: "fa fa-male"
+PopulationIcons.defaultProps = {
+  population: [],
+  color: "255, 255, 255"
 };
 
 const HandCards = ({ hand, ai, myTurn, playCard }) => {
@@ -110,7 +136,9 @@ const Player = props => {
         {stage < 2 && (
           <span>Population: {_.get(details, "population", []).length}</span>
         )}
-        {stage < 2 && <span>Casualites: {details.casualties}</span>}
+        {stage < 2 && (
+          <span>Casualites: {_.get(details, "casualties", []).length}</span>
+        )}
       </legend>
       <div
         style={{
@@ -132,26 +160,23 @@ const Player = props => {
             <Row className="ml-4 mr-4">
               <Col xs={4}>
                 <h6 className="d-flex justify-content-center">Saved</h6>
-                <PeopleIcons
-                  number={details.saved}
+                <PopulationIcons
+                  population={_.get(details, "saved", [])}
                   color={details.color}
-                  type="fas fa-grin-alt"
                 />
               </Col>
               <Col xs={4}>
                 <h6 className="d-flex justify-content-center">Population</h6>
-                <PeopleIcons
-                  number={details.population.length}
+                <PopulationIcons
+                  population={_.get(details, "population", [])}
                   color={details.color}
-                  type="fas fa-male"
                 />
               </Col>
               <Col xs={4}>
                 <h6 className="d-flex justify-content-center">Casualites</h6>
-                <PeopleIcons
-                  number={details.casualties}
+                <PopulationIcons
+                  population={_.get(details, "casualties", [])}
                   color={details.color}
-                  type="fas fa-dizzy"
                 />
               </Col>
             </Row>

@@ -8,9 +8,7 @@ import _ from "lodash";
 import actions from "../redux/Actions";
 import * as types from "../types/types";
 import * as constant from "../data/constants";
-// import { escapeSquares } from "../data/gridData";
 import * as helper from "./Logic/helperFunctions";
-// import { randAndArrangeRecommendations } from "../utils/utilsCommon";
 import { playPompCard } from "./Logic/cardLogic";
 import { placePerson } from "./Logic/placePeopleLogic";
 import { placeRelatives } from "./Logic/placeRelativesLogic";
@@ -48,7 +46,6 @@ const MainContainer = props => {
     takeCard,
     discardCard,
     incrementPlayerTurn,
-    // incrementPlayerSaved,
     updatePlayerHand,
     updateInstructions,
     placePeopleInSquare,
@@ -60,8 +57,6 @@ const MainContainer = props => {
     setEruptionCounter,
     setLavaTile,
     setDangerZone
-    // setRunZone,
-    // setRunner
   } = props;
 
   /**
@@ -157,7 +152,7 @@ const MainContainer = props => {
     currentOccupants.splice(idx, 1);
 
     placePeopleInSquare(square, currentOccupants);
-    incrementPlayerCasualties(personObj.player, 1);
+    incrementPlayerCasualties(personObj.player, personObj);
     updateInstructions({
       text: `${_.get(playersState, `details.${activePlayer}.name`)}: ${
         constant.DRAW
@@ -195,8 +190,8 @@ const MainContainer = props => {
           .filter(player => player.player !== activePlayer)
           .sort((a, b) =>
             // TODO if chaotic, perhaps a 0-1 to this comparison
-            a.population.length - a.casualties * 0.1 <
-            b.population.length - b.casualties * 0.1
+            a.population.length - a.casualties.length * 0.1 <
+            b.population.length - b.casualties.length * 0.1
               ? 1
               : -1
           );
@@ -320,7 +315,6 @@ const MainContainer = props => {
         resolveNoPlaceToPlace={resolveNoPlaceToPlace}
         dangerZone={gridState.dangerZone}
         placeLavaTile={placeLavaTile}
-        // runToSquare={runToSquare}
         toggleFlags={toggleFlags}
       />
     </div>
@@ -344,15 +338,12 @@ MainContainer.propTypes = {
   placePeopleInSquare: PropTypes.func,
   incrementStage: PropTypes.func,
   incrementPlayerCasualties: PropTypes.func,
-  // incrementPlayerSaved: PropTypes.func,
   setRunCounter: PropTypes.func,
   addRecommendations: PropTypes.func,
   addActivePlayer: PropTypes.func,
   setEruptionCounter: PropTypes.func,
   setLavaTile: PropTypes.func,
   setDangerZone: PropTypes.func
-  // setRunZone: PropTypes.func,
-  // setRunner: PropTypes.func
 };
 
 MainContainer.defaultProps = {
@@ -372,15 +363,12 @@ MainContainer.defaultProps = {
   placePeopleInSquare: () => {},
   incrementStage: () => {},
   incrementPlayerCasualties: () => {},
-  // incrementPlayerSaved: () => {},
   setRunCounter: () => {},
   addRecommendations: () => {},
   addActivePlayer: () => {},
   setEruptionCounter: () => {},
   setLavaTile: () => {},
   setDangerZone: () => {}
-  // setRunZone: () => {},
-  // setRunner: () => {}
 };
 
 export const MainContainerTest = MainContainer;

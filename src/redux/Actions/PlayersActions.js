@@ -66,11 +66,11 @@ export const incrementPlayerPopulation = (playerId, personObj) => ({
  * @function incrementPlayerCasualtiesInStore
  * @description adds/updates single player casualties to PlayersState store
  * @param {String} playerId
- * @param {Number} casualties - player casualties increase
+ * @param {Number} personObj - player casualty
  */
-export const incrementPlayerCasualtiesInStore = (playerId, casualties) => ({
+export const incrementPlayerCasualtiesInStore = (playerId, personObj) => ({
   type: actionTypes.INCREMENT_PLAYER_CASUALTIES,
-  payload: { playerId, casualties }
+  payload: { playerId, personObj }
 });
 
 /**
@@ -87,9 +87,9 @@ export const addActivePlayer = playerId => ({
  * @function incrementPlayerCasualties
  * @description adds/updates single player casualties with snackbar
  * @param {String} playerId
- * @param {Number} casualties - player casualties increase
+ * @param {Object} personObj - player casualty
  */
-export const incrementPlayerCasualties = (playerId, casualties) => (
+export const incrementPlayerCasualties = (playerId, personObj) => (
   dispatch,
   getState
 ) => {
@@ -102,27 +102,27 @@ export const incrementPlayerCasualties = (playerId, casualties) => (
       })
     );
   }, 10);
-  dispatch(incrementPlayerCasualtiesInStore(playerId, casualties));
+  dispatch(incrementPlayerCasualtiesInStore(playerId, personObj));
 };
 
 /**
  * @function incrementPlayerSavedInStore
  * @description adds/updates single player saved to PlayersState store
  * @param {String} playerId
- * @param {Object} saved - player saved increase
+ * @param {Object} personObj - saved person
  */
-export const incrementPlayerSavedInStore = (playerId, saved) => ({
+export const incrementPlayerSavedInStore = (playerId, personObj) => ({
   type: actionTypes.INCREMENT_PLAYER_SAVED,
-  payload: { playerId, saved }
+  payload: { playerId, personObj }
 });
 
 /**
  * @function incrementPlayerSaved
  * @description adds/updates single player saved with snackbar
  * @param {String} playerId
- * @param {Number} saved - player saved increase
+ * @param {Number} personObj - saved person
  */
-export const incrementPlayerSaved = (playerId, saved) => (
+export const incrementPlayerSaved = (playerId, personObj) => (
   dispatch,
   getState
 ) => {
@@ -135,7 +135,7 @@ export const incrementPlayerSaved = (playerId, saved) => (
       })
     );
   }, 10);
-  dispatch(incrementPlayerSavedInStore(playerId, saved));
+  dispatch(incrementPlayerSavedInStore(playerId, personObj));
 };
 
 /**
@@ -165,10 +165,8 @@ export const incrementPlayerTurn = () => (dispatch, getState) => {
   // no people left on board
   const census = [];
   Object.values(playersState.details).forEach(arr => {
-    console.log(arr);
     census.concat(arr.population);
   });
-  console.log("census:", census);
   if (
     pile.length === // TODO
     0 /* ||

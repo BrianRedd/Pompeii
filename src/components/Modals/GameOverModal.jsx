@@ -34,15 +34,15 @@ const PlayerStats = ({ details, winner }) => {
         </h5>
         <Row>
           <Col xs={6}>Saved:</Col>
-          <Col xs={6}>{details[player].saved}</Col>
+          <Col xs={6}>{_.get(details, `${player}.saved.length`, 0)}</Col>
         </Row>
         <Row>
           <Col xs={6}>Casualties:</Col>
-          <Col xs={6}>{details[player].casualties}</Col>
+          <Col xs={6}>{_.get(details, `${player}.casualties.length`, 0)}</Col>
         </Row>
         <Row>
           <Col xs={6}>Population:</Col>
-          <Col xs={6}>{details[player].population.length}</Col>
+          <Col xs={6}>{_.get(details, `${player}.population.length`, 0)}</Col>
         </Row>
       </Col>
     );

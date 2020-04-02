@@ -37,16 +37,16 @@ export const runToSquare = toSquare => {
       `grid.${gridState.runFromSquare}.occupants`
     );
     const oldSquareIdx = oldSquareOccupants
-      .map(person => person.player)
+      .map(occupant => occupant.player)
       .indexOf(playersState.activePlayer);
-    oldSquareOccupants.splice(oldSquareIdx, 1);
+    const personObj = oldSquareOccupants.splice(oldSquareIdx, 1);
     store.dispatch(
       actions.placePeopleInSquare(gridState.runFromSquare, oldSquareOccupants)
     );
 
     if (escapeSquares.includes(toSquare)) {
       store.dispatch(
-        actions.incrementPlayerSaved(playersState.activePlayer, 1)
+        actions.incrementPlayerSaved(playersState.activePlayer, personObj[0])
       );
       if (playerDetails.population.length === 1) {
         numberOfRuns = 1;
@@ -144,10 +144,6 @@ export const selectRunner = (person, square) => {
         helper.runToRecommendations(targetZones, square)
       );
       store.dispatch(actions.addRecommendations(sortedRecommendations));
-      console.log(
-        "AI: going to send to runToSquare",
-        sortedRecommendations[0].square
-      );
       store.dispatch(
         actions.addSnackbar({
           message: `${_.get(

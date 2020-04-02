@@ -71,9 +71,9 @@ const StartGameContainer = props => {
         name: values[`player${i}`],
         hand: [],
         color: playerColors[i - 1],
-        casualties: 0,
+        casualties: [],
         population: [],
-        saved: 0,
+        saved: [],
         ai: values[`player${i}AI`]
       };
     }

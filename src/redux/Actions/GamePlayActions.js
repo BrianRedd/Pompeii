@@ -90,16 +90,15 @@ export const gameSetup = (
       const actualPop = Math.round(Math.random() * potentialPop);
       const occupants = [];
       for (let i = 0; i < actualPop; i += 1) {
-        const player =
-          playersArray[Math.floor(Math.random() * playersArray.length)];
+        const rand = Math.floor(Math.random() * playersArray.length);
+        const player = playersArray[rand];
         const personObj = {
-          id: `P${i}-${theseDetails[player].population.length}`,
+          id: `P${rand}-${theseDetails[player].population.length}s`,
           player,
           gender: Math.floor(Math.random() * 2) === 1 ? "male" : "female"
         };
         occupants.push(personObj);
         theseDetails[player].population.push(personObj); // TODO
-        console.log("theseDetails:", theseDetails);
       }
       gridSquares[grid].occupants = occupants;
     });

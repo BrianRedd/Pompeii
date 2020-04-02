@@ -23,7 +23,7 @@ export const burnSurroundedTiles = tiles => {
     store.dispatch(actions.placeLavaTileOnSquare(tile, "Lava"));
 
     _.get(gridState, `grid.${tile}.occupants`, []).forEach(person => {
-      store.dispatch(actions.incrementPlayerCasualties(person.player, 1));
+      store.dispatch(actions.incrementPlayerCasualties(person.player, person));
     });
     store.dispatch(actions.placePeopleInSquare(tile, []));
   });
@@ -42,7 +42,7 @@ export const placeLavaTile = square => {
   store.dispatch(actions.placeLavaTileOnSquare(square, tileState.lavaTile));
 
   _.get(gridState, `grid.${square}.occupants`, []).forEach(person => {
-    store.dispatch(actions.incrementPlayerCasualties(person.player, 1));
+    store.dispatch(actions.incrementPlayerCasualties(person.player, person));
   });
   store.dispatch(actions.placePeopleInSquare(square, []));
 

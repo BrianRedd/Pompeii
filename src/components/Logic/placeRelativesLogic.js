@@ -37,17 +37,18 @@ export const placeRelatives = grid => {
 
   if (grid) {
     // place relative in square
+    const personObj = {
+      id: `P${playersState.players.indexOf(playersState.activePlayer)}-${
+        playersState.details[playersState.activePlayer].population.length
+      }r`,
+      player: playersState.activePlayer,
+      gender: Math.round(Math.random()) ? "male" : "female"
+    };
     store.dispatch(
-      actions.placePeopleInSquare(grid, [
-        ...currentOccupants,
-        {
-          player: playersState.activePlayer,
-          gender: Math.round(Math.random()) ? "male" : "female"
-        }
-      ])
+      actions.placePeopleInSquare(grid, [...currentOccupants, personObj])
     );
     store.dispatch(
-      actions.incrementPlayerPopulation(playersState.activePlayer, 1)
+      actions.incrementPlayerPopulation(playersState.activePlayer, personObj)
     );
     thisPlacedRelatives = [...gamePlayState.placedRelatives, grid];
     store.dispatch(actions.setPlacedRelatives(thisPlacedRelatives));

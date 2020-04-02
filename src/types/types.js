@@ -221,9 +221,9 @@ export const playerDetails = {
       name: string,
       hand: arrayOf(string),
       color: string,
-      casualties: number,
+      casualties: arrayOf(object),
       population: arrayOf(object),
-      saved: number,
+      saved: arrayOf(object),
       ai: bool
     })
   }),
@@ -232,9 +232,9 @@ export const playerDetails = {
       name: "",
       hand: [],
       color: "#FFFFFF",
-      casualties: 0,
+      casualties: [],
       population: [],
-      saved: 0,
+      saved: [],
       ai: false
     }
   }

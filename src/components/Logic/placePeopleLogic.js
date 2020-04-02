@@ -46,7 +46,7 @@ export const placePerson = grid => {
   const personObj = {
     id: `P${playersState.players.indexOf(playersState.activePlayer)}-${
       playersState.details[playersState.activePlayer].population.length
-    }`,
+    }p`,
     player: playersState.activePlayer,
     gender: Math.round(Math.random()) ? "male" : "female"
   };

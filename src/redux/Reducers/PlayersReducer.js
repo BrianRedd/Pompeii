@@ -14,7 +14,10 @@ import { compareCards } from "../../utils/utilsCommon";
 const playersState = (state = types.playersState.defaults, action) => {
   const { type, payload } = action;
   let totalTurns;
-  let playerPopulation = [];
+  let populationArray = [];
+  let casualtiesArray = [];
+  let savedArray = [];
+  let idx;
   switch (type) {
     case actions.SET_PLAYERS_ARRAY:
       return {
@@ -46,48 +49,73 @@ const playersState = (state = types.playersState.defaults, action) => {
         }
       };
     case actions.INCREMENT_PLAYER_POPULATION:
-      playerPopulation = _.get(
+      populationArray = _.get(
         state,
         `details.${payload.playerId}.population`,
         []
       );
-      console.log("INCREMENT_PLAYER_POPULATION", playerPopulation);
-      playerPopulation.push(payload.personObj);
-      console.log("INCREMENT_PLAYER_POPULATION", playerPopulation);
+      populationArray.push(payload.personObj);
       return {
         ...state,
         details: {
           ...state.details,
           [payload.playerId]: {
             ...state.details[payload.playerId],
-            population: playerPopulation
+            population: populationArray
           }
         }
       };
-    case actions.INCREMENT_PLAYER_CASUALTIES: // TODO
+    case actions.INCREMENT_PLAYER_CASUALTIES:
+      populationArray = _.get(
+        state,
+        `details.${payload.playerId}.population`,
+        []
+      );
+      idx = populationArray.map(pop => pop.id).indexOf(payload.personObj.id);
+      populationArray.slice(idx, 1);
+      casualtiesArray = _.get(
+        state,
+        `details.${payload.playerId}.casualties`,
+        []
+      );
+      casualtiesArray.push(payload.personObj);
       return {
         ...state,
         details: {
           ...state.details,
           [payload.playerId]: {
             ...state.details[payload.playerId],
-            // population:
-            //   state.details[payload.playerId].population - payload.casualties,
-            casualties:
-              state.details[payload.playerId].casualties + payload.casualties
+            population: populationArray,
+            casualties: casualtiesArray
           }
         }
       };
-    case actions.INCREMENT_PLAYER_SAVED: // TODO
+    case actions.INCREMENT_PLAYER_SAVED:
+      console.log(
+        "INCREMENT_PLAYER_SAVED; payload:",
+        payload.playerId,
+        payload.personObj
+      );
+      populationArray = _.get(
+        state,
+        `details.${payload.playerId}.population`,
+        []
+      );
+      console.log(_.get(state, `details.${payload.playerId}.population`, []));
+      idx = populationArray.map(pop => pop.id).indexOf(payload.personObj.id);
+      console.log("idx:", idx);
+      populationArray.slice(idx, 1);
+      savedArray = _.get(state, `details.${payload.playerId}.saved`, []);
+      savedArray.push(payload.personObj);
+      console.log("populationArray:", populationArray);
       return {
         ...state,
         details: {
           ...state.details,
           [payload.playerId]: {
             ...state.details[payload.playerId],
-            saved: state.details[payload.playerId].saved + payload.saved
-            // population:
-            //   state.details[payload.playerId].population - payload.saved
+            saved: savedArray,
+            population: populationArray
           }
         }
       };
