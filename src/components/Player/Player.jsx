@@ -10,30 +10,6 @@ import * as types from "../../types/types";
 
 import Card, { CardBack } from "../Helpers/Card";
 
-// const PeopleIcons = ({ number, color, type }) => {
-//   const peopleIcons = [];
-//   for (let i = 0; i < number; i += 1) {
-//     peopleIcons.push(
-//       <div key={i} className="person">
-//         <span className={`${type} fa-lg`} style={{ color: `rgb(${color})` }} />
-//       </div>
-//     );
-//   }
-//   return <div>{peopleIcons}</div>;
-// };
-
-// PeopleIcons.propTypes = {
-//   number: PropTypes.number,
-//   color: PropTypes.string,
-//   type: PropTypes.string
-// };
-
-// PeopleIcons.defaultProps = {
-//   number: 0,
-//   color: "255, 255, 255",
-//   type: "fa fa-male"
-// };
-
 const PopulationIcons = ({ population, color }) => {
   const populationIcons = population.map(person => {
     return (

@@ -50,28 +50,36 @@ $board-width: 1320px;
         white-space: normal;
         div {
           align-self: center;
-          .person {
-            display: inline-block;
-            height: $people-size;
-            width: $people-size;
-            text-align: center;
-            border-radius: 50%;
-            border-style: solid;
-            border-width: 1px;
-            border-color: $color-black;
-            span {
-              color: $color-white;
-            }
-            &:hover {
-              opacity: 1;
-            }
-            &.highlight:hover {
-              -moz-box-shadow: 0px 0px 3px 3px $color-gold;
-              -webkit-box-shadow: 0px 0px 3px 3px $color-gold;
-              box-shadow: 0px 0px 3px 3px $color-gold;
-            }
-          }
         }
+      }
+    }
+    .person {
+      display: inline-block;
+      height: $people-size;
+      width: $people-size;
+      text-align: center;
+      border-radius: 50%;
+      border-style: solid;
+      border-width: 1px;
+      border-color: $color-black;
+      span {
+        color: $color-white;
+      }
+      &:hover {
+        opacity: 1;
+      }
+      &.highlight:hover,
+      &.animated-piece {
+        -moz-box-shadow: 0px 0px 3px 3px $color-gold;
+        -webkit-box-shadow: 0px 0px 3px 3px $color-gold;
+        box-shadow: 0px 0px 3px 3px $color-gold;
+      }
+      &.animated-piece {
+        position: absolute;
+        height: 45px;
+        width: 45px;
+        font-size: 1.5rem;
+        z-index: 1;
       }
     }
   }
@@ -367,7 +375,7 @@ Game Piece Animations
 ---------------------*/
 
 .lava-tile,
-.person {
+.person:not(.animated-piece) {
   animation: slide-down 0.5s ease;
 }
 

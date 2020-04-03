@@ -7,12 +7,14 @@ import PropTypes from "prop-types";
 import * as types from "../../types/types";
 
 import Board from "./Board";
+import AnimatedPieceLayer from "./AnimatedPieceLayer";
 import OccupancyLayer from "./OccupancyLayer";
 import CancelButtons from "./CancelButtons";
 
 const mapStateToProps = state => {
   return {
     flagsState: state.flagsState,
+    gamePlayState: state.gamePlayState,
     gridState: state.gridState,
     messageState: state.messageState,
     playersState: state.playersState
@@ -26,9 +28,10 @@ const mapStateToProps = state => {
  */
 const BoardContainer = props => {
   const {
-    messageState,
     flagsState,
+    gamePlayState,
     gridState,
+    messageState,
     playersState,
     performSacrifice,
     placeRelatives,
@@ -44,6 +47,12 @@ const BoardContainer = props => {
         runCount={flagsState.runCount}
         messageState={messageState}
       />
+      {gamePlayState.selectedPerson && (
+        <AnimatedPieceLayer
+          gamePlayState={gamePlayState}
+          playersState={playersState}
+        />
+      )}
       <CancelButtons
         flagsState={flagsState}
         placeRelatives={placeRelatives}
@@ -56,6 +65,7 @@ const BoardContainer = props => {
 
 BoardContainer.propTypes = {
   flagsState: types.flagsState.types,
+  gamePlayState: types.gamePlayState.types,
   gridState: types.gridState.types,
   messageState: types.messageState.types,
   playersState: types.playersState.types,
@@ -66,6 +76,7 @@ BoardContainer.propTypes = {
 
 BoardContainer.defaultProps = {
   flagsState: types.flagsState.defaults,
+  gamePlayState: types.gamePlayState.defaults,
   gridState: types.gridState.defaults,
   messageState: types.messageState.defaults,
   playersState: types.playersState.defaults,

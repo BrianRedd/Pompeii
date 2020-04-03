@@ -18,6 +18,7 @@ const playersState = (state = types.playersState.defaults, action) => {
   let casualtiesArray = [];
   let savedArray = [];
   let idx;
+  let playerId;
   switch (type) {
     case actions.SET_PLAYERS_ARRAY:
       return {
@@ -71,8 +72,8 @@ const playersState = (state = types.playersState.defaults, action) => {
         `details.${payload.playerId}.population`,
         []
       );
-      idx = populationArray.map(pop => pop.id).indexOf(payload.personObj.id);
-      populationArray.slice(idx, 1);
+      idx = populationArray.indexOf(payload.personObj);
+      populationArray.splice(idx, 1);
       casualtiesArray = _.get(
         state,
         `details.${payload.playerId}.casualties`,
@@ -91,29 +92,18 @@ const playersState = (state = types.playersState.defaults, action) => {
         }
       };
     case actions.INCREMENT_PLAYER_SAVED:
-      console.log(
-        "INCREMENT_PLAYER_SAVED; payload:",
-        payload.playerId,
-        payload.personObj
-      );
-      populationArray = _.get(
-        state,
-        `details.${payload.playerId}.population`,
-        []
-      );
-      console.log(_.get(state, `details.${payload.playerId}.population`, []));
-      idx = populationArray.map(pop => pop.id).indexOf(payload.personObj.id);
-      console.log("idx:", idx);
-      populationArray.slice(idx, 1);
-      savedArray = _.get(state, `details.${payload.playerId}.saved`, []);
-      savedArray.push(payload.personObj);
-      console.log("populationArray:", populationArray);
+      playerId = payload.player;
+      populationArray = _.get(state, `details.${playerId}.population`, []);
+      idx = populationArray.indexOf(payload);
+      populationArray.splice(idx, 1);
+      savedArray = _.get(state, `details.${playerId}.saved`, []);
+      savedArray.push(payload);
       return {
         ...state,
         details: {
           ...state.details,
-          [payload.playerId]: {
-            ...state.details[payload.playerId],
+          [playerId]: {
+            ...state.details[playerId],
             saved: savedArray,
             population: populationArray
           }

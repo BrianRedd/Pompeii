@@ -17,7 +17,7 @@ import { escapeSquares } from "../../data/gridData";
  */
 export const runToSquare = toSquare => {
   const storeState = store.getState();
-  const { flagsState, gridState, playersState } = storeState;
+  const { flagsState, gamePlayState, gridState, playersState } = storeState;
 
   store.dispatch(actions.addRecommendations([]));
   const playerDetails = _.get(
@@ -26,6 +26,7 @@ export const runToSquare = toSquare => {
   );
   console.log("runToSquare; toSquare:", toSquare);
   if (toSquare === gridState.runFromSquare) {
+    store.dispatch(actions.selectPerson(null));
     store.dispatch(actions.setRunZone([]));
     return;
   }
@@ -36,17 +37,17 @@ export const runToSquare = toSquare => {
       gridState,
       `grid.${gridState.runFromSquare}.occupants`
     );
-    const oldSquareIdx = oldSquareOccupants
-      .map(occupant => occupant.player)
-      .indexOf(playersState.activePlayer);
-    const personObj = oldSquareOccupants.splice(oldSquareIdx, 1);
+    const oldSquareIdx = oldSquareOccupants.indexOf(
+      gamePlayState.selectedPerson
+    );
+    oldSquareOccupants.splice(oldSquareIdx, 1);
     store.dispatch(
       actions.placePeopleInSquare(gridState.runFromSquare, oldSquareOccupants)
     );
 
     if (escapeSquares.includes(toSquare)) {
       store.dispatch(
-        actions.incrementPlayerSaved(playersState.activePlayer, personObj[0])
+        actions.incrementPlayerSaved(gamePlayState.selectedPerson)
       );
       if (playerDetails.population.length === 1) {
         numberOfRuns = 1;
@@ -54,8 +55,7 @@ export const runToSquare = toSquare => {
     } else {
       const newSquareOccupants = _.get(gridState, `grid.${toSquare}.occupants`);
       newSquareOccupants.push({
-        player: playersState.activePlayer,
-        gender: _.get(gridState, "runner.gender"),
+        ...gamePlayState.selectedPerson,
         lastMoved:
           oldSquareOccupants.length > 0 ? playersState.totalTurns : undefined
       });
@@ -69,27 +69,30 @@ export const runToSquare = toSquare => {
   store.dispatch(actions.setRunCounter(numberOfRuns));
   store.dispatch(actions.setRunZone([]));
   store.dispatch(actions.setRunner());
+  store.dispatch(actions.selectPerson(null));
   if (!numberOfRuns) {
     store.dispatch(actions.incrementPlayerTurn());
   } else if (playerDetails.ai) {
-    store.dispatch(
-      actions.addRecommendations(
-        utils.randAndArrangeRecommendations(helper.runnerRecommendations())
-      )
-    );
-    const sortedRecommendations = utils.randAndArrangeRecommendations(
-      helper.runnerRecommendations()
-    );
-    const selectedSquare = sortedRecommendations[0].square;
-    const census = _.get(gridState, `grid.${selectedSquare}.occupants`);
-    let selectedOccupant = "";
-    census.forEach(occupant => {
-      if (occupant.player === playersState.activePlayer) {
-        selectedOccupant = occupant;
-      }
-    });
-    // eslint-disable-next-line no-use-before-define
-    selectRunner(selectedOccupant, selectedSquare);
+    setTimeout(() => {
+      store.dispatch(
+        actions.addRecommendations(
+          utils.randAndArrangeRecommendations(helper.runnerRecommendations())
+        )
+      );
+      const sortedRecommendations = utils.randAndArrangeRecommendations(
+        helper.runnerRecommendations()
+      );
+      const selectedSquare = sortedRecommendations[0].square;
+      const census = _.get(gridState, `grid.${selectedSquare}.occupants`);
+      let selectedOccupant = "";
+      census.forEach(occupant => {
+        if (occupant.player === playersState.activePlayer) {
+          selectedOccupant = occupant;
+        }
+      });
+      // eslint-disable-next-line no-use-before-define
+      selectRunner(selectedOccupant, selectedSquare);
+    }, 100);
   }
 };
 
@@ -104,6 +107,12 @@ export const selectRunner = (person, square) => {
   const storeState = store.getState();
   const { gridState, playersState } = storeState;
 
+  const personPlusSquare = {
+    ...person,
+    square
+  };
+  console.log("personPlusSquare:", personPlusSquare);
+  store.dispatch(actions.selectPerson(personPlusSquare));
   const playerDetails = _.get(
     playersState,
     `details.${playersState.activePlayer}`

@@ -26,6 +26,11 @@ const gamePlayState = (state = types.gamePlayState.defaults, action) => {
         ...state,
         gameSettings: payload
       };
+    case actions.SELECT_PERSON:
+      return {
+        ...state,
+        selectedPerson: payload
+      };
     default:
       return state;
   }

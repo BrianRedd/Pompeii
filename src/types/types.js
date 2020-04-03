@@ -79,42 +79,6 @@ export const flagsState = {
 };
 
 /*
- GAME PLAY TYPES
- ---------------*/
-
-/**
- * @const gamePlayState
- * @description Types for gamePlayState Redux store
- */
-export const gamePlayState = {
-  types: shape({
-    gameSettings: shape({
-      prePopulate: bool,
-      startPhase: number,
-      noEruption: bool,
-      showStrategyValues: bool
-    }),
-    recommendations: arrayOf(
-      shape({
-        square: string,
-        value: number
-      })
-    ),
-    placedRelatives: arrayOf(string)
-  }),
-  defaults: {
-    getSettings: {
-      prePopulate: false,
-      startPhase: 0,
-      noEruption: false,
-      showStrategyValues: false
-    },
-    recommendations: [],
-    placedRelatives: []
-  }
-};
-
-/*
  GRID TYPES
  ----------*/
 
@@ -179,6 +143,44 @@ export const gridState = {
     runZone: [],
     runFromSquare: "",
     runner: occupant.defaults
+  }
+};
+
+/*
+ GAME PLAY TYPES
+ ---------------*/
+
+/**
+ * @const gamePlayState
+ * @description Types for gamePlayState Redux store
+ */
+export const gamePlayState = {
+  types: shape({
+    gameSettings: shape({
+      prePopulate: bool,
+      startPhase: number,
+      noEruption: bool,
+      showStrategyValues: bool
+    }),
+    recommendations: arrayOf(
+      shape({
+        square: string,
+        value: number
+      })
+    ),
+    placedRelatives: arrayOf(string),
+    selectedPerson: occupant.type
+  }),
+  defaults: {
+    getSettings: {
+      prePopulate: false,
+      startPhase: 0,
+      noEruption: false,
+      showStrategyValues: false
+    },
+    recommendations: [],
+    placedRelatives: [],
+    selectedPerson: null
   }
 };
 

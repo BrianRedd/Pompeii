@@ -16,6 +16,7 @@ export const SET_ERUPTION_COUNTER = "SET_ERUPTION_COUNTER";
 // game play actions
 export const ADD_RECOMMENDATIONS = "ADD_RECOMMENDATIONS";
 export const SET_PLACED_RELATIVES = "SET_PLACED_RELATIVES";
+export const SELECT_PERSON = "SELECT_PERSON";
 
 // grid actions
 export const ADD_GRID = "ADD_GRID";

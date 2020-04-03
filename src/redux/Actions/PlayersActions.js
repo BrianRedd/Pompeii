@@ -108,25 +108,21 @@ export const incrementPlayerCasualties = (playerId, personObj) => (
 /**
  * @function incrementPlayerSavedInStore
  * @description adds/updates single player saved to PlayersState store
- * @param {String} playerId
  * @param {Object} personObj - saved person
  */
-export const incrementPlayerSavedInStore = (playerId, personObj) => ({
+export const incrementPlayerSavedInStore = personObj => ({
   type: actionTypes.INCREMENT_PLAYER_SAVED,
-  payload: { playerId, personObj }
+  payload: personObj
 });
 
 /**
  * @function incrementPlayerSaved
  * @description adds/updates single player saved with snackbar
- * @param {String} playerId
  * @param {Number} personObj - saved person
  */
-export const incrementPlayerSaved = (playerId, personObj) => (
-  dispatch,
-  getState
-) => {
+export const incrementPlayerSaved = personObj => (dispatch, getState) => {
   const { playersState } = getState();
+  const playerId = personObj.player;
   setTimeout(() => {
     dispatch(
       addSnackbar({
@@ -135,7 +131,7 @@ export const incrementPlayerSaved = (playerId, personObj) => (
       })
     );
   }, 10);
-  dispatch(incrementPlayerSavedInStore(playerId, personObj));
+  dispatch(incrementPlayerSavedInStore(personObj));
 };
 
 /**

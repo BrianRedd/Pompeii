@@ -41,7 +41,12 @@ const OccupancySquare = ({
         };
       }
       return (
-        <Tooltip key={key} title={`${playerName}`} placement="top" arrow>
+        <Tooltip
+          key={key}
+          title={`${playerName}, ${person.id}`}
+          placement="top"
+          arrow
+        >
           <ButtonBase
             className={`person ${person.id}${
               (playersState.players[playersState.turn] === person.player &&

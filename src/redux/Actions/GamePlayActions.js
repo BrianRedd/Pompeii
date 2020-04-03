@@ -67,6 +67,16 @@ export const saveGameSettings = relatives => ({
 });
 
 /**
+ * @function selectPerson
+ * @description saves selected person
+ * @param {Object} personObj
+ */
+export const selectPerson = personObj => ({
+  type: actionTypes.SELECT_PERSON,
+  payload: personObj
+});
+
+/**
  * @function gameSetup
  * @description takes start game values and dispatches initial game store values
  * @param {Object} details playerState details object
