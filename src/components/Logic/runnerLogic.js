@@ -37,9 +37,9 @@ export const runToSquare = toSquare => {
       gridState,
       `grid.${gridState.runFromSquare}.occupants`
     );
-    const oldSquareIdx = oldSquareOccupants.indexOf(
-      gamePlayState.selectedPerson
-    );
+    const oldSquareIdx = oldSquareOccupants
+      .map(occupant => occupant.id)
+      .indexOf(gamePlayState.selectedPerson.id);
     oldSquareOccupants.splice(oldSquareIdx, 1);
     store.dispatch(
       actions.placePeopleInSquare(gridState.runFromSquare, oldSquareOccupants)
