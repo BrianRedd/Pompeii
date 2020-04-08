@@ -9,10 +9,11 @@ import * as types from "../../types/types";
 import { selectRunner } from "../Logic/runnerLogic";
 import * as constant from "../../data/constants";
 
+import { performSacrifice } from "../Logic/placePeopleLogic";
+
 const OccupancySquare = ({
   square,
   playersState,
-  performSacrifice,
   runCount,
   messageState,
   grid
@@ -79,8 +80,7 @@ OccupancySquare.propTypes = {
   playersState: types.playersState.types,
   grid: types.gridSquare.types,
   square: PropTypes.string,
-  runCount: PropTypes.number,
-  performSacrifice: PropTypes.func
+  runCount: PropTypes.number
 };
 
 OccupancySquare.defaultProps = {
@@ -88,8 +88,7 @@ OccupancySquare.defaultProps = {
   playersState: types.playersState.defaults,
   grid: types.gridSquare.defaults,
   square: "",
-  runCount: 0,
-  performSacrifice: () => {}
+  runCount: 0
 };
 
 /**
@@ -102,7 +101,7 @@ const OccupancyLayer = props => {
   const {
     gridState: { grid },
     playersState,
-    performSacrifice,
+    // performSacrifice,
     runCount,
     messageState
   } = props;
@@ -132,7 +131,7 @@ const OccupancyLayer = props => {
           <OccupancySquare
             square={square}
             playersState={playersState}
-            performSacrifice={performSacrifice}
+            // performSacrifice={performSacrifice}
             runCount={runCount}
             selectRunner={selectRunner}
             messageState={messageState}
@@ -154,16 +153,16 @@ OccupancyLayer.propTypes = {
   gridState: types.gridState.types,
   messageState: types.messageState.types,
   playersState: types.playersState.types,
-  runCount: PropTypes.number,
-  performSacrifice: PropTypes.func
+  runCount: PropTypes.number
+  // performSacrifice: PropTypes.func
 };
 
 OccupancyLayer.defaultProps = {
   gridState: types.gridState.defaults,
   messageState: types.messageState.defaults,
   playersState: types.playersState.defaults,
-  runCount: 0,
-  performSacrifice: () => {}
+  runCount: 0
+  // performSacrifice: () => {}
 };
 
 export default OccupancyLayer;

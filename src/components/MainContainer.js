@@ -7,7 +7,6 @@ import _ from "lodash";
 
 import actions from "../redux/Actions";
 import * as types from "../types/types";
-import * as constant from "../data/constants";
 import * as helper from "./Logic/helperFunctions";
 import { playPompCard } from "./Logic/cardLogic";
 import { placePerson } from "./Logic/placePeopleLogic";
@@ -43,16 +42,8 @@ const MainContainer = props => {
     playersState: { activePlayer },
     tileState,
     toggleFlags,
-    takeCard,
-    discardCard,
     incrementPlayerTurn,
-    updatePlayerHand,
-    updateInstructions,
-    placePeopleInSquare,
-    incrementStage,
-    incrementPlayerCasualties,
     setRunCounter,
-    addRecommendations,
     addActivePlayer,
     setEruptionCounter,
     setLavaTile,
@@ -76,188 +67,6 @@ const MainContainer = props => {
   useEffect(() => {
     setActivePlayer(_.get(playersState, `players.${playersState.turn}`));
   }, [playersState, setActivePlayer]);
-
-  /**
-   * @function setRecommendationArray
-   * @description dispatches action to add recommendations to state
-   * @param {Array} array
-   */
-  const setRecommendationArray = useCallback(
-    array => {
-      console.log("setRecommendationArray:", array);
-      addRecommendations(array);
-    },
-    [addRecommendations]
-  );
-
-  /**
-   * @function resolveAd79
-   * @description resolve AD 79 card when drawn
-   */
-  const resolveAd79 = () => {
-    console.log("resolveAd79");
-    if (!flagsState.flags.includes("card-ad79")) {
-      toggleFlags("card-ad79");
-    }
-    setTimeout(() => {
-      if (messageState.stage === 1) {
-        const nextPlayer =
-          (playersState.turn + 1) % playersState.players.length;
-        setActivePlayer(playersState.players[nextPlayer]);
-        incrementPlayerTurn();
-        updateInstructions({
-          text: `${_.get(
-            playersState,
-            `details.${playersState.players[nextPlayer]}.name`
-          )}: ${constant.LAVA_TILE}`,
-          color: _.get(
-            playersState,
-            `details.${playersState.players[nextPlayer]}.color`
-          )
-        });
-      }
-    }, 100);
-    incrementStage();
-    setRecommendationArray([]);
-  };
-
-  /**
-   * @function performSacrifice
-   * @description upon selection of person, sacrifice if not your own
-   * @param {Object} personObj
-   * @param {String} square
-   * @param {Boolean} ai - is sacrifice performed by AI?
-   */
-  const performSacrifice = (personObj, square, ai) => {
-    console.log(
-      "performSacrifice; personObj:",
-      personObj,
-      "square:",
-      square,
-      ai
-    );
-    if (
-      !ai &&
-      (!flagsState.flags.includes("card-omen") ||
-        personObj.player === activePlayer)
-    ) {
-      return;
-    }
-
-    const currentOccupants = _.get(gridState, `grid.${square}.occupants`, []);
-
-    const idx = currentOccupants
-      .map(person => person.player)
-      .indexOf(personObj.player);
-    currentOccupants.splice(idx, 1);
-
-    placePeopleInSquare(square, currentOccupants);
-    incrementPlayerCasualties(personObj.player, personObj);
-    updateInstructions({
-      text: `${_.get(playersState, `details.${activePlayer}.name`)}: ${
-        constant.DRAW
-      }`,
-      color: _.get(playersState, `details.${activePlayer}.color`)
-    });
-    if (flagsState.flags.includes("card-omen")) {
-      toggleFlags("card-omen");
-    }
-  };
-
-  /**
-   * @function resolveOmen
-   * @description resolve Omen card when drawn - sacrifice another player's person
-   */
-  const resolveOmen = () => {
-    console.log("resolveOmen");
-    const playerDetails = _.get(playersState, `details.${activePlayer}`);
-    updateInstructions({
-      text: `${playerDetails.name}: ${constant.SACRIFICE}`,
-      color: playerDetails.color
-    });
-
-    // ai performing sacrifice
-    if (playerDetails.ai) {
-      setTimeout(() => {
-        const playersArray = [];
-        Object.keys(_.get(playersState, "details")).forEach(player => {
-          playersArray.push({
-            ...playersState.details[player],
-            player
-          });
-        });
-        const playersScores = playersArray
-          .filter(player => player.player !== activePlayer)
-          .sort((a, b) =>
-            // TODO if chaotic, perhaps a 0-1 to this comparison
-            a.population.length - a.casualties.length * 0.1 <
-            b.population.length - b.casualties.length * 0.1
-              ? 1
-              : -1
-          );
-        const target = playersScores[0];
-        const census = [];
-        Object.keys(_.get(gridState, "grid")).forEach(square => {
-          _.get(gridState, `grid.${square}.occupants`, []).forEach(occupant => {
-            census.push({
-              player: occupant.player,
-              square,
-              personObj: occupant
-            });
-          });
-        });
-        const targetList = census.filter(person => {
-          return person.player === target.player;
-        });
-        if (targetList.length > 0) {
-          const rand = Math.floor(Math.random() * targetList.length);
-          performSacrifice(
-            targetList[rand].personObj,
-            targetList[rand].square,
-            true
-          );
-        }
-      }, 1000);
-    } else if (!flagsState.flags.includes("card-omen")) {
-      toggleFlags("card-omen");
-    }
-  };
-
-  /**
-   * @function drawCard
-   * @description draw card from deck
-   */
-  const drawCard = () => {
-    console.log("drawCard");
-    // draw card
-    const takenCard = cardsState.deck[cardsState.deck.length - 1];
-    takeCard();
-
-    // check for AD79
-    if (_.get(cardsState, `cards.${takenCard}.type`) === constant.AD79) {
-      discardCard(takenCard);
-      resolveAd79();
-      return;
-    }
-
-    // check for Omen
-    if (_.get(cardsState, `cards.${takenCard}.type`) === constant.OMEN) {
-      discardCard(takenCard);
-      resolveOmen();
-      return;
-    }
-
-    const newHand = [
-      ..._.get(playersState, `details.${activePlayer}.hand`),
-      takenCard
-    ];
-
-    // add card to player hand
-    updatePlayerHand(activePlayer, newHand);
-
-    // next player's turn
-    incrementPlayerTurn();
-  };
 
   /**
    * @function resolveNoPlaceToPlace
@@ -295,7 +104,6 @@ const MainContainer = props => {
         messageState={messageState}
         playersState={playersState}
         tileState={tileState}
-        drawCard={drawCard}
         deckEnabled={
           _.get(playersState, `details.${activePlayer}.hand.length`) < 4 &&
           !flagsState.flags.includes("placing-person") &&
@@ -311,7 +119,6 @@ const MainContainer = props => {
         placeRelatives={placeRelatives}
         cardGrid={cardsState.grid}
         vacancy={helper.vacancy}
-        performSacrifice={performSacrifice}
         resolveNoPlaceToPlace={resolveNoPlaceToPlace}
         dangerZone={gridState.dangerZone}
         placeLavaTile={placeLavaTile}
@@ -330,16 +137,8 @@ MainContainer.propTypes = {
   playersState: types.playersState.types,
   tileState: types.tileState.types,
   toggleFlags: PropTypes.func,
-  takeCard: PropTypes.func,
-  discardCard: PropTypes.func,
   incrementPlayerTurn: PropTypes.func,
-  updatePlayerHand: PropTypes.func,
-  updateInstructions: PropTypes.func,
-  placePeopleInSquare: PropTypes.func,
-  incrementStage: PropTypes.func,
-  incrementPlayerCasualties: PropTypes.func,
   setRunCounter: PropTypes.func,
-  addRecommendations: PropTypes.func,
   addActivePlayer: PropTypes.func,
   setEruptionCounter: PropTypes.func,
   setLavaTile: PropTypes.func,
@@ -355,16 +154,8 @@ MainContainer.defaultProps = {
   playersState: types.playersState.defaults,
   tileState: types.tileState.defaults,
   toggleFlags: () => {},
-  takeCard: () => {},
-  discardCard: () => {},
   incrementPlayerTurn: () => {},
-  updatePlayerHand: () => {},
-  updateInstructions: () => {},
-  placePeopleInSquare: () => {},
-  incrementStage: () => {},
-  incrementPlayerCasualties: () => {},
   setRunCounter: () => {},
-  addRecommendations: () => {},
   addActivePlayer: () => {},
   setEruptionCounter: () => {},
   setLavaTile: () => {},

@@ -157,19 +157,11 @@ export const incrementPlayerTurn = () => (dispatch, getState) => {
   } = getState();
 
   // game over?
-  // out of tiles
-  // no people left on board
-  const census = [];
+  let census = [];
   Object.values(playersState.details).forEach(arr => {
-    census.concat(arr.population);
+    census = [...census, ...arr.population];
   });
-  if (
-    pile.length === // TODO
-    0 /* ||
-    _.sum(
-      Object.values(playersState.details).map(arr => arr.population.length)
-    ) === 0 */
-  ) {
+  if (pile.length === 0 || census.length === 0) {
     const gridArray = Object.keys(grid);
     gridArray.forEach(square => {
       if (_.get(grid, `${square}.occupants.length`) > 0) {

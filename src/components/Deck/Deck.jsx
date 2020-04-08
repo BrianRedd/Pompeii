@@ -5,6 +5,8 @@ import PropTypes from "prop-types";
 import { Col, Row } from "reactstrap";
 import { ButtonBase } from "@material-ui/core";
 
+import { drawCard } from "../Logic/cardLogic";
+
 import Card, { CardBack } from "../Helpers/Card";
 
 /**
@@ -13,7 +15,7 @@ import Card, { CardBack } from "../Helpers/Card";
  * @returns {React.Component} - Rendered component.
  */
 const Deck = props => {
-  const { playerColor, topDiscard, drawCard, deckSizes, deckEnabled } = props;
+  const { playerColor, topDiscard, deckSizes, deckEnabled } = props;
 
   return (
     <Row data-test="presentation-deck">
@@ -64,8 +66,7 @@ Deck.propTypes = {
   }),
   playerColor: PropTypes.string,
   topDiscard: PropTypes.string,
-  deckEnabled: PropTypes.bool,
-  drawCard: PropTypes.func
+  deckEnabled: PropTypes.bool
 };
 
 Deck.defaultProps = {
@@ -76,7 +77,6 @@ Deck.defaultProps = {
   },
   playerColor: "",
   topDiscard: "",
-  deckEnabled: false,
-  drawCard: () => {}
+  deckEnabled: false
 };
 export default Deck;

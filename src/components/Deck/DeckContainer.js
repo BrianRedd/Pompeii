@@ -23,7 +23,7 @@ const mapStateToProps = state => {
  * @returns {React.Component} - Rendered component.
  */
 const DeckContainer = props => {
-  const { cardsState, playersState, drawCard, deckEnabled } = props;
+  const { cardsState, playersState, deckEnabled } = props;
 
   const [lastDrawnCard, setLastDrawnCard] = useState(null);
 
@@ -45,7 +45,6 @@ const DeckContainer = props => {
           deck: _.get(cardsState, "deck.length", 0),
           discard: _.get(cardsState, "discard.length", 0)
         }}
-        drawCard={drawCard}
         deckEnabled={deckEnabled}
         playerColor={_.get(
           playersState,
@@ -59,15 +58,13 @@ const DeckContainer = props => {
 DeckContainer.propTypes = {
   cardsState: types.cardsState.types,
   playersState: types.playersState.types,
-  deckEnabled: PropTypes.bool,
-  drawCard: PropTypes.func
+  deckEnabled: PropTypes.bool
 };
 
 DeckContainer.defaultProps = {
   cardsState: types.cardsState.defaults,
   playersState: types.playersState.defaults,
-  deckEnabled: false,
-  drawCard: () => {}
+  deckEnabled: false
 };
 
 export const DeckContainerTest = DeckContainer;

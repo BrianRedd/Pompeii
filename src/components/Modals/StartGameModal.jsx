@@ -246,6 +246,28 @@ const StartGameModal = props => {
               <Col xs={12}>
                 <Row className="justify-content-end">
                   <Tooltip
+                    title={`Dev Mode: AI AutoPlay Disabled: ${
+                      formProps.values.autoPlayDisabled ? "ON" : "OFF"
+                    }`}
+                  >
+                    <div>
+                      <IconButton
+                        onClick={() =>
+                          formProps.setFieldValue(
+                            "autoPlayDisabled",
+                            !formProps.values.autoPlayDisabled
+                          )
+                        }
+                      >
+                        {formProps.values.autoPlayDisabled ? (
+                          <i className="far fa-pause-circle fa-sm color-magenta" />
+                        ) : (
+                          <i className="far fa-play-circle fa-sm color-grey" />
+                        )}
+                      </IconButton>
+                    </div>
+                  </Tooltip>
+                  <Tooltip
                     title={`Dev Mode: Pre-populate Board ${
                       formProps.values.prePopulate ? "ON" : "OFF"
                     }`}

@@ -47,6 +47,7 @@ const StartGameContainer = props => {
     player4AI: false,
     startPlayer: 0,
     wildLava: false,
+    autoPlayDisabled: false,
     prePopulate: false,
     startPhase: 0,
     noEruption: false,
@@ -78,6 +79,7 @@ const StartGameContainer = props => {
       };
     }
     const gameSettings = {
+      autoPlayDisabled: values.autoPlayDisabled,
       prePopulate: values.prePopulate,
       startPhase: values.startPhase,
       noEruption: values.noEruption,

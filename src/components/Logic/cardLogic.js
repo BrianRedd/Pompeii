@@ -9,6 +9,7 @@ import { aiPlayers } from "../../data/playerData";
 import * as constant from "../../data/constants";
 import { randAndArrangeRecommendations } from "../../utils/utilsCommon";
 import * as helper from "./helperFunctions";
+// eslint-disable-next-line import/no-cycle
 import * as placePeopleLogic from "./placePeopleLogic";
 
 /**
@@ -185,4 +186,145 @@ export const chooseCardToPlay = () => {
     }
     // END recommendations (ai's only)
   }
+};
+
+/**
+ * @function resolveAd79
+ * @description resolve AD 79 card when drawn
+ */
+export const resolveAd79 = () => {
+  console.log("resolveAd79");
+  const storeState = store.getState();
+  const { flagsState, messageState, playersState } = storeState;
+
+  if (!flagsState.flags.includes("card-ad79")) {
+    store.dispatch(actions.toggleFlags("card-ad79"));
+  }
+  setTimeout(() => {
+    if (messageState.stage === 1) {
+      const nextPlayer = (playersState.turn + 1) % playersState.players.length;
+      // store.dispatch(actions.setActivePlayer(playersState.players[nextPlayer]));
+      store.dispatch(actions.incrementPlayerTurn());
+      store.dispatch(
+        actions.updateInstructions({
+          text: `${_.get(
+            playersState,
+            `details.${playersState.players[nextPlayer]}.name`
+          )}: ${constant.LAVA_TILE}`,
+          color: _.get(
+            playersState,
+            `details.${playersState.players[nextPlayer]}.color`
+          )
+        })
+      );
+    }
+  }, 100);
+  store.dispatch(actions.incrementStage());
+  store.dispatch(actions.addRecommendations([]));
+};
+
+/**
+ * @function resolveOmen
+ * @description resolve Omen card when drawn - sacrifice another player's person
+ */
+export const resolveOmen = () => {
+  console.log("resolveOmen");
+  const storeState = store.getState();
+  const { gridState, flagsState, playersState } = storeState;
+
+  const playerDetails = _.get(
+    playersState,
+    `details.${playersState.activePlayer}`
+  );
+  store.dispatch(
+    actions.updateInstructions({
+      text: `${playerDetails.name}: ${constant.SACRIFICE}`,
+      color: playerDetails.color
+    })
+  );
+
+  // ai performing sacrifice
+  if (playerDetails.ai) {
+    setTimeout(() => {
+      const playersArray = [];
+      Object.keys(_.get(playersState, "details")).forEach(player => {
+        playersArray.push({
+          ...playersState.details[player],
+          player
+        });
+      });
+      const playersScores = playersArray
+        .filter(player => player.player !== playersState.activePlayer)
+        .sort((a, b) =>
+          // TODO if chaotic, perhaps a 0-1 to this comparison
+          a.population.length - a.casualties.length * 0.1 <
+          b.population.length - b.casualties.length * 0.1
+            ? 1
+            : -1
+        );
+      const target = playersScores[0];
+      const census = [];
+      Object.keys(_.get(gridState, "grid")).forEach(square => {
+        _.get(gridState, `grid.${square}.occupants`, []).forEach(occupant => {
+          census.push({
+            player: occupant.player,
+            square,
+            personObj: occupant
+          });
+        });
+      });
+      const targetList = census.filter(person => {
+        return person.player === target.player;
+      });
+      if (targetList.length > 0) {
+        const rand = Math.floor(Math.random() * targetList.length);
+        placePeopleLogic.performSacrifice(
+          targetList[rand].personObj,
+          targetList[rand].square,
+          true
+        );
+      }
+    }, 1000);
+  } else if (!flagsState.flags.includes("card-omen")) {
+    store.dispatch(actions.toggleFlags("card-omen"));
+  }
+};
+
+/**
+ * @function drawCard
+ * @description draw card from deck
+ */
+export const drawCard = () => {
+  console.log("drawCard");
+  const storeState = store.getState();
+  const { playersState, cardsState } = storeState;
+
+  // draw card
+  const takenCard = cardsState.deck[cardsState.deck.length - 1];
+  store.dispatch(actions.takeCard());
+
+  // check for AD79
+  if (_.get(cardsState, `cards.${takenCard}.type`) === constant.AD79) {
+    store.dispatch(actions.discardCard(takenCard));
+    resolveAd79();
+    return;
+  }
+
+  // check for Omen
+  if (_.get(cardsState, `cards.${takenCard}.type`) === constant.OMEN) {
+    store.dispatch(actions.discardCard(takenCard));
+    resolveOmen();
+    return;
+  }
+
+  const newHand = [
+    ..._.get(playersState, `details.${playersState.activePlayer}.hand`),
+    takenCard
+  ];
+
+  // add card to player hand
+  store.dispatch(actions.updatePlayerHand(playersState.activePlayer, newHand));
+
+  // next player's turn
+  store.dispatch(actions.incrementPlayerTurn());
 };

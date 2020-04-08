@@ -33,7 +33,6 @@ const BoardContainer = props => {
     gridState,
     messageState,
     playersState,
-    performSacrifice,
     placeRelatives,
     toggleFlags
   } = props;
@@ -43,7 +42,6 @@ const BoardContainer = props => {
       <OccupancyLayer
         gridState={gridState}
         playersState={playersState}
-        performSacrifice={performSacrifice}
         runCount={flagsState.runCount}
         messageState={messageState}
       />
@@ -69,7 +67,6 @@ BoardContainer.propTypes = {
   gridState: types.gridState.types,
   messageState: types.messageState.types,
   playersState: types.playersState.types,
-  performSacrifice: PropTypes.func,
   placeRelatives: PropTypes.func,
   toggleFlags: PropTypes.func
 };
@@ -80,7 +77,6 @@ BoardContainer.defaultProps = {
   gridState: types.gridState.defaults,
   messageState: types.messageState.defaults,
   playersState: types.playersState.defaults,
-  performSacrifice: () => {},
   placeRelatives: () => {},
   toggleFlags: () => {}
 };

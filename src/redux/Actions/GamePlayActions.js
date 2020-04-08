@@ -61,9 +61,9 @@ export const setPlacedRelatives = relatives => dispatch => {
  * @description saves dev-level game settings
  * @param {Object} settings
  */
-export const saveGameSettings = relatives => ({
+export const saveGameSettings = settings => ({
   type: actionTypes.SAVE_GAME_SETTINGS,
-  payload: relatives
+  payload: settings
 });
 
 /**

@@ -157,6 +157,7 @@ export const gridState = {
 export const gamePlayState = {
   types: shape({
     gameSettings: shape({
+      autoPlayDisabled: bool,
       prePopulate: bool,
       startPhase: number,
       noEruption: bool,
@@ -172,7 +173,8 @@ export const gamePlayState = {
     selectedPerson: occupant.type
   }),
   defaults: {
-    getSettings: {
+    gameSettings: {
+      autoPlayDisabled: false,
       prePopulate: false,
       startPhase: 0,
       noEruption: false,

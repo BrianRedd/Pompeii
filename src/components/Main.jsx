@@ -38,10 +38,8 @@ const Main = props => {
     playersState,
     tileState,
     deckEnabled,
-    drawCard,
     cardGrid,
     vacancy,
-    performSacrifice,
     resolveNoPlaceToPlace,
     pileEnabled,
     dangerZone,
@@ -63,7 +61,6 @@ const Main = props => {
         )}
         <Row>
           <BoardContainer
-            performSacrifice={performSacrifice}
             runFlag={flagsState.runCount}
             placeRelatives={placeRelatives}
             toggleFlags={toggleFlags}
@@ -81,10 +78,7 @@ const Main = props => {
               {messageState.stage < 2 &&
                 !flagsState.flags.includes("card-ad79") &&
                 !flagsState.flags.includes("lava-tile") && (
-                  <DeckContainer
-                    drawCard={drawCard}
-                    deckEnabled={deckEnabled}
-                  />
+                  <DeckContainer deckEnabled={deckEnabled} />
                 )}
               {messageState.stage === 2 &&
                 !flagsState.flags.includes("card-ad79") &&
@@ -179,9 +173,7 @@ Main.propTypes = {
   deckEnabled: PropTypes.bool,
   pileEnabled: PropTypes.bool,
   resolveNoPlaceToPlace: PropTypes.func,
-  drawCard: PropTypes.func,
   vacancy: PropTypes.func,
-  performSacrifice: PropTypes.func,
   placeLavaTile: PropTypes.func,
   placeRelatives: PropTypes.func,
   toggleFlags: PropTypes.func,
@@ -200,9 +192,7 @@ Main.defaultProps = {
   deckEnabled: false,
   pileEnabled: false,
   resolveNoPlaceToPlace: () => {},
-  drawCard: () => {},
   vacancy: () => {},
-  performSacrifice: () => {},
   placeLavaTile: () => {},
   placeRelatives: () => {},
   toggleFlags: () => {},

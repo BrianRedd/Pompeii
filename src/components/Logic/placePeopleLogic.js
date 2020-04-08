@@ -11,6 +11,8 @@ import actions from "../../redux/Actions";
 
 // eslint-disable-next-line import/no-cycle
 import { placeRelatives } from "./placeRelativesLogic";
+// eslint-disable-next-line import/no-cycle
+// import { drawCard } from "./cardLogic";
 
 /**
  * @function placePerson
@@ -23,6 +25,9 @@ export const placePerson = grid => {
   const {
     cardsState,
     flagsState,
+    // gamePlayState: {
+    //   gameSettings: { autoPlayDisabled }
+    // },
     gridState,
     messageState,
     playersState
@@ -145,6 +150,10 @@ export const placePerson = grid => {
         color: playerDetails.color
       })
     );
+
+    // if (!autoPlayDisabled) {
+    //   drawCard();
+    // }
   } else {
     // else complete placement
     store.dispatch(actions.setCardGrid([]));
@@ -160,5 +169,54 @@ export const placePerson = grid => {
         color: playerDetails.color
       })
     );
+
+    // if (playerDetails.ai && !autoPlayDisabled) {
+    //   drawCard();
+    // }
+  }
+};
+
+/**
+ * @function performSacrifice
+ * @description upon selection of person, sacrifice if not your own
+ * @param {Object} personObj
+ * @param {String} square
+ * @param {Boolean} ai - is sacrifice performed by AI?
+ */
+export const performSacrifice = (personObj, square, ai) => {
+  console.log("performSacrifice; personObj:", personObj, "square:", square, ai);
+  const storeState = store.getState();
+  const { flagsState, gridState, playersState } = storeState;
+
+  if (
+    !ai &&
+    (!flagsState.flags.includes("card-omen") ||
+      personObj.player === playersState.activePlayer)
+  ) {
+    return;
+  }
+
+  const currentOccupants = _.get(gridState, `grid.${square}.occupants`, []);
+
+  const idx = currentOccupants
+    .map(person => person.player)
+    .indexOf(personObj.player);
+  currentOccupants.splice(idx, 1);
+
+  store.dispatch(actions.placePeopleInSquare(square, currentOccupants));
+  store.dispatch(
+    actions.incrementPlayerCasualties(personObj.player, personObj)
+  );
+  store.dispatch(
+    actions.updateInstructions({
+      text: `${_.get(
+        playersState,
+        `details.${playersState.activePlayer}.name`
+      )}: ${constant.DRAW}`,
+      color: _.get(playersState, `details.${playersState.activePlayer}.color`)
+    })
+  );
+  if (flagsState.flags.includes("card-omen")) {
+    store.dispatch(actions.toggleFlags("card-omen"));
   }
 };
