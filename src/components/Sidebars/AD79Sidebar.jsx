@@ -43,7 +43,7 @@ const AD79Sidebar = props => {
         >
           <img
             alt="AD 79"
-            src="/assets/cards/AD79-0-S.png"
+            src="./assets/cards/AD79-0-S.png"
             className="pompeii-card"
           />
         </ButtonBase>

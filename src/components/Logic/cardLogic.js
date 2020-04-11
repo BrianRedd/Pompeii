@@ -62,7 +62,6 @@ export const playPompCard = card => {
   // AI: Place person
   if (playersState.details[playersState.activePlayer].ai) {
     setTimeout(() => {
-      console.log("I'm an AI, and I'm placing a person!");
       placePeopleLogic.placePerson(
         _.get(gamePlayState, "recommendations[0].square")
       );
@@ -195,7 +194,12 @@ export const chooseCardToPlay = () => {
 export const resolveAd79 = () => {
   console.log("resolveAd79");
   const storeState = store.getState();
-  const { flagsState, messageState, playersState } = storeState;
+  const {
+    flagsState,
+    messageState,
+    playersState
+    // gamePlayState: { gameSettings: {autoPlayDisabled} }
+  } = storeState;
 
   if (!flagsState.flags.includes("card-ad79")) {
     store.dispatch(actions.toggleFlags("card-ad79"));
@@ -204,6 +208,10 @@ export const resolveAd79 = () => {
     if (messageState.stage === 1) {
       const nextPlayer = (playersState.turn + 1) % playersState.players.length;
       // store.dispatch(actions.setActivePlayer(playersState.players[nextPlayer]));
+      // console.log(
+      //   `%c***If ${playersState.activePlayer} is AI, should they auto-draw now?`,
+      //   "color: red; font-weight: bold"
+      // );
       store.dispatch(actions.incrementPlayerTurn());
       store.dispatch(
         actions.updateInstructions({
@@ -219,8 +227,17 @@ export const resolveAd79 = () => {
       );
     }
   }, 100);
-  store.dispatch(actions.incrementStage());
+  // if (/* playersState.details[playersState.activePlayer].ai &&  */ !autoPlayDisabled) {
+  //   console.log(`%c***AI (${playersState.activePlayer}) auto-draw NOW?`);
+  // }
+
   store.dispatch(actions.addRecommendations([]));
+  store.dispatch(actions.incrementStage());
+
+  console.log(
+    `%c***If ${playersState.activePlayer} is AI, should they auto-draw now?`,
+    "color: red; font-weight: bold"
+  );
 };
 
 /**
@@ -324,7 +341,5 @@ export const drawCard = () => {
 
   // add card to player hand
   store.dispatch(actions.updatePlayerHand(playersState.activePlayer, newHand));
-
-  // next player's turn
   store.dispatch(actions.incrementPlayerTurn());
 };

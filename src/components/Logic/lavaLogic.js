@@ -64,11 +64,19 @@ export const placeLavaTile = square => {
 
   if (flagsState.eruptionCount) {
     store.dispatch(actions.setEruptionCounter(flagsState.eruptionCount - 1));
+    console.log(
+      `%c***If ${playersState.activePlayer} is AI, should they auto-draw now?`,
+      "color: red; font-weight: bold"
+    );
     store.dispatch(actions.incrementPlayerTurn());
   } else if (
     _.get(playersState, `details.${playersState.activePlayer}.population`, [])
       .length < 1
   ) {
+    console.log(
+      `%c***If ${playersState.activePlayer} is AI, should they auto-draw now?`,
+      "color: red; font-weight: bold"
+    );
     store.dispatch(actions.incrementPlayerTurn());
   } else {
     store.dispatch(actions.setRunCounter(2));

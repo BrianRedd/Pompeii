@@ -41,7 +41,7 @@ const Card = props => {
       data-test="presentation-card"
       className="image-fluid pompeii-card"
       alt={cardName}
-      src={`/assets/cards/${cardSrc}.png`}
+      src={`./assets/cards/${cardSrc}.png`}
     />
   );
 };
@@ -62,7 +62,7 @@ export const CardBack = () => {
       data-test="presentation-card-back"
       className="image-fluid pompeii-card"
       alt="Deck"
-      src="/assets/cards/Back.png"
+      src="./assets/cards/Back.png"
     />
   );
 };

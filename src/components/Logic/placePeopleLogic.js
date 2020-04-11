@@ -12,7 +12,7 @@ import actions from "../../redux/Actions";
 // eslint-disable-next-line import/no-cycle
 import { placeRelatives } from "./placeRelativesLogic";
 // eslint-disable-next-line import/no-cycle
-// import { drawCard } from "./cardLogic";
+import { drawCard } from "./cardLogic";
 
 /**
  * @function placePerson
@@ -25,9 +25,9 @@ export const placePerson = grid => {
   const {
     cardsState,
     flagsState,
-    // gamePlayState: {
-    //   gameSettings: { autoPlayDisabled }
-    // },
+    gamePlayState: {
+      gameSettings: { autoPlayDisabled }
+    },
     gridState,
     messageState,
     playersState
@@ -151,9 +151,10 @@ export const placePerson = grid => {
       })
     );
 
-    // if (!autoPlayDisabled) {
-    //   drawCard();
-    // }
+    console.log(
+      `%c***If ${playersState.activePlayer} is AI, should they auto-draw now?`,
+      "color: red; font-weight: bold"
+    );
   } else {
     // else complete placement
     store.dispatch(actions.setCardGrid([]));
@@ -170,9 +171,16 @@ export const placePerson = grid => {
       })
     );
 
-    // if (playerDetails.ai && !autoPlayDisabled) {
-    //   drawCard();
-    // }
+    if (
+      playersState.details[playersState.activePlayer].ai &&
+      !autoPlayDisabled
+    ) {
+      console.log(
+        `%c***If ${playersState.activePlayer} is AI, should they auto-draw now?`,
+        "color: red; font-weight: bold"
+      );
+      // drawCard();
+    }
   }
 };
 
@@ -186,7 +194,14 @@ export const placePerson = grid => {
 export const performSacrifice = (personObj, square, ai) => {
   console.log("performSacrifice; personObj:", personObj, "square:", square, ai);
   const storeState = store.getState();
-  const { flagsState, gridState, playersState } = storeState;
+  const {
+    flagsState,
+    gridState,
+    playersState
+    // gamePlayState: {
+    //   gameSettings: { autoPlayDisabled }
+    // },
+  } = storeState;
 
   if (
     !ai &&
@@ -219,4 +234,13 @@ export const performSacrifice = (personObj, square, ai) => {
   if (flagsState.flags.includes("card-omen")) {
     store.dispatch(actions.toggleFlags("card-omen"));
   }
+
+  console.log(
+    `%c***If ${playersState.activePlayer} is AI, should they auto-draw now?`,
+    "color: red; font-weight: bold"
+  );
+  // if (ai && !autoPlayDisabled) {
+  //   console.log(`%c***AI (${playersState.activePlayer}) auto-drawING NOW!!!`);
+  //   drawCard();
+  // }
 };

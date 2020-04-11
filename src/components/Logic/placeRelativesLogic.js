@@ -24,6 +24,9 @@ export const placeRelatives = grid => {
     gamePlayState,
     gridState,
     playersState
+    // gamePlayState: {
+    //   gameSettings: { autoPlayDisabled }
+    // },
   } = storeState;
 
   const playerDetails = _.get(
@@ -99,4 +102,8 @@ export const placeRelatives = grid => {
       placePerson(orderedRecommendations[0].square);
     }, 500);
   }
+
+  // if (!autoPlayDisabled) {
+  //   console.log(`%c***AI (${playersState.activePlayer}) auto-draw NOW?`);
+  // }
 };

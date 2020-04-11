@@ -44,7 +44,7 @@ const LavaTileSidebar = props => {
             >
               <img
                 alt={tileState.lavaTile}
-                src={`/assets/tiles/${tileState.lavaTile}.png`}
+                src={`./assets/tiles/${tileState.lavaTile}.png`}
               />
             </ButtonBase>
             <figcaption>(Click to Continue)</figcaption>
@@ -67,7 +67,7 @@ const LavaTileSidebar = props => {
                       }
                     }}
                   >
-                    <img alt={wilds[0]} src={`/assets/tiles/${wilds[0]}.png`} />
+                    <img alt={wilds[0]} src={`./assets/tiles/${wilds[0]}.png`} />
                   </ButtonBase>
                   <figcaption>{`(Click to Place ${wilds[0]})`}</figcaption>
                 </figure>
@@ -83,7 +83,7 @@ const LavaTileSidebar = props => {
                       }
                     }}
                   >
-                    <img alt={wilds[1]} src={`/assets/tiles/${wilds[1]}.png`} />
+                    <img alt={wilds[1]} src={`./assets/tiles/${wilds[1]}.png`} />
                   </ButtonBase>
                   <figcaption>{`(Click to Place ${wilds[1]})`}</figcaption>
                 </figure>

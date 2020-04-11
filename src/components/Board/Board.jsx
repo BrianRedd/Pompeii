@@ -35,7 +35,7 @@ const Board = props => {
       <img
         className={`${messageState.stage === 2 ? "eruption-fade" : ""}`}
         alt="Board"
-        src="/assets/Board-grid.png"
+        src="./assets/Board-grid.png"
       />
     </div>
   );

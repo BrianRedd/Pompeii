@@ -124,7 +124,7 @@ const OccupancyLayer = props => {
           <img
             alt="Lava"
             className="lava-tile"
-            src={`/assets/tiles/${grid[square].lava}.png`}
+            src={`./assets/tiles/${grid[square].lava}.png`}
           />
         )}
         {_.get(grid, `${square}.occupants.length`) > 0 && (

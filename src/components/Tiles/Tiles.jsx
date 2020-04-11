@@ -42,9 +42,9 @@ const Tiles = props => {
             style={pileEnabled ? { borderColor: `rgb(${playerColor})` } : {}}
           >
             {lavaTile ? (
-              <img alt={lavaTile} src={`/assets/tiles/${lavaTile}.png`} />
+              <img alt={lavaTile} src={`./assets/tiles/${lavaTile}.png`} />
             ) : (
-              <img alt="Tile Pile" src="/assets/tiles/back.png" />
+              <img alt="Tile Pile" src="./assets/tiles/back.png" />
             )}
           </ButtonBase>
         </div>

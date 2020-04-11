@@ -84,10 +84,18 @@ const MainContainer = props => {
     setDangerZone([]);
     if (flagsState.eruptionCount) {
       setEruptionCounter(flagsState.eruptionCount - 1);
+      console.log(
+        `%c***If ${activePlayer} is AI, should they auto-draw now?`,
+        "color: red; font-weight: bold"
+      );
       incrementPlayerTurn();
     } else if (
       _.get(playersState, `details.${activePlayer}.population.length`) < 1
     ) {
+      console.log(
+        `%c***If ${activePlayer} is AI, should they auto-draw now?`,
+        "color: red; font-weight: bold"
+      );
       incrementPlayerTurn();
     } else {
       setRunCounter(2);

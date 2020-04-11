@@ -71,6 +71,10 @@ export const runToSquare = toSquare => {
   store.dispatch(actions.setRunner());
   store.dispatch(actions.selectPerson(null));
   if (!numberOfRuns) {
+    console.log(
+      `%c***If ${playersState.activePlayer} is AI, should they auto-draw now?`,
+      "color: red; font-weight: bold;"
+    );
     store.dispatch(actions.incrementPlayerTurn());
   } else if (playerDetails.ai) {
     setTimeout(() => {
@@ -173,7 +177,11 @@ export const selectRunner = (person, square) => {
  */
 export const runForYourLives = async () => {
   const storeState = store.getState();
-  const { gridState, playersState } = storeState;
+  const {
+    gridState,
+    playersState
+    // gamePlayState: { gameSettings: {autoPlayDisabled} }
+  } = storeState;
 
   const playerDetails = _.get(
     playersState,
@@ -200,6 +208,10 @@ export const runForYourLives = async () => {
         }
       });
       selectRunner(selectedOccupant, startSquare);
+
+      // if (!autoPlayDisabled) {
+      //   console.log(`%c***AI (${playersState.activePlayer}) auto-draw NOW?`);
+      // }
     }, 750);
   }
 };
