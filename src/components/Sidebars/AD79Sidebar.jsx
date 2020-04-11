@@ -28,7 +28,7 @@ const mapDispatchToProps = {
 const AD79Sidebar = props => {
   const { messageState, flagsState, toggleFlags } = props;
   return (
-    <div data-test="sidebar-ad79" className="w-100 text-center">
+    <div data-test="sidebar-ad79" className="w-100 text-center sidebar-ad79">
       <h4 className={`text-${stageData[messageState.stage].color}`}>
         {stageData[messageState.stage].text}
       </h4>

@@ -105,9 +105,10 @@ $board-width: 1320px;
         border: 2px solid transparent;
       }
     }
-    .deck-container {
+    .deck-container,
+    .sidebar-ad79 {
       min-height: 224px;
-      background-color: rgba(255, 255, 255, 0.5);
+      background-color: $color-light-grey;
       .deck {
         border: 2px solid transparent;
       }

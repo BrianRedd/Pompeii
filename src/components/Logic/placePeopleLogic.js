@@ -151,10 +151,15 @@ export const placePerson = grid => {
       })
     );
 
-    console.log(
-      `%c***If ${playersState.activePlayer} is AI, should they auto-draw now?`,
-      "color: red; font-weight: bold"
-    );
+    if (playersState.details[playersState.activePlayer].ai) {
+      setTimeout(() => {
+        console.log(
+          `%c***AI (${playersState.activePlayer}) auto-drawing NOW!!!`,
+          "color: green; font-weight: bold"
+        );
+        drawCard();
+      }, 500);
+    }
   } else {
     // else complete placement
     store.dispatch(actions.setCardGrid([]));
@@ -175,11 +180,17 @@ export const placePerson = grid => {
       playersState.details[playersState.activePlayer].ai &&
       !autoPlayDisabled
     ) {
-      console.log(
-        `%c***If ${playersState.activePlayer} is AI, should they auto-draw now?`,
-        "color: red; font-weight: bold"
-      );
-      // drawCard();
+      // console.log(
+      //   `%c***If ${playersState.activePlayer} is AI, should they auto-draw now?`,
+      //   "color: red; font-weight: bold"
+      // );
+      setTimeout(() => {
+        console.log(
+          `%c***AI (${playersState.activePlayer}) auto-drawing NOW!!!`,
+          "color: green; font-weight: bold"
+        );
+        drawCard();
+      }, 500);
     }
   }
 };
@@ -196,11 +207,11 @@ export const performSacrifice = (personObj, square, ai) => {
   const storeState = store.getState();
   const {
     flagsState,
-    gridState,
-    playersState
     // gamePlayState: {
     //   gameSettings: { autoPlayDisabled }
     // },
+    gridState,
+    playersState
   } = storeState;
 
   if (
@@ -234,13 +245,4 @@ export const performSacrifice = (personObj, square, ai) => {
   if (flagsState.flags.includes("card-omen")) {
     store.dispatch(actions.toggleFlags("card-omen"));
   }
-
-  console.log(
-    `%c***If ${playersState.activePlayer} is AI, should they auto-draw now?`,
-    "color: red; font-weight: bold"
-  );
-  // if (ai && !autoPlayDisabled) {
-  //   console.log(`%c***AI (${playersState.activePlayer}) auto-drawING NOW!!!`);
-  //   drawCard();
-  // }
 };

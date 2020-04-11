@@ -196,9 +196,11 @@ export const resolveAd79 = () => {
   const storeState = store.getState();
   const {
     flagsState,
+    gamePlayState: {
+      gameSettings: { autoPlayDisabled }
+    },
     messageState,
     playersState
-    // gamePlayState: { gameSettings: {autoPlayDisabled} }
   } = storeState;
 
   if (!flagsState.flags.includes("card-ad79")) {
@@ -207,11 +209,6 @@ export const resolveAd79 = () => {
   setTimeout(() => {
     if (messageState.stage === 1) {
       const nextPlayer = (playersState.turn + 1) % playersState.players.length;
-      // store.dispatch(actions.setActivePlayer(playersState.players[nextPlayer]));
-      // console.log(
-      //   `%c***If ${playersState.activePlayer} is AI, should they auto-draw now?`,
-      //   "color: red; font-weight: bold"
-      // );
       store.dispatch(actions.incrementPlayerTurn());
       store.dispatch(
         actions.updateInstructions({
@@ -225,19 +222,35 @@ export const resolveAd79 = () => {
           )
         })
       );
+      setTimeout(() => {
+        console.log(
+          `%c***If ${playersState.activePlayer} is AI, should they click AD79 now?`,
+          "color: red; font-weight: bold"
+        );
+        // console.log(
+        //   `%c***AI (${playersState.activePlayer}) clicking AD79 NOW!!!`,
+        //   "color: green; font-weight: bold"
+        // );
+        // store.dispatch(actions.toggleFlags("card-ad79"));
+      }, 500);
+    } else if (
+      playersState.details[playersState.activePlayer].ai &&
+      !autoPlayDisabled
+    ) {
+      setTimeout(() => {
+        console.log(
+          `%c***AI (${playersState.activePlayer}) clicking AD79 NOW!!!`,
+          "color: green; font-weight: bold"
+        );
+        store.dispatch(actions.toggleFlags("card-ad79"));
+        // eslint-disable-next-line no-use-before-define
+        drawCard();
+      }, 1000);
     }
   }, 100);
-  // if (/* playersState.details[playersState.activePlayer].ai &&  */ !autoPlayDisabled) {
-  //   console.log(`%c***AI (${playersState.activePlayer}) auto-draw NOW?`);
-  // }
 
   store.dispatch(actions.addRecommendations([]));
   store.dispatch(actions.incrementStage());
-
-  console.log(
-    `%c***If ${playersState.activePlayer} is AI, should they auto-draw now?`,
-    "color: red; font-weight: bold"
-  );
 };
 
 /**
@@ -301,6 +314,14 @@ export const resolveOmen = () => {
           true
         );
       }
+      setTimeout(() => {
+        console.log(
+          `%c***AI (${playersState.activePlayer}), after murdering an innocent, is drawing a card!!!`,
+          "color: green; font-weight: bold"
+        );
+        // eslint-disable-next-line no-use-before-define
+        drawCard();
+      }, 1000);
     }, 1000);
   } else if (!flagsState.flags.includes("card-omen")) {
     store.dispatch(actions.toggleFlags("card-omen"));
@@ -339,7 +360,11 @@ export const drawCard = () => {
     takenCard
   ];
 
-  // add card to player hand
-  store.dispatch(actions.updatePlayerHand(playersState.activePlayer, newHand));
   store.dispatch(actions.incrementPlayerTurn());
+  // add card to player hand
+  setTimeout(() => {
+    store.dispatch(
+      actions.updatePlayerHand(playersState.activePlayer, newHand)
+    );
+  }, 0);
 };
