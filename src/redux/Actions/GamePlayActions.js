@@ -112,7 +112,9 @@ export const gameSetup = (
           gender: Math.floor(Math.random() * 2) === 1 ? "male" : "female"
         };
         occupants.push(personObj);
-        theseDetails[player].population.push(personObj); // TODO
+        theseDetails[player].population.push(personObj);
+        theseDetails[player].totalPieces =
+          _.get(theseDetails, `${player}.totalPieces`, 0) + 1;
       }
       gridSquares[grid].occupants = occupants;
     });

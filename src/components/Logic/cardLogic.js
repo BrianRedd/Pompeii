@@ -381,7 +381,7 @@ export const drawCard = () => {
   }
 
   const newHand = [
-    ..._.get(playersState, `details.${playersState.activePlayer}.hand`),
+    ..._.get(playersState, `details.${playersState.activePlayer}.hand`, []),
     takenCard
   ];
 

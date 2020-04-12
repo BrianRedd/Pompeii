@@ -32,31 +32,15 @@ test("renders without error", () => {
 describe("draw pile", () => {
   let wrapper;
   let pile;
-  let deck;
   let empty;
   beforeEach(() => {
     wrapper = commonSetup(TestedComponent, defaultProps);
     pile = findByTestAttr(wrapper, "card-pile-deck");
-    deck = findByTestAttr(wrapper, "card-deck");
     empty = findByTestAttr(wrapper, "card-pile-deck-empty");
   });
   test("renders", () => {
     expect(pile.length).toBe(1);
     expect(empty.length).toBe(0);
-  });
-  test("clickable by default", () => {
-    expect(deck.length).toBe(1);
-  });
-  test("clicking draws card", () => {
-    deck.simulate("click");
-    expect(mockDraw).toHaveBeenCalled();
-  });
-  test("not clickable if deck is empty", () => {
-    wrapper = commonSetup(TestedComponent, cardDrawnProps);
-    deck = findByTestAttr(wrapper, "card-deck");
-    empty = findByTestAttr(wrapper, "card-pile-deck-empty");
-    expect(deck.length).toBe(0);
-    expect(empty.length).toBe(1);
   });
 });
 

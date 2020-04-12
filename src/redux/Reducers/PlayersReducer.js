@@ -24,6 +24,7 @@ const playersState = (state = types.playersState.defaults, action) => {
   );
   let idx;
   let playerId;
+  let transitionObj;
   switch (type) {
     case actions.SET_PLAYERS_ARRAY:
       return {
@@ -73,37 +74,30 @@ const playersState = (state = types.playersState.defaults, action) => {
         }
       };
     case actions.INCREMENT_PLAYER_CASUALTIES:
-      populationArray = _.get(
-        state,
-        `details.${payload.playerId}.population`,
-        []
-      );
-      idx = populationArray.indexOf(payload.personObj);
-      populationArray.splice(idx, 1);
-      casualtiesArray = _.get(
-        state,
-        `details.${payload.playerId}.casualties`,
-        []
-      );
-      casualtiesArray.push(payload.personObj);
+      playerId = payload.player;
+      populationArray = _.get(state, `details.${playerId}.population`, []);
+      casualtiesArray = _.get(state, `details.${playerId}.casualties`, []);
+      idx = populationArray.map(p => p.id).indexOf(payload.id);
+      transitionObj = populationArray.splice(idx, 1);
+      casualtiesArray.push(transitionObj[0]);
       return {
         ...state,
         details: {
           ...state.details,
-          [payload.playerId]: {
-            ...state.details[payload.playerId],
-            population: populationArray,
-            casualties: casualtiesArray
+          [playerId]: {
+            ...state.details[playerId],
+            casualties: casualtiesArray,
+            population: populationArray
           }
         }
       };
     case actions.INCREMENT_PLAYER_SAVED:
       playerId = payload.player;
       populationArray = _.get(state, `details.${playerId}.population`, []);
-      idx = populationArray.indexOf(payload);
-      populationArray.splice(idx, 1);
       savedArray = _.get(state, `details.${playerId}.saved`, []);
-      savedArray.push(payload);
+      idx = populationArray.map(p => p.id).indexOf(payload.id);
+      transitionObj = populationArray.splice(idx, 1);
+      savedArray.push(transitionObj[0]);
       return {
         ...state,
         details: {

@@ -66,11 +66,10 @@ export const incrementPlayerPopulation = (playerId, personObj) => ({
  * @function incrementPlayerCasualtiesInStore
  * @description adds/updates single player casualties to PlayersState store
  * @param {String} playerId
- * @param {Number} personObj - player casualty
  */
-export const incrementPlayerCasualtiesInStore = (playerId, personObj) => ({
+export const incrementPlayerCasualtiesInStore = personObj => ({
   type: actionTypes.INCREMENT_PLAYER_CASUALTIES,
-  payload: { playerId, personObj }
+  payload: personObj
 });
 
 /**
@@ -105,7 +104,7 @@ export const incrementPlayerCasualties = (playerId, personObj) => (
       })
     );
   }, 10);
-  dispatch(incrementPlayerCasualtiesInStore(playerId, personObj));
+  dispatch(incrementPlayerCasualtiesInStore(personObj));
 };
 
 /**

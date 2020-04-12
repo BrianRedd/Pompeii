@@ -1,12 +1,10 @@
 /** @module SnackbarReducer.test */
 
 import { ADD_SNACKBAR } from "../../ActionTypes";
+import * as types from "../../../types/types";
 import Reducer from "../SnackbarReducer";
 
-const defaultState = {
-  message: null,
-  type: "default"
-};
+const defaultState = types.snackbarState.defaults;
 
 test("should return initial state", () => {
   expect(Reducer(undefined, { type: "", payload: "" })).toEqual(defaultState);

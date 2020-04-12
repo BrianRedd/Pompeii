@@ -1,8 +1,8 @@
-/** PlayersReducer.test */
+/** @module PlayersReducer.test */
 
 import * as actionTypes from "../../ActionTypes";
-import Reducer from "../PlayersReducer";
 import * as types from "../../../types/types";
+import Reducer from "../PlayersReducer";
 
 const defaultState = types.playersState.defaults;
 
@@ -68,61 +68,97 @@ test("should handle UPDATE_PLAYER_HAND action", () => {
 test("should handle INCREMENT_PLAYER_POPULATION action", () => {
   const payload = {
     playerId: "player1",
-    population: [{ id: "1" }]
+    personObj: { id: "2", player: "player1" }
   };
   const action = {
     type: actionTypes.INCREMENT_PLAYER_POPULATION,
     payload
   };
   const state = Reducer(
-    { details: { player1: { personObj: { id: "2" } } } },
+    {
+      details: {
+        player1: {
+          totalPieces: 1,
+          population: [{ id: "1", player: "player1" }]
+        }
+      }
+    },
     action
   );
   expect(state.details).toEqual({
     player1: {
-      population: [{ id: "1" }, { id: "2" }]
+      population: [
+        { id: "1", player: "player1" },
+        { id: "2", player: "player1" }
+      ],
+      totalPieces: 2
     }
   });
 });
 
 test("should handle INCREMENT_PLAYER_CASUALTIES action", () => {
-  const payload = {
-    playerId: "player1",
-    casualties: 1
-  };
+  const payload = { id: "1", player: "player1" };
   const action = {
     type: actionTypes.INCREMENT_PLAYER_CASUALTIES,
     payload
   };
   const state = Reducer(
-    { details: { player1: { casualties: 0, population: 2 } } },
+    {
+      details: {
+        player1: {
+          population: [
+            { id: "1", player: "player1" },
+            { id: "2", player: "player1" }
+          ],
+          casualties: [{ id: "4", player: "player1" }],
+          totalPieces: 3
+        }
+      }
+    },
     action
   );
   expect(state.details).toEqual({
     player1: {
-      casualties: 1,
-      population: 1
+      population: [{ id: "2", player: "player1" }],
+      casualties: [
+        { id: "4", player: "player1" },
+        { id: "1", player: "player1" }
+      ],
+      totalPieces: 3
     }
   });
 });
 
 test("should handle INCREMENT_PLAYER_SAVED action", () => {
-  const payload = {
-    playerId: "player1",
-    saved: 1
-  };
+  const payload = { id: "2", player: "player1" };
   const action = {
     type: actionTypes.INCREMENT_PLAYER_SAVED,
     payload
   };
   const state = Reducer(
-    { details: { player1: { population: 2, saved: 0 } } },
+    {
+      details: {
+        player1: {
+          population: [{ id: "2", player: "player1" }],
+          casualties: [
+            { id: "4", player: "player1" },
+            { id: "1", player: "player1" }
+          ],
+          totalPieces: 3
+        }
+      }
+    },
     action
   );
   expect(state.details).toEqual({
     player1: {
-      population: 1,
-      saved: 1
+      population: [],
+      casualties: [
+        { id: "4", player: "player1" },
+        { id: "1", player: "player1" }
+      ],
+      saved: [{ id: "2", player: "player1" }],
+      totalPieces: 3
     }
   });
 });

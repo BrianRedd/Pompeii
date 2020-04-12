@@ -102,6 +102,7 @@ const StartGameContainer = props => {
         flags={flags}
         commitStartGame={commitStartGame}
         initialValues={initialValues}
+        toggleFlags={toggleFlags}
       />
     </div>
   );

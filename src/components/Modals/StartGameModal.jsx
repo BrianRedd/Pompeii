@@ -158,7 +158,7 @@ const PlayerNameSelection = ({ formProps }) => {
  * @returns {React.Component} - Rendered component.
  */
 const StartGameModal = props => {
-  const { flags, commitStartGame, initialValues } = props;
+  const { flags, commitStartGame, initialValues, toggleFlags } = props;
 
   const startGame = "game-start";
 
@@ -244,130 +244,141 @@ const StartGameModal = props => {
                   </React.Fragment>
                 )}
               <Col xs={12}>
-                <Row className="justify-content-end">
-                  <Tooltip
-                    title={`Dev Mode: AI AutoPlay Disabled: ${
-                      formProps.values.autoPlayDisabled ? "ON" : "OFF"
-                    }`}
+                <Row className="d-flex justify-content-between">
+                  <Button
+                    data-test="button-close"
+                    className="btn btn-secondary"
+                    onClick={() => toggleFlags("rules-modal")}
                   >
-                    <div>
-                      <IconButton
-                        onClick={() =>
-                          formProps.setFieldValue(
-                            "autoPlayDisabled",
-                            !formProps.values.autoPlayDisabled
-                          )
-                        }
-                      >
-                        {formProps.values.autoPlayDisabled ? (
-                          <i className="far fa-pause-circle fa-sm color-magenta" />
-                        ) : (
-                          <i className="far fa-play-circle fa-sm color-grey" />
-                        )}
-                      </IconButton>
-                    </div>
-                  </Tooltip>
-                  <Tooltip
-                    title={`Dev Mode: Pre-populate Board ${
-                      formProps.values.prePopulate ? "ON" : "OFF"
-                    }`}
-                  >
-                    <div>
-                      <IconButton
-                        onClick={() =>
-                          formProps.setFieldValue(
-                            "prePopulate",
-                            !formProps.values.prePopulate
-                          )
-                        }
-                      >
-                        {formProps.values.prePopulate ? (
-                          <i className="fas fa-users fa-sm color-magenta" />
-                        ) : (
-                          <i className="fas fa-users fa-sm color-grey" />
-                        )}
-                      </IconButton>
-                    </div>
-                  </Tooltip>
-                  <Tooltip
-                    title={`Dev Mode: Phase ${formProps.values.startPhase + 1}`}
-                  >
-                    <div>
-                      <IconButton
-                        onClick={() => {
-                          const nextPhase =
-                            (formProps.values.startPhase + 1) % 3;
-                          formProps.setFieldValue("startPhase", nextPhase);
-                          formProps.setFieldValue(
-                            "prePopulate",
-                            !!(nextPhase > 0)
-                          );
-                        }}
-                      >
-                        {(() => {
-                          switch (formProps.values.startPhase) {
-                            case 1:
-                              return (
-                                <i className="fa-sm fas fa-dice-two color-blue" />
-                              );
-                            case 2:
-                              return (
-                                <i className="fa-sm fas fa-dice-three color-magenta" />
-                              );
-                            default:
-                              return (
-                                <i className="fa-sm fas fa-dice-one color-grey" />
-                              );
+                    <span className="fas fa-book fa-lg mr-2" />
+                    Game Rules
+                  </Button>
+                  <div className="d-flex justify-content-around">
+                    <Tooltip
+                      title={`Dev Mode: AI AutoPlay Disabled: ${
+                        formProps.values.autoPlayDisabled ? "ON" : "OFF"
+                      }`}
+                    >
+                      <div>
+                        <IconButton
+                          onClick={() =>
+                            formProps.setFieldValue(
+                              "autoPlayDisabled",
+                              !formProps.values.autoPlayDisabled
+                            )
                           }
-                        })()}
-                      </IconButton>
-                    </div>
-                  </Tooltip>
-                  <Tooltip
-                    title={`Dev Mode: Terror Delay ${
-                      formProps.values.noEruption ? "OFF" : "ON"
-                    }`}
-                  >
-                    <div>
-                      <IconButton
-                        onClick={() =>
-                          formProps.setFieldValue(
-                            "noEruption",
-                            !formProps.values.noEruption
-                          )
-                        }
-                        disabled={formProps.values.startPhase !== 2}
-                      >
-                        {formProps.values.noEruption ? (
-                          <i className="far fa-grimace fa-sm color-magenta" />
-                        ) : (
-                          <i className="far fa-surprise fa-sm color-grey" />
-                        )}
-                      </IconButton>
-                    </div>
-                  </Tooltip>
-                  <Tooltip
-                    title={`Dev Mode: Show Strategy Values ${
-                      formProps.values.showStrategyValues ? "ON" : "OFF"
-                    }`}
-                  >
-                    <div>
-                      <IconButton
-                        onClick={() =>
-                          formProps.setFieldValue(
-                            "showStrategyValues",
-                            !formProps.values.showStrategyValues
-                          )
-                        }
-                      >
-                        {formProps.values.showStrategyValues ? (
-                          <i className="fas fa-eye fa-sm color-magenta" />
-                        ) : (
-                          <i className="fas fa-eye-slash fa-sm color-grey" />
-                        )}
-                      </IconButton>
-                    </div>
-                  </Tooltip>
+                        >
+                          {formProps.values.autoPlayDisabled ? (
+                            <i className="far fa-pause-circle fa-sm color-magenta" />
+                          ) : (
+                            <i className="far fa-play-circle fa-sm color-grey" />
+                          )}
+                        </IconButton>
+                      </div>
+                    </Tooltip>
+                    <Tooltip
+                      title={`Dev Mode: Pre-populate Board ${
+                        formProps.values.prePopulate ? "ON" : "OFF"
+                      }`}
+                    >
+                      <div>
+                        <IconButton
+                          onClick={() =>
+                            formProps.setFieldValue(
+                              "prePopulate",
+                              !formProps.values.prePopulate
+                            )
+                          }
+                        >
+                          {formProps.values.prePopulate ? (
+                            <i className="fas fa-users fa-sm color-magenta" />
+                          ) : (
+                            <i className="fas fa-users fa-sm color-grey" />
+                          )}
+                        </IconButton>
+                      </div>
+                    </Tooltip>
+                    <Tooltip
+                      title={`Dev Mode: Phase ${formProps.values.startPhase +
+                        1}`}
+                    >
+                      <div>
+                        <IconButton
+                          onClick={() => {
+                            const nextPhase =
+                              (formProps.values.startPhase + 1) % 3;
+                            formProps.setFieldValue("startPhase", nextPhase);
+                            formProps.setFieldValue(
+                              "prePopulate",
+                              !!(nextPhase > 0)
+                            );
+                          }}
+                        >
+                          {(() => {
+                            switch (formProps.values.startPhase) {
+                              case 1:
+                                return (
+                                  <i className="fa-sm fas fa-dice-two color-blue" />
+                                );
+                              case 2:
+                                return (
+                                  <i className="fa-sm fas fa-dice-three color-magenta" />
+                                );
+                              default:
+                                return (
+                                  <i className="fa-sm fas fa-dice-one color-grey" />
+                                );
+                            }
+                          })()}
+                        </IconButton>
+                      </div>
+                    </Tooltip>
+                    <Tooltip
+                      title={`Dev Mode: Terror Delay ${
+                        formProps.values.noEruption ? "OFF" : "ON"
+                      }`}
+                    >
+                      <div>
+                        <IconButton
+                          onClick={() =>
+                            formProps.setFieldValue(
+                              "noEruption",
+                              !formProps.values.noEruption
+                            )
+                          }
+                          disabled={formProps.values.startPhase !== 2}
+                        >
+                          {formProps.values.noEruption ? (
+                            <i className="far fa-grimace fa-sm color-magenta" />
+                          ) : (
+                            <i className="far fa-surprise fa-sm color-grey" />
+                          )}
+                        </IconButton>
+                      </div>
+                    </Tooltip>
+                    <Tooltip
+                      title={`Dev Mode: Show Strategy Values ${
+                        formProps.values.showStrategyValues ? "ON" : "OFF"
+                      }`}
+                    >
+                      <div>
+                        <IconButton
+                          onClick={() =>
+                            formProps.setFieldValue(
+                              "showStrategyValues",
+                              !formProps.values.showStrategyValues
+                            )
+                          }
+                        >
+                          {formProps.values.showStrategyValues ? (
+                            <i className="fas fa-eye fa-sm color-magenta" />
+                          ) : (
+                            <i className="fas fa-eye-slash fa-sm color-grey" />
+                          )}
+                        </IconButton>
+                      </div>
+                    </Tooltip>
+                  </div>
                 </Row>
               </Col>
             </ModalBody>
@@ -393,7 +404,8 @@ StartGameModal.propTypes = {
   initialValues: PropTypes.shape({
     key: PropTypes.any
   }),
-  commitStartGame: PropTypes.func
+  commitStartGame: PropTypes.func,
+  toggleFlags: PropTypes.func
 };
 
 StartGameModal.defaultProps = {
@@ -404,7 +416,8 @@ StartGameModal.defaultProps = {
     player2: "Player 2",
     player3: "Player 3"
   },
-  commitStartGame: () => {}
+  commitStartGame: () => {},
+  toggleFlags: () => {}
 };
 
 export default StartGameModal;

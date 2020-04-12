@@ -60,6 +60,11 @@ const flagsList = [
     name: "game-start",
     description: "Start of Game Modal",
     defaultState: true
+  },
+  {
+    name: "rules-modal",
+    description: "Rules Modal",
+    defaultState: false
   }
 ];
 

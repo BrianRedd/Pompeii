@@ -63,47 +63,34 @@ test("updatePlayerHand", () => {
 
 test("incrementPlayerPopulation", () => {
   const playerId = "player1";
-  const population = [{ id: 2 }];
+  const personObj = { player: "player1", id: "1" };
   const expectedAction = {
     type: actionTypes.INCREMENT_PLAYER_POPULATION,
-    payload: {
-      playerId,
-      population
-    }
+    payload: { playerId, personObj }
   };
-  expect(actions.incrementPlayerPopulation(playerId, population)).toEqual(
+  expect(actions.incrementPlayerPopulation(playerId, personObj)).toEqual(
     expectedAction
   );
 });
 
 test("incrementPlayerCasualtiesInStore", () => {
-  const playerId = "player1";
-  const casualties = 1;
+  const payload = { player: "player1", id: "1" };
   const expectedAction = {
     type: actionTypes.INCREMENT_PLAYER_CASUALTIES,
-    payload: {
-      playerId,
-      casualties
-    }
+    payload
   };
-  expect(
-    actions.incrementPlayerCasualtiesInStore(playerId, casualties)
-  ).toEqual(expectedAction);
+  expect(actions.incrementPlayerCasualtiesInStore(payload)).toEqual(
+    expectedAction
+  );
 });
 
 test("incrementPlayerSavedInStore", () => {
-  const playerId = "player1";
-  const saved = 1;
+  const payload = { player: "player1", id: "1" };
   const expectedAction = {
     type: actionTypes.INCREMENT_PLAYER_SAVED,
-    payload: {
-      playerId,
-      saved
-    }
+    payload
   };
-  expect(actions.incrementPlayerSavedInStore(playerId, saved)).toEqual(
-    expectedAction
-  );
+  expect(actions.incrementPlayerSavedInStore(payload)).toEqual(expectedAction);
 });
 
 test("setPlayerTurn", () => {
@@ -122,11 +109,13 @@ describe("incrementPlayerTurn", () => {
       details: {
         player1: {
           name: "Player 1",
-          color: "#000000"
+          color: "#000000",
+          population: [{ id: "1" }]
         },
         player2: {
           name: "Player 2",
-          color: "#FFFFFF"
+          color: "#FFFFFF",
+          population: [{ id: "1" }]
         }
       }
     },
@@ -152,13 +141,6 @@ describe("incrementPlayerTurn", () => {
           text: `Player 2: ${constant.PLAY}`,
           color: "#FFFFFF"
         }
-      },
-      {
-        type: actionTypes.ADD_SNACKBAR,
-        payload: {
-          message: "It is now Player 2's turn",
-          type: "info"
-        }
       }
     ];
     const store = configureMockStore([thunk])(thisState);
@@ -183,13 +165,6 @@ describe("incrementPlayerTurn", () => {
         payload: {
           text: `Player 1: ${constant.PLAY}`,
           color: "#000000"
-        }
-      },
-      {
-        type: actionTypes.ADD_SNACKBAR,
-        payload: {
-          message: "It is now Player 1's turn",
-          type: "info"
         }
       }
     ];
