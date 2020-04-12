@@ -50,6 +50,7 @@ const BoardContainer = props => {
         playersState={playersState}
         runCount={flagsState.runCount}
         messageState={messageState}
+        selectedPerson={gamePlayState.selectedPerson}
       />
       {gamePlayState.selectedPerson && (
         <AnimatedPieceLayer

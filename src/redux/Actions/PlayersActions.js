@@ -97,7 +97,10 @@ export const incrementPlayerCasualties = (playerId, personObj) => (
   setTimeout(() => {
     dispatch(
       addSnackbar({
-        message: `${playersState.details[playerId].name}'s people have suffered casualties!`,
+        message: `${_.get(
+          playersState,
+          `details.${playerId}.name`
+        )}'s people have suffered casualties!`,
         type: "error"
       })
     );
@@ -121,17 +124,19 @@ export const incrementPlayerSavedInStore = personObj => ({
  * @param {Number} personObj - saved person
  */
 export const incrementPlayerSaved = personObj => (dispatch, getState) => {
-  const { playersState } = getState();
-  const playerId = personObj.player;
-  setTimeout(() => {
-    dispatch(
-      addSnackbar({
-        message: `One of ${playersState.details[playerId].name}'s people have escaped!`,
-        type: "success"
-      })
-    );
-  }, 10);
-  dispatch(incrementPlayerSavedInStore(personObj));
+  if (personObj) {
+    const { playersState } = getState();
+    const playerId = personObj.player;
+    setTimeout(() => {
+      dispatch(
+        addSnackbar({
+          message: `One of ${playersState.details[playerId].name}'s people have escaped!`,
+          type: "success"
+        })
+      );
+    }, 10);
+    dispatch(incrementPlayerSavedInStore(personObj));
+  }
 };
 
 /**

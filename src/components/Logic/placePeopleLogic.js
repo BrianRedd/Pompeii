@@ -71,7 +71,7 @@ export const placePerson = square => {
       message: `${playerDetails.name} places a person at ${
         square.split("_")[1]
       } x ${square.split("_")[0]}`,
-      type: "default"
+      type: "info"
     })
   );
   store.dispatch(actions.addRecommendations([]));

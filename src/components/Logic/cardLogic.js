@@ -233,7 +233,19 @@ export const resolveAd79 = () => {
             "color: green; font-weight: bold"
           );
           store.dispatch(actions.toggleFlags("card-ad79"));
-          console.log("%cCheck if NEXT PLAYER is AI", "color: chartreuse;");
+          lavaLogic.drawTile();
+        }, 1000);
+      } else if (
+        _.get(
+          playersState,
+          `details.${playersState.players[nextPlayer]}.ai` && !autoPlayDisabled
+        )
+      ) {
+        setTimeout(() => {
+          console.log(
+            `%c***AI (${playersState.players[nextPlayer]}) is auto-drawing a lava tile!`,
+            "color: green; font-weight: bold"
+          );
           lavaLogic.drawTile();
         }, 1000);
       }

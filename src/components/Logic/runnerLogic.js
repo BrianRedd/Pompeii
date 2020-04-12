@@ -41,7 +41,7 @@ export const runToSquare = toSquare => {
     );
     const oldSquareIdx = oldSquareOccupants
       .map(occupant => occupant.id)
-      .indexOf(gamePlayState.selectedPerson.id);
+      .indexOf(_.get(gamePlayState, "selectedPerson.id"));
     oldSquareOccupants.splice(oldSquareIdx, 1);
     store.dispatch(
       actions.placePeopleInSquare(gridState.runFromSquare, oldSquareOccupants)
@@ -84,7 +84,6 @@ export const runToSquare = toSquare => {
           `%c***AI (${playersState.activePlayer}) is auto-drawing a lava tile!`,
           "color: green; font-weight: bold"
         );
-        console.log("%cCheck if NEXT PLAYER is AI", "color: chartreuse;");
         lavaLogic.drawTile();
       }, 1000);
     }
@@ -93,6 +92,7 @@ export const runToSquare = toSquare => {
     store.dispatch(actions.incrementPlayerTurn());
     if (
       _.get(playersState, `details.${playersState.players[nextPlayer]}.ai`) &&
+      !_.get(gamePlayState, "gameSettings.autoPlayDisabled") &&
       !amIAI
     ) {
       setTimeout(() => {
@@ -100,7 +100,6 @@ export const runToSquare = toSquare => {
           `%c***AI (${playersState.players[nextPlayer]}) is auto-drawing a lava tile!`,
           "color: green; font-weight: bold"
         );
-        console.log("%cCheck if NEXT PLAYER is AI", "color: chartreuse;");
         lavaLogic.drawTile();
       }, 1000);
     }
@@ -114,19 +113,21 @@ export const runToSquare = toSquare => {
       const sortedRecommendations = utils.randAndArrangeRecommendations(
         helper.runnerRecommendations()
       );
-      const selectedSquare = sortedRecommendations[0].square;
-      const census = _.get(gridState, `grid.${selectedSquare}.occupants`);
-      let selectedOccupant = "";
-      census.forEach(occupant => {
-        if (
-          occupant.player === playersState.activePlayer &&
-          !selectedOccupant
-        ) {
-          selectedOccupant = occupant;
-        }
-      });
-      // eslint-disable-next-line no-use-before-define
-      selectRunner(selectedOccupant, selectedSquare);
+      const selectedSquare = _.get(sortedRecommendations, "[0].square");
+      if (selectedSquare) {
+        const census = _.get(gridState, `grid.${selectedSquare}.occupants`);
+        let selectedOccupant = "";
+        census.forEach(occupant => {
+          if (
+            occupant.player === playersState.activePlayer &&
+            !selectedOccupant
+          ) {
+            selectedOccupant = occupant;
+          }
+        });
+        // eslint-disable-next-line no-use-before-define
+        selectRunner(selectedOccupant, selectedSquare);
+      }
     }, 100);
   }
 };
@@ -158,7 +159,7 @@ export const selectRunner = (person, square) => {
     store.dispatch(
       actions.addSnackbar({
         message: "Not your person!",
-        type: "default"
+        type: "info"
       })
     );
     return;
@@ -170,7 +171,7 @@ export const selectRunner = (person, square) => {
     store.dispatch(
       actions.addSnackbar({
         message: "Already ran this person this turn!",
-        type: "default"
+        type: "info"
       })
     );
     return;
@@ -193,7 +194,7 @@ export const selectRunner = (person, square) => {
             playersState,
             `details.${playersState.activePlayer}.name`
           )} ran a person from ${square} to ${sortedRecommendations[0].square}`,
-          type: "default"
+          type: "info"
         })
       );
       runToSquare(sortedRecommendations[0].square);

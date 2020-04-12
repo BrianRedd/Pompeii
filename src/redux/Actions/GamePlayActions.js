@@ -97,7 +97,10 @@ export const gameSetup = (
     const gridKeys = Object.keys(gridSquares);
     gridKeys.forEach(grid => {
       const potentialPop = _.get(gridSquares, `${grid}.buildingCapacity`, 0);
-      const actualPop = Math.floor(Math.random() * potentialPop);
+      const actualPop =
+        gameSettings.startPhase === 2
+          ? Math.ceil(Math.random() * potentialPop)
+          : Math.floor(Math.random() * potentialPop);
       const occupants = [];
       for (let i = 0; i < actualPop; i += 1) {
         const rand = Math.floor(Math.random() * playersArray.length);

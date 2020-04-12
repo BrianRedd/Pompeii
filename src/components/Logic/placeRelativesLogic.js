@@ -79,7 +79,7 @@ export const placeRelatives = square => {
         message: `${playerDetails.name} places a relative at ${
           square.split("_")[1]
         } x ${square.split("_")[0]}`,
-        type: "default"
+        type: "info"
       })
     );
   }

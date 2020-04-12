@@ -84,7 +84,6 @@ export const placeLavaTile = square => {
           `%c***AI (${playersState.activePlayer}) is auto-drawing a lava tile! (${flagsState.eruptionCount})`,
           "color: green; font-weight: bold"
         );
-        console.log("%cCheck if NEXT PLAYER is AI", "color: chartreuse;");
         // eslint-disable-next-line no-use-before-define
         drawTile();
       }, 1000);
@@ -94,6 +93,7 @@ export const placeLavaTile = square => {
     store.dispatch(actions.incrementPlayerTurn());
     if (
       _.get(playersState, `details.${playersState.players[nextPlayer]}.ai`) &&
+      !autoPlayDisabled &&
       !amIAI
     ) {
       setTimeout(() => {
@@ -101,7 +101,6 @@ export const placeLavaTile = square => {
           `%c***AI (${playersState.players[nextPlayer]}) is auto-drawing a lava tile!`,
           "color: green; font-weight: bold"
         );
-        console.log("%cCheck if NEXT PLAYER is AI", "color: chartreuse;");
         // eslint-disable-next-line no-use-before-define
         drawTile();
       }, 1000);
@@ -119,16 +118,26 @@ export const placeLavaTile = square => {
           `%c***AI (${playersState.activePlayer}) is auto-drawing a lava tile! (no population)`,
           "color: green; font-weight: bold"
         );
-        console.log("%cCheck if NEXT PLAYER is AI", "color: chartreuse;");
         // eslint-disable-next-line no-use-before-define
         drawTile();
       }, 1000);
-    } else {
-      console.log(
-        "Human Player just placed a tile; should AI be able play now?"
-      );
     }
+    const nextPlayer = (playersState.turn + 1) % playersState.players.length;
+
     store.dispatch(actions.incrementPlayerTurn());
+    if (
+      _.get(playersState, `details.${playersState.players[nextPlayer]}.ai`) &&
+      !autoPlayDisabled
+    ) {
+      setTimeout(() => {
+        console.log(
+          `%c***AI (${playersState.players[nextPlayer]}) is auto-drawing a lava tile!`,
+          "color: green; font-weight: bold"
+        );
+        // eslint-disable-next-line no-use-before-define
+        drawTile();
+      }, 1000);
+    }
   } else {
     console.log(
       "%cset run counter to 2 and continue",
@@ -188,7 +197,7 @@ export const highlightDangerZones = tile => {
             playersState,
             `details.${playersState.activePlayer}.name`
           )} places ${tile} lava at ${recommendations[0].square}`,
-          type: "default"
+          type: "info"
         })
       );
     }
@@ -247,7 +256,7 @@ export const highlightDangerZones = tile => {
               playersState,
               `details.${playersState.activePlayer}.name`
             )} places ${tile} lava at ${recommendations[0].square}`,
-            type: "default"
+            type: "info"
           })
         );
       }
@@ -264,26 +273,62 @@ export const highlightDangerZones = tile => {
 export const drawTile = human => {
   console.log("drawTile", human ? "by a human!" : "");
   const storeState = store.getState();
-  const { flagsState, tileState } = storeState;
+  const {
+    flagsState,
+    gridState: { grid },
+    tileState,
+    playersState
+  } = storeState;
 
-  const tilePile = [...tileState.pile];
-  if (!flagsState.flags.includes("placing-lava-tile")) {
-    store.dispatch(actions.toggleFlags("placing-lava-tile"));
+  console.log(
+    "DrawTile: ActivePlayer:",
+    playersState.activePlayer,
+    playersState.details[playersState.activePlayer].ai
+  );
+
+  let census = [];
+  Object.values(playersState.details).forEach(arr => {
+    census = [...census, ...arr.population];
+  });
+  if (!_.get(tileState, "pile.length") || census.length === 0) {
+    alert("Out of tiles or people; GAME OVER!");
+    const gridArray = Object.keys(grid);
+    gridArray.forEach(square => {
+      if (_.get(grid, `${square}.occupants.length`) > 0) {
+        _.get(grid, `${square}.occupants`).forEach(person => {
+          store.dispatch(
+            actions.incrementPlayerCasualtiesInStore(person.player, 1)
+          );
+        });
+      }
+      if (!_.get(grid, `${square}.lava`)) {
+        store.dispatch(actions.placeLavaTileOnSquare(square, "Lava"));
+      }
+      store.dispatch(actions.placePeopleInSquare(square, []));
+    });
+    store.dispatch(actions.toggleFlags("game-over"));
   }
 
-  // draw tile
-  const takenTile = tilePile.pop();
-  store.dispatch(actions.setLavaTile(takenTile));
+  if (!(!human && !playersState.details[playersState.activePlayer].ai)) {
+    const tilePile = [...tileState.pile];
+    if (!flagsState.flags.includes("placing-lava-tile")) {
+      store.dispatch(actions.toggleFlags("placing-lava-tile"));
+    }
 
-  store.dispatch(actions.takeTile());
+    // draw tile
+    const takenTile = tilePile.pop();
+    store.dispatch(actions.setLavaTile(takenTile));
 
-  const wilds = _.get(tileState, `tiles.${takenTile}.wilds`);
-  if (wilds) {
-    store.dispatch(actions.toggleFlags("wild-lava-tile"));
-  } else {
-    highlightDangerZones(takenTile);
-  }
-  if (!flagsState.flags.includes("lava-tile")) {
-    store.dispatch(actions.toggleFlags("lava-tile"));
+    store.dispatch(actions.takeTile());
+
+    const wilds = _.get(tileState, `tiles.${takenTile}.wilds`);
+    if (wilds) {
+      store.dispatch(actions.toggleFlags("wild-lava-tile"));
+    } else {
+      highlightDangerZones(takenTile);
+    }
+    if (!flagsState.flags.includes("lava-tile")) {
+      store.dispatch(actions.toggleFlags("lava-tile"));
+    }
   }
 };

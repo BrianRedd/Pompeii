@@ -282,7 +282,7 @@ export const snackbarState = {
   }),
   defaults: {
     message: null,
-    type: "default"
+    type: "info"
   }
 };
 

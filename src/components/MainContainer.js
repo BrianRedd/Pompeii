@@ -119,12 +119,16 @@ const MainContainer = props => {
         deckEnabled={
           _.get(playersState, `details.${activePlayer}.hand.length`) < 4 &&
           !flagsState.flags.includes("placing-person") &&
-          !flagsState.flags.includes("card-omen")
+          !flagsState.flags.includes("card-omen") &&
+          (!_.get(playersState, `details.${playersState.activePlayer}.ai`) ||
+            _.get(gamePlayState, "gameSettings.autoPlayDisabled"))
         }
         pileEnabled={
           messageState.stage === 2 &&
           !flagsState.flags.includes("placing-lava-tile") &&
-          !flagsState.runCount
+          !flagsState.runCount &&
+          (!_.get(playersState, `details.${playersState.activePlayer}.ai`) ||
+            _.get(gamePlayState, "gameSettings.autoPlayDisabled"))
         }
         playPompCard={playPompCard}
         placePerson={placePerson}
