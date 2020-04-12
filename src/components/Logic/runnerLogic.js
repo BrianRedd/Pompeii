@@ -73,12 +73,12 @@ export const runToSquare = toSquare => {
   store.dispatch(actions.setRunner());
   store.dispatch(actions.selectPerson(null));
   if (!numberOfRuns) {
-    let amIAI = false;
+    // let amIAI = false;
     if (
       _.get(playersState, `details.${playersState.activePlayer}.ai`) &&
       !_.get(gamePlayState, "gameSettings.autoPlayDisabled")
     ) {
-      amIAI = true;
+      // amIAI = true;
       setTimeout(() => {
         console.log(
           `%c***AI (${playersState.activePlayer}) is auto-drawing a lava tile!`,
@@ -87,22 +87,26 @@ export const runToSquare = toSquare => {
         lavaLogic.drawTile();
       }, 1000);
     }
-    const nextPlayer = (playersState.turn + 1) % playersState.players.length;
+    // const nextPlayer = (playersState.turn + 1) % playersState.players.length;
 
+    console.log(
+      `%c***If player AFTER ${playersState.activePlayer} is AI, should they auto-draw now?`,
+      "color: purple; font-weight: bold"
+    );
     store.dispatch(actions.incrementPlayerTurn());
-    if (
-      _.get(playersState, `details.${playersState.players[nextPlayer]}.ai`) &&
-      !_.get(gamePlayState, "gameSettings.autoPlayDisabled") &&
-      !amIAI
-    ) {
-      setTimeout(() => {
-        console.log(
-          `%c***AI (${playersState.players[nextPlayer]}) is auto-drawing a lava tile!`,
-          "color: green; font-weight: bold"
-        );
-        lavaLogic.drawTile();
-      }, 1000);
-    }
+    // if (
+    //   _.get(playersState, `details.${playersState.players[nextPlayer]}.ai`) &&
+    //   !_.get(gamePlayState, "gameSettings.autoPlayDisabled") &&
+    //   !amIAI
+    // ) {
+    //   setTimeout(() => {
+    //     console.log(
+    //       `%c***AI (${playersState.players[nextPlayer]}) is auto-drawing a lava tile!`,
+    //       "color: green; font-weight: bold"
+    //     );
+    //     lavaLogic.drawTile();
+    //   }, 1000);
+    // }
   } else if (playerDetails.ai) {
     setTimeout(() => {
       store.dispatch(
@@ -231,15 +235,17 @@ export const runForYourLives = async () => {
         helper.runnerRecommendations()
       );
       store.dispatch(actions.addRecommendations(sortedRecommendations));
-      const startSquare = sortedRecommendations[0].square;
-      const census = _.get(gridState, `grid.${startSquare}.occupants`);
-      let selectedOccupant = "";
-      census.forEach(occupant => {
-        if (occupant.player === playersState.activePlayer) {
-          selectedOccupant = occupant;
-        }
-      });
-      selectRunner(selectedOccupant, startSquare);
+      const startSquare = _.get(sortedRecommendations, "[0].square");
+      if (startSquare) {
+        const census = _.get(gridState, `grid.${startSquare}.occupants`);
+        let selectedOccupant = "";
+        census.forEach(occupant => {
+          if (occupant.player === playersState.activePlayer) {
+            selectedOccupant = occupant;
+          }
+        });
+        selectRunner(selectedOccupant, startSquare);
+      }
     }, 750);
   }
 };

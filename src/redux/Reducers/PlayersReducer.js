@@ -75,40 +75,47 @@ const playersState = (state = types.playersState.defaults, action) => {
       };
     case actions.INCREMENT_PLAYER_CASUALTIES:
       playerId = payload.player;
-      populationArray = _.get(state, `details.${playerId}.population`, []);
-      casualtiesArray = _.get(state, `details.${playerId}.casualties`, []);
-      idx = populationArray.map(p => p.id).indexOf(payload.id);
-      transitionObj = populationArray.splice(idx, 1);
-      casualtiesArray.push(transitionObj[0]);
-      return {
-        ...state,
-        details: {
-          ...state.details,
-          [playerId]: {
-            ...state.details[playerId],
-            casualties: casualtiesArray,
-            population: populationArray
+      if (playerId) {
+        populationArray = _.get(state, `details.${playerId}.population`, []);
+        casualtiesArray = _.get(state, `details.${playerId}.casualties`, []);
+        idx = populationArray.map(p => p.id).indexOf(payload.id);
+        transitionObj = populationArray.splice(idx, 1);
+        casualtiesArray.push(transitionObj[0]);
+        return {
+          ...state,
+          details: {
+            ...state.details,
+            [playerId]: {
+              ...state.details[playerId],
+              casualties: casualtiesArray,
+              population: populationArray
+            }
           }
-        }
-      };
+        };
+      }
+      return { ...state };
     case actions.INCREMENT_PLAYER_SAVED:
       playerId = payload.player;
-      populationArray = _.get(state, `details.${playerId}.population`, []);
-      savedArray = _.get(state, `details.${playerId}.saved`, []);
-      idx = populationArray.map(p => p.id).indexOf(payload.id);
-      transitionObj = populationArray.splice(idx, 1);
-      savedArray.push(transitionObj[0]);
-      return {
-        ...state,
-        details: {
-          ...state.details,
-          [playerId]: {
-            ...state.details[playerId],
-            saved: savedArray,
-            population: populationArray
+      if (playerId) {
+        populationArray = _.get(state, `details.${playerId}.population`, []);
+        savedArray = _.get(state, `details.${playerId}.saved`, []);
+        idx = populationArray.map(p => p.id).indexOf(payload.id);
+        transitionObj = populationArray.splice(idx, 1);
+        savedArray.push(transitionObj[0]);
+        return {
+          ...state,
+          details: {
+            ...state.details,
+            [playerId]: {
+              ...state.details[playerId],
+              saved: savedArray,
+              population: populationArray
+            }
           }
-        }
-      };
+        };
+      }
+      return { ...state };
+
     case actions.SET_PLAYER_TURN:
       totalTurns = state.totalTurns + 1;
       return {

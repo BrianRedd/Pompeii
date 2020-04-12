@@ -73,12 +73,12 @@ export const placeLavaTile = square => {
 
   if (flagsState.eruptionCount) {
     store.dispatch(actions.setEruptionCounter(flagsState.eruptionCount - 1));
-    let amIAI = false;
+    // let amIAI = false;
     if (
       _.get(playersState, `details.${playersState.activePlayer}.ai`) &&
       !autoPlayDisabled
     ) {
-      amIAI = true;
+      // amIAI = true;
       setTimeout(() => {
         console.log(
           `%c***AI (${playersState.activePlayer}) is auto-drawing a lava tile! (${flagsState.eruptionCount})`,
@@ -88,23 +88,26 @@ export const placeLavaTile = square => {
         drawTile();
       }, 1000);
     }
-    const nextPlayer = (playersState.turn + 1) % playersState.players.length;
-
+    // const nextPlayer = (playersState.turn + 1) % playersState.players.length;
+    console.log(
+      `%c***If player AFTER ${playersState.activePlayer} is AI, should they auto-draw now?`,
+      "color: purple; font-weight: bold"
+    );
     store.dispatch(actions.incrementPlayerTurn());
-    if (
-      _.get(playersState, `details.${playersState.players[nextPlayer]}.ai`) &&
-      !autoPlayDisabled &&
-      !amIAI
-    ) {
-      setTimeout(() => {
-        console.log(
-          `%c***AI (${playersState.players[nextPlayer]}) is auto-drawing a lava tile!`,
-          "color: green; font-weight: bold"
-        );
-        // eslint-disable-next-line no-use-before-define
-        drawTile();
-      }, 1000);
-    }
+    // if (
+    //   _.get(playersState, `details.${playersState.players[nextPlayer]}.ai`) &&
+    //   !autoPlayDisabled &&
+    //   !amIAI
+    // ) {
+    //   setTimeout(() => {
+    //     console.log(
+    //       `%c***AI (${playersState.players[nextPlayer]}) is auto-drawing a lava tile!`,
+    //       "color: green; font-weight: bold"
+    //     );
+    //     // eslint-disable-next-line no-use-before-define
+    //     drawTile();
+    //   }, 1000);
+    // }
   } else if (
     _.get(playersState, `details.${playersState.activePlayer}.population`, [])
       .length < 1
@@ -122,22 +125,25 @@ export const placeLavaTile = square => {
         drawTile();
       }, 1000);
     }
-    const nextPlayer = (playersState.turn + 1) % playersState.players.length;
-
+    // const nextPlayer = (playersState.turn + 1) % playersState.players.length;
+    console.log(
+      `%c***If player AFTER ${playersState.activePlayer} is AI, should they auto-draw now?`,
+      "color: purple; font-weight: bold"
+    );
     store.dispatch(actions.incrementPlayerTurn());
-    if (
-      _.get(playersState, `details.${playersState.players[nextPlayer]}.ai`) &&
-      !autoPlayDisabled
-    ) {
-      setTimeout(() => {
-        console.log(
-          `%c***AI (${playersState.players[nextPlayer]}) is auto-drawing a lava tile!`,
-          "color: green; font-weight: bold"
-        );
-        // eslint-disable-next-line no-use-before-define
-        drawTile();
-      }, 1000);
-    }
+    // if (
+    //   _.get(playersState, `details.${playersState.players[nextPlayer]}.ai`) &&
+    //   !autoPlayDisabled
+    // ) {
+    //   setTimeout(() => {
+    //     console.log(
+    //       `%c***AI (${playersState.players[nextPlayer]}) is auto-drawing a lava tile!`,
+    //       "color: green; font-weight: bold"
+    //     );
+    //     // eslint-disable-next-line no-use-before-define
+    //     drawTile();
+    //   }, 1000);
+    // }
   } else {
     console.log(
       "%cset run counter to 2 and continue",
@@ -275,7 +281,7 @@ export const drawTile = human => {
   const storeState = store.getState();
   const {
     flagsState,
-    gridState: { grid },
+    // gridState: { grid },
     tileState,
     playersState
   } = storeState;
@@ -286,28 +292,28 @@ export const drawTile = human => {
     playersState.details[playersState.activePlayer].ai
   );
 
-  let census = [];
-  Object.values(playersState.details).forEach(arr => {
-    census = [...census, ...arr.population];
-  });
-  if (!_.get(tileState, "pile.length") || census.length === 0) {
-    alert("Out of tiles or people; GAME OVER!");
-    const gridArray = Object.keys(grid);
-    gridArray.forEach(square => {
-      if (_.get(grid, `${square}.occupants.length`) > 0) {
-        _.get(grid, `${square}.occupants`).forEach(person => {
-          store.dispatch(
-            actions.incrementPlayerCasualtiesInStore(person.player, 1)
-          );
-        });
-      }
-      if (!_.get(grid, `${square}.lava`)) {
-        store.dispatch(actions.placeLavaTileOnSquare(square, "Lava"));
-      }
-      store.dispatch(actions.placePeopleInSquare(square, []));
-    });
-    store.dispatch(actions.toggleFlags("game-over"));
-  }
+  // let census = [];
+  // Object.values(playersState.details).forEach(arr => {
+  //   census = [...census, ...arr.population];
+  // });
+  // if (!_.get(tileState, "pile.length") || census.length === 0) {
+  //   alert("Out of tiles or people; GAME OVER!");
+  //   const gridArray = Object.keys(grid);
+  //   gridArray.forEach(square => {
+  //     if (_.get(grid, `${square}.occupants.length`) > 0) {
+  //       _.get(grid, `${square}.occupants`).forEach(person => {
+  //         store.dispatch(
+  //           actions.incrementPlayerCasualtiesInStore(person.player, 1)
+  //         );
+  //       });
+  //     }
+  //     if (!_.get(grid, `${square}.lava`)) {
+  //       store.dispatch(actions.placeLavaTileOnSquare(square, "Lava"));
+  //     }
+  //     store.dispatch(actions.placePeopleInSquare(square, []));
+  //   });
+  //   store.dispatch(actions.toggleFlags("game-over"));
+  // }
 
   if (!(!human && !playersState.details[playersState.activePlayer].ai)) {
     const tilePile = [...tileState.pile];

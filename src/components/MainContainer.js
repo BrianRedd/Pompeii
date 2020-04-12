@@ -11,7 +11,7 @@ import * as helper from "./Logic/helperFunctions";
 import { playPompCard } from "./Logic/cardLogic";
 import { placePerson } from "./Logic/placePeopleLogic";
 import { placeRelatives } from "./Logic/placeRelativesLogic";
-import { placeLavaTile } from "./Logic/lavaLogic";
+import * as lavaLogic from "./Logic/lavaLogic";
 import { runForYourLives } from "./Logic/runnerLogic";
 
 import Main from "./Main";
@@ -93,10 +93,23 @@ const MainContainer = props => {
       _.get(playersState, `details.${activePlayer}.population.length`) < 1
     ) {
       console.log(
-        `%c***If ${activePlayer} is AI, should they auto-draw now?`,
-        "color: red; font-weight: bold"
+        `%c***If player AFTER ${activePlayer} is AI, should they auto-draw now?`,
+        "color: purple; font-weight: bold"
       );
+      // const nextPlayer = (playersState.turn + 1) % playersState.players.length;
       incrementPlayerTurn();
+      // if (
+      //   _.get(playersState, `details.${playersState.players[nextPlayer]}.ai`) &&
+      //   !_.get(gamePlayState, "gameSettings.autoPlayDisabled")
+      // ) {
+      //   setTimeout(() => {
+      //     console.log(
+      //       `%c***AI (${playersState.players[nextPlayer]}) is auto-drawing a lava tile!`,
+      //       "color: green; font-weight: bold"
+      //     );
+      //     lavaLogic.drawTile();
+      //   }, 1000);
+      // }
     } else {
       console.log(
         `%c***If ${activePlayer} is AI, should they auto-draw now?`,
@@ -119,16 +132,18 @@ const MainContainer = props => {
         deckEnabled={
           _.get(playersState, `details.${activePlayer}.hand.length`) < 4 &&
           !flagsState.flags.includes("placing-person") &&
-          !flagsState.flags.includes("card-omen") &&
+          !flagsState.flags.includes(
+            "card-omen"
+          ) /* &&
           (!_.get(playersState, `details.${playersState.activePlayer}.ai`) ||
-            _.get(gamePlayState, "gameSettings.autoPlayDisabled"))
+            _.get(gamePlayState, "gameSettings.autoPlayDisabled")) */
         }
         pileEnabled={
           messageState.stage === 2 &&
           !flagsState.flags.includes("placing-lava-tile") &&
-          !flagsState.runCount &&
+          !flagsState.runCount /* &&
           (!_.get(playersState, `details.${playersState.activePlayer}.ai`) ||
-            _.get(gamePlayState, "gameSettings.autoPlayDisabled"))
+            _.get(gamePlayState, "gameSettings.autoPlayDisabled")) */
         }
         playPompCard={playPompCard}
         placePerson={placePerson}
@@ -137,7 +152,7 @@ const MainContainer = props => {
         vacancy={helper.vacancy}
         resolveNoPlaceToPlace={resolveNoPlaceToPlace}
         dangerZone={gridState.dangerZone}
-        placeLavaTile={placeLavaTile}
+        placeLavaTile={lavaLogic.placeLavaTile}
         toggleFlags={toggleFlags}
       />
     </div>

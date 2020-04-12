@@ -235,7 +235,7 @@ export const resolveAd79 = () => {
           store.dispatch(actions.toggleFlags("card-ad79"));
           lavaLogic.drawTile();
         }, 1000);
-      } else if (
+      } /* else if (
         _.get(
           playersState,
           `details.${playersState.players[nextPlayer]}.ai` && !autoPlayDisabled
@@ -248,6 +248,11 @@ export const resolveAd79 = () => {
           );
           lavaLogic.drawTile();
         }, 1000);
+      } */ else {
+        console.log(
+          `%c***If player AFTER ${playersState.activePlayer} is AI, should they auto-draw now?`,
+          "color: purple; font-weight: bold"
+        );
       }
     } else if (
       _.get(playersState, `details.${playersState.activePlayer}.ai`) &&
