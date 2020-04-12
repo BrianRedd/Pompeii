@@ -98,6 +98,10 @@ const MainContainer = props => {
       );
       incrementPlayerTurn();
     } else {
+      console.log(
+        `%c***If ${activePlayer} is AI, should they auto-draw now?`,
+        "color: red; font-weight: bold"
+      );
       setRunCounter(2);
       runForYourLives();
     }

@@ -38,7 +38,7 @@ const Tiles = props => {
             data-test="tile-pile"
             focusRipple
             disabled={!pileEnabled || !!lavaTile}
-            onClick={() => drawTile()}
+            onClick={() => drawTile(true)}
             style={pileEnabled ? { borderColor: `rgb(${playerColor})` } : {}}
           >
             {lavaTile ? (

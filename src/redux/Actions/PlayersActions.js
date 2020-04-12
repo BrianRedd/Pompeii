@@ -193,13 +193,13 @@ export const incrementPlayerTurn = () => (dispatch, getState) => {
       )
     })
   );
-  dispatch(
-    addSnackbar({
-      message: `It is now ${_.get(
-        playersState,
-        `details.${playersState.players[nextPlayer]}.name`
-      )}'s turn`,
-      type: "info"
-    })
-  );
+  // dispatch(
+  //   addSnackbar({
+  //     message: `It is now ${_.get(
+  //       playersState,
+  //       `details.${playersState.players[nextPlayer]}.name`
+  //     )}'s turn`,
+  //     type: "info"
+  //   })
+  // );
 };

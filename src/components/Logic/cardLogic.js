@@ -9,6 +9,7 @@ import { aiPlayers } from "../../data/playerData";
 import * as constant from "../../data/constants";
 import { randAndArrangeRecommendations } from "../../utils/utilsCommon";
 import * as helper from "./helperFunctions";
+import * as lavaLogic from "./lavaLogic";
 // eslint-disable-next-line import/no-cycle
 import * as placePeopleLogic from "./placePeopleLogic";
 
@@ -222,24 +223,27 @@ export const resolveAd79 = () => {
           )
         })
       );
-      setTimeout(() => {
-        console.log(
-          `%c***If ${playersState.activePlayer} is AI, should they click AD79 now?`,
-          "color: red; font-weight: bold"
-        );
-        // console.log(
-        //   `%c***AI (${playersState.activePlayer}) clicking AD79 NOW!!!`,
-        //   "color: green; font-weight: bold"
-        // );
-        // store.dispatch(actions.toggleFlags("card-ad79"));
-      }, 500);
+      if (
+        _.get(playersState, `details.${playersState.activePlayer}.ai`) &&
+        !autoPlayDisabled
+      ) {
+        setTimeout(() => {
+          console.log(
+            `%c***AI (${playersState.activePlayer}) clicking SECOND AD79!`,
+            "color: green; font-weight: bold"
+          );
+          store.dispatch(actions.toggleFlags("card-ad79"));
+          console.log("%cCheck if NEXT PLAYER is AI", "color: chartreuse;");
+          lavaLogic.drawTile();
+        }, 1000);
+      }
     } else if (
-      playersState.details[playersState.activePlayer].ai &&
+      _.get(playersState, `details.${playersState.activePlayer}.ai`) &&
       !autoPlayDisabled
     ) {
       setTimeout(() => {
         console.log(
-          `%c***AI (${playersState.activePlayer}) clicking AD79 NOW!!!`,
+          `%c***AI (${playersState.activePlayer}) clicking FIRST AD79!`,
           "color: green; font-weight: bold"
         );
         store.dispatch(actions.toggleFlags("card-ad79"));
@@ -260,7 +264,14 @@ export const resolveAd79 = () => {
 export const resolveOmen = () => {
   console.log("resolveOmen");
   const storeState = store.getState();
-  const { gridState, flagsState, playersState } = storeState;
+  const {
+    gamePlayState: {
+      gameSettings: { autoPlayDisabled }
+    },
+    gridState,
+    flagsState,
+    playersState
+  } = storeState;
 
   const playerDetails = _.get(
     playersState,
@@ -314,14 +325,16 @@ export const resolveOmen = () => {
           true
         );
       }
-      setTimeout(() => {
-        console.log(
-          `%c***AI (${playersState.activePlayer}), after murdering an innocent, is drawing a card!!!`,
-          "color: green; font-weight: bold"
-        );
-        // eslint-disable-next-line no-use-before-define
-        drawCard();
-      }, 1000);
+      if (!autoPlayDisabled) {
+        setTimeout(() => {
+          console.log(
+            `%c***AI (${playersState.activePlayer}), after murdering an innocent, is drawing a card!!!`,
+            "color: green; font-weight: bold"
+          );
+          // eslint-disable-next-line no-use-before-define
+          drawCard();
+        }, 1000);
+      }
     }, 1000);
   } else if (!flagsState.flags.includes("card-omen")) {
     store.dispatch(actions.toggleFlags("card-omen"));

@@ -7,7 +7,8 @@ import actions from "../../redux/Actions";
 import * as data from "../../data/gridData";
 import * as utils from "../../utils/utilsCommon";
 import * as helper from "./helperFunctions";
-import { runForYourLives } from "./runnerLogic";
+// eslint-disable-next-line import/no-cycle
+import * as runnerLogic from "./runnerLogic";
 
 /**
  * @function burnSurroundedTiles
@@ -36,7 +37,15 @@ export const burnSurroundedTiles = tiles => {
  */
 export const placeLavaTile = square => {
   const storeState = store.getState();
-  const { flagsState, gridState, playersState, tileState } = storeState;
+  const {
+    flagsState,
+    gamePlayState: {
+      gameSettings: { autoPlayDisabled }
+    },
+    gridState,
+    playersState,
+    tileState
+  } = storeState;
 
   console.log("placeLavaTile:", tileState.lavaTile, square);
   store.dispatch(actions.placeLavaTileOnSquare(square, tileState.lavaTile));
@@ -64,23 +73,69 @@ export const placeLavaTile = square => {
 
   if (flagsState.eruptionCount) {
     store.dispatch(actions.setEruptionCounter(flagsState.eruptionCount - 1));
-    console.log(
-      `%c***If ${playersState.activePlayer} is AI, should they auto-draw now?`,
-      "color: red; font-weight: bold"
-    );
+    let amIAI = false;
+    if (
+      _.get(playersState, `details.${playersState.activePlayer}.ai`) &&
+      !autoPlayDisabled
+    ) {
+      amIAI = true;
+      setTimeout(() => {
+        console.log(
+          `%c***AI (${playersState.activePlayer}) is auto-drawing a lava tile! (${flagsState.eruptionCount})`,
+          "color: green; font-weight: bold"
+        );
+        console.log("%cCheck if NEXT PLAYER is AI", "color: chartreuse;");
+        // eslint-disable-next-line no-use-before-define
+        drawTile();
+      }, 1000);
+    }
+    const nextPlayer = (playersState.turn + 1) % playersState.players.length;
+
     store.dispatch(actions.incrementPlayerTurn());
+    if (
+      _.get(playersState, `details.${playersState.players[nextPlayer]}.ai`) &&
+      !amIAI
+    ) {
+      setTimeout(() => {
+        console.log(
+          `%c***AI (${playersState.players[nextPlayer]}) is auto-drawing a lava tile!`,
+          "color: green; font-weight: bold"
+        );
+        console.log("%cCheck if NEXT PLAYER is AI", "color: chartreuse;");
+        // eslint-disable-next-line no-use-before-define
+        drawTile();
+      }, 1000);
+    }
   } else if (
     _.get(playersState, `details.${playersState.activePlayer}.population`, [])
       .length < 1
   ) {
-    console.log(
-      `%c***If ${playersState.activePlayer} is AI, should they auto-draw now?`,
-      "color: red; font-weight: bold"
-    );
+    if (
+      _.get(playersState, `details.${playersState.activePlayer}.ai`) &&
+      !autoPlayDisabled
+    ) {
+      setTimeout(() => {
+        console.log(
+          `%c***AI (${playersState.activePlayer}) is auto-drawing a lava tile! (no population)`,
+          "color: green; font-weight: bold"
+        );
+        console.log("%cCheck if NEXT PLAYER is AI", "color: chartreuse;");
+        // eslint-disable-next-line no-use-before-define
+        drawTile();
+      }, 1000);
+    } else {
+      console.log(
+        "Human Player just placed a tile; should AI be able play now?"
+      );
+    }
     store.dispatch(actions.incrementPlayerTurn());
   } else {
+    console.log(
+      "%cset run counter to 2 and continue",
+      "color: fuschia;font-weight:bold;"
+    );
     store.dispatch(actions.setRunCounter(2));
-    runForYourLives();
+    runnerLogic.runForYourLives();
   }
 };
 
@@ -133,7 +188,7 @@ export const highlightDangerZones = tile => {
             playersState,
             `details.${playersState.activePlayer}.name`
           )} places ${tile} lava at ${recommendations[0].square}`,
-          type: "warning"
+          type: "default"
         })
       );
     }
@@ -192,7 +247,7 @@ export const highlightDangerZones = tile => {
               playersState,
               `details.${playersState.activePlayer}.name`
             )} places ${tile} lava at ${recommendations[0].square}`,
-            type: "warning"
+            type: "default"
           })
         );
       }
@@ -206,8 +261,8 @@ export const highlightDangerZones = tile => {
  * @function drawTile
  * @description drawing a tile during stage 3
  */
-export const drawTile = () => {
-  console.log("drawTile");
+export const drawTile = human => {
+  console.log("drawTile", human ? "by a human!" : "");
   const storeState = store.getState();
   const { flagsState, tileState } = storeState;
 

@@ -13,10 +13,10 @@ import { placePerson } from "./placePeopleLogic";
 /**
  * @function placeRelatives
  * @description function when relatives is placed
- * @param {String} grid - grid where "parent" was placed
+ * @param {String} square - square where "parent" was placed
  */
-export const placeRelatives = grid => {
-  console.log("placeRelatives; grid:", grid);
+export const placeRelatives = square => {
+  console.log("placeRelatives; square:", square);
   const storeState = store.getState();
   const {
     cardsState,
@@ -24,9 +24,6 @@ export const placeRelatives = grid => {
     gamePlayState,
     gridState,
     playersState
-    // gamePlayState: {
-    //   gameSettings: { autoPlayDisabled }
-    // },
   } = storeState;
 
   const playerDetails = _.get(
@@ -34,31 +31,40 @@ export const placeRelatives = grid => {
     `details.${playersState.activePlayer}`
   );
   // current other occupants
-  const currentOccupants = _.get(gridState, `grid.${grid}.occupants`, []);
+  const currentOccupants = _.get(gridState, `grid.${square}.occupants`, []);
   let thisPlacedRelatives = gamePlayState.placedRelatives;
   let orderedRecommendations = [];
 
-  if (grid) {
+  if (square) {
+    const id = `P${playersState.players.indexOf(
+      playersState.activePlayer
+    )}-${_.get(
+      playersState,
+      `details.${playersState.activePlayer}.totalPieces`,
+      0
+    )}r`;
     // place relative in square
     const personObj = {
-      id: `P${playersState.players.indexOf(playersState.activePlayer)}-${
-        playersState.details[playersState.activePlayer].population.length
-      }r`,
+      id,
       player: playersState.activePlayer,
       gender: Math.round(Math.random()) ? "male" : "female"
     };
+    console.log(
+      `%c${playersState.activePlayer} placed person ${id} on square ${square}`,
+      "color: blue;font-weight:bold;"
+    );
     store.dispatch(
-      actions.placePeopleInSquare(grid, [...currentOccupants, personObj])
+      actions.placePeopleInSquare(square, [...currentOccupants, personObj])
     );
     store.dispatch(
       actions.incrementPlayerPopulation(playersState.activePlayer, personObj)
     );
-    thisPlacedRelatives = [...gamePlayState.placedRelatives, grid];
+    thisPlacedRelatives = [...gamePlayState.placedRelatives, square];
     store.dispatch(actions.setPlacedRelatives(thisPlacedRelatives));
     if (playerDetails.ai) {
       const idx = gamePlayState.recommendations
         .map(rec => rec.square)
-        .indexOf(grid);
+        .indexOf(square);
       gamePlayState.recommendations.splice(idx, 1);
       orderedRecommendations = randAndArrangeRecommendations(
         gamePlayState.recommendations
@@ -66,20 +72,20 @@ export const placeRelatives = grid => {
       store.dispatch(actions.addRecommendations(orderedRecommendations));
     }
     store.dispatch(
-      actions.setCardGrid([...cardsState.grid].filter(val => val !== grid))
+      actions.setCardGrid([...cardsState.grid].filter(val => val !== square))
     );
     store.dispatch(
       actions.addSnackbar({
         message: `${playerDetails.name} places a relative at ${
-          grid.split("_")[1]
-        } x ${grid.split("_")[0]}`,
-        type: "success"
+          square.split("_")[1]
+        } x ${square.split("_")[0]}`,
+        type: "default"
       })
     );
   }
 
   // if enough relatives have been placed, end relative placement
-  if (thisPlacedRelatives.length === flagsState.relativesCount || !grid) {
+  if (thisPlacedRelatives.length === flagsState.relativesCount || !square) {
     store.dispatch(actions.setRelativesCounter(0));
     store.dispatch(actions.setPlacedRelatives([]));
     store.dispatch(actions.addRecommendations([]));
@@ -102,8 +108,4 @@ export const placeRelatives = grid => {
       placePerson(orderedRecommendations[0].square);
     }, 500);
   }
-
-  // if (!autoPlayDisabled) {
-  //   console.log(`%c***AI (${playersState.activePlayer}) auto-draw NOW?`);
-  // }
 };

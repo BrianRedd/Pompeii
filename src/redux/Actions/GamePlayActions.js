@@ -97,13 +97,14 @@ export const gameSetup = (
     const gridKeys = Object.keys(gridSquares);
     gridKeys.forEach(grid => {
       const potentialPop = _.get(gridSquares, `${grid}.buildingCapacity`, 0);
-      const actualPop = Math.round(Math.random() * potentialPop);
+      const actualPop = Math.floor(Math.random() * potentialPop);
       const occupants = [];
       for (let i = 0; i < actualPop; i += 1) {
         const rand = Math.floor(Math.random() * playersArray.length);
         const player = playersArray[rand];
+        const id = `P${rand}-${theseDetails[player].population.length}s`;
         const personObj = {
-          id: `P${rand}-${theseDetails[player].population.length}s`,
+          id,
           player,
           gender: Math.floor(Math.random() * 2) === 1 ? "male" : "female"
         };
@@ -125,7 +126,7 @@ export const gameSetup = (
   await dispatch(addPlayers(theseDetails));
   await dispatch(setPlayerTurn(parseFloat(startPlayer) - 1));
   await dispatch(addActivePlayer(playersArray[startPlayer]));
-  await dispatch(generateDeck(!!(gameSettings.stage > 0)));
+  await dispatch(generateDeck(!!(gameSettings.startPhase === 1)));
   await dispatch(generatePile(gameSettings.wildLava));
   await dispatch(
     updateInstructions({

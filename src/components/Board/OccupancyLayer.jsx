@@ -32,13 +32,14 @@ const OccupancySquare = ({
       let style = {
         backgroundColor: color
       };
-      const offSetArray = _.get(grid, `${square}.offSets`);
+      const offSetArray = _.get(grid, `${square}.offSets`, []);
+
       if (messageState.stage < 2 && offSetArray.length > 0) {
         style = {
           ...style,
           position: "absolute",
-          left: `${offSetArray[idx][0]}px`,
-          top: `${offSetArray[idx][1]}px`
+          left: `${_.get(offSetArray, `[${idx}][0]`, 0)}px`,
+          top: `${_.get(offSetArray, `[${idx}][1]`, 0)}px`
         };
       }
       return (
@@ -101,7 +102,6 @@ const OccupancyLayer = props => {
   const {
     gridState: { grid },
     playersState,
-    // performSacrifice,
     runCount,
     messageState
   } = props;
@@ -131,7 +131,6 @@ const OccupancyLayer = props => {
           <OccupancySquare
             square={square}
             playersState={playersState}
-            // performSacrifice={performSacrifice}
             runCount={runCount}
             selectRunner={selectRunner}
             messageState={messageState}
@@ -154,7 +153,6 @@ OccupancyLayer.propTypes = {
   messageState: types.messageState.types,
   playersState: types.playersState.types,
   runCount: PropTypes.number
-  // performSacrifice: PropTypes.func
 };
 
 OccupancyLayer.defaultProps = {
@@ -162,7 +160,6 @@ OccupancyLayer.defaultProps = {
   messageState: types.messageState.defaults,
   playersState: types.playersState.defaults,
   runCount: 0
-  // performSacrifice: () => {}
 };
 
 export default OccupancyLayer;

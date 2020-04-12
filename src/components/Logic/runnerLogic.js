@@ -9,6 +9,8 @@ import * as constant from "../../data/constants";
 import * as utils from "../../utils/utilsCommon";
 import * as helper from "./helperFunctions";
 import { escapeSquares } from "../../data/gridData";
+// eslint-disable-next-line import/no-cycle
+import * as lavaLogic from "./lavaLogic";
 
 /**
  * @function runToSquare
@@ -49,7 +51,7 @@ export const runToSquare = toSquare => {
       store.dispatch(
         actions.incrementPlayerSaved(gamePlayState.selectedPerson)
       );
-      if (playerDetails.population.length === 1) {
+      if (playerDetails.population.length === 0) {
         numberOfRuns = 1;
       }
     } else {
@@ -71,11 +73,37 @@ export const runToSquare = toSquare => {
   store.dispatch(actions.setRunner());
   store.dispatch(actions.selectPerson(null));
   if (!numberOfRuns) {
-    console.log(
-      `%c***If ${playersState.activePlayer} is AI, should they auto-draw now?`,
-      "color: red; font-weight: bold;"
-    );
+    let amIAI = false;
+    if (
+      _.get(playersState, `details.${playersState.activePlayer}.ai`) &&
+      !_.get(gamePlayState, "gameSettings.autoPlayDisabled")
+    ) {
+      amIAI = true;
+      setTimeout(() => {
+        console.log(
+          `%c***AI (${playersState.activePlayer}) is auto-drawing a lava tile!`,
+          "color: green; font-weight: bold"
+        );
+        console.log("%cCheck if NEXT PLAYER is AI", "color: chartreuse;");
+        lavaLogic.drawTile();
+      }, 1000);
+    }
+    const nextPlayer = (playersState.turn + 1) % playersState.players.length;
+
     store.dispatch(actions.incrementPlayerTurn());
+    if (
+      _.get(playersState, `details.${playersState.players[nextPlayer]}.ai`) &&
+      !amIAI
+    ) {
+      setTimeout(() => {
+        console.log(
+          `%c***AI (${playersState.players[nextPlayer]}) is auto-drawing a lava tile!`,
+          "color: green; font-weight: bold"
+        );
+        console.log("%cCheck if NEXT PLAYER is AI", "color: chartreuse;");
+        lavaLogic.drawTile();
+      }, 1000);
+    }
   } else if (playerDetails.ai) {
     setTimeout(() => {
       store.dispatch(
@@ -90,7 +118,10 @@ export const runToSquare = toSquare => {
       const census = _.get(gridState, `grid.${selectedSquare}.occupants`);
       let selectedOccupant = "";
       census.forEach(occupant => {
-        if (occupant.player === playersState.activePlayer) {
+        if (
+          occupant.player === playersState.activePlayer &&
+          !selectedOccupant
+        ) {
           selectedOccupant = occupant;
         }
       });
@@ -115,7 +146,6 @@ export const selectRunner = (person, square) => {
     ...person,
     square
   };
-  console.log("personPlusSquare:", personPlusSquare);
   store.dispatch(actions.selectPerson(personPlusSquare));
   const playerDetails = _.get(
     playersState,
@@ -128,7 +158,7 @@ export const selectRunner = (person, square) => {
     store.dispatch(
       actions.addSnackbar({
         message: "Not your person!",
-        type: "warning"
+        type: "default"
       })
     );
     return;
@@ -140,7 +170,7 @@ export const selectRunner = (person, square) => {
     store.dispatch(
       actions.addSnackbar({
         message: "Already ran this person this turn!",
-        type: "warning"
+        type: "default"
       })
     );
     return;
@@ -163,7 +193,7 @@ export const selectRunner = (person, square) => {
             playersState,
             `details.${playersState.activePlayer}.name`
           )} ran a person from ${square} to ${sortedRecommendations[0].square}`,
-          type: "success"
+          type: "default"
         })
       );
       runToSquare(sortedRecommendations[0].square);
@@ -176,6 +206,7 @@ export const selectRunner = (person, square) => {
  * @description player can now run two of their people
  */
 export const runForYourLives = async () => {
+  console.log("runForYourLives");
   const storeState = store.getState();
   const {
     gridState,
@@ -208,10 +239,6 @@ export const runForYourLives = async () => {
         }
       });
       selectRunner(selectedOccupant, startSquare);
-
-      // if (!autoPlayDisabled) {
-      //   console.log(`%c***AI (${playersState.activePlayer}) auto-draw NOW?`);
-      // }
     }, 750);
   }
 };

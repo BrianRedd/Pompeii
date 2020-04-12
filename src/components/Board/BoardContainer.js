@@ -7,6 +7,10 @@ import PropTypes from "prop-types";
 import * as types from "../../types/types";
 
 import Board from "./Board";
+import {
+  TopCoordinatesDisplay,
+  LeftCoordinatesDisplay
+} from "./CoordinatesLayers";
 import AnimatedPieceLayer from "./AnimatedPieceLayer";
 import OccupancyLayer from "./OccupancyLayer";
 import CancelButtons from "./CancelButtons";
@@ -39,6 +43,8 @@ const BoardContainer = props => {
   return (
     <div data-test="container-board" className="board-container">
       <Board messageState={messageState} />
+      <TopCoordinatesDisplay />
+      <LeftCoordinatesDisplay />
       <OccupancyLayer
         gridState={gridState}
         playersState={playersState}

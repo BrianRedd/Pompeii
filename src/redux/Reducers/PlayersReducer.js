@@ -17,6 +17,11 @@ const playersState = (state = types.playersState.defaults, action) => {
   let populationArray = [];
   let casualtiesArray = [];
   let savedArray = [];
+  const totalPieces = _.get(
+    state,
+    `details.${_.get(payload, "playerId", "null")}.totalPieces`,
+    0
+  );
   let idx;
   let playerId;
   switch (type) {
@@ -62,7 +67,8 @@ const playersState = (state = types.playersState.defaults, action) => {
           ...state.details,
           [payload.playerId]: {
             ...state.details[payload.playerId],
-            population: populationArray
+            population: populationArray,
+            totalPieces: totalPieces + 1
           }
         }
       };

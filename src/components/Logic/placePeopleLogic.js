@@ -17,10 +17,10 @@ import { drawCard } from "./cardLogic";
 /**
  * @function placePerson
  * @description function when person is placed
- * @param {String} grid
+ * @param {String} square
  */
-export const placePerson = grid => {
-  console.log("placePerson; grid:", grid);
+export const placePerson = square => {
+  console.log("placePerson; grid:", square);
   const storeState = store.getState();
   const {
     cardsState,
@@ -40,23 +40,28 @@ export const placePerson = grid => {
 
   // if number of relatives is set, place relative instead
   if (flagsState.relativesCount > 0) {
-    placeRelatives(grid);
+    placeRelatives(square);
     return;
   }
 
   // current other occupants
-  const currentOccupants = _.get(gridState, `grid.${grid}.occupants`, []);
+  const currentOccupants = _.get(gridState, `grid.${square}.occupants`, []);
 
   // place person in square
+  const id = `P${playersState.players.indexOf(
+    playersState.activePlayer
+  )}-${_.get(
+    playersState,
+    `details.${playersState.activePlayer}.totalPieces`,
+    0
+  )}p`;
   const personObj = {
-    id: `P${playersState.players.indexOf(playersState.activePlayer)}-${
-      playersState.details[playersState.activePlayer].population.length
-    }p`,
+    id,
     player: playersState.activePlayer,
     gender: Math.round(Math.random()) ? "male" : "female"
   };
   store.dispatch(
-    actions.placePeopleInSquare(grid, [...currentOccupants, personObj])
+    actions.placePeopleInSquare(square, [...currentOccupants, personObj])
   );
   store.dispatch(
     actions.incrementPlayerPopulation(playersState.activePlayer, personObj)
@@ -64,9 +69,9 @@ export const placePerson = grid => {
   store.dispatch(
     actions.addSnackbar({
       message: `${playerDetails.name} places a person at ${
-        grid.split("_")[1]
-      } x ${grid.split("_")[0]}`,
-      type: "success"
+        square.split("_")[1]
+      } x ${square.split("_")[0]}`,
+      type: "default"
     })
   );
   store.dispatch(actions.addRecommendations([]));
@@ -84,9 +89,9 @@ export const placePerson = grid => {
       ...cardsState.grid,
       ...data.gridByColor.White,
       ...data.gridByColor[
-        _.get(gridState, `grid.${grid}.buildingName`, "").split(" ")[0]
+        _.get(gridState, `grid.${square}.buildingName`, "").split(" ")[0]
       ]
-    ]).filter(val => val !== grid);
+    ]).filter(val => val !== square);
     store.dispatch(actions.setCardGrid(newGridArray));
 
     if (playerDetails.ai) {
@@ -151,10 +156,13 @@ export const placePerson = grid => {
       })
     );
 
-    if (playersState.details[playersState.activePlayer].ai) {
+    if (
+      _.get(playersState, `details.${playersState.activePlayer}.ai`) &&
+      !autoPlayDisabled
+    ) {
       setTimeout(() => {
         console.log(
-          `%c***AI (${playersState.activePlayer}) auto-drawing NOW!!!`,
+          `%c***AI (${playersState.activePlayer}) auto-drawing!`,
           "color: green; font-weight: bold"
         );
         drawCard();
@@ -177,16 +185,12 @@ export const placePerson = grid => {
     );
 
     if (
-      playersState.details[playersState.activePlayer].ai &&
+      _.get(playersState, `details.${playersState.activePlayer}.ai`) &&
       !autoPlayDisabled
     ) {
-      // console.log(
-      //   `%c***If ${playersState.activePlayer} is AI, should they auto-draw now?`,
-      //   "color: red; font-weight: bold"
-      // );
       setTimeout(() => {
         console.log(
-          `%c***AI (${playersState.activePlayer}) auto-drawing NOW!!!`,
+          `%c***AI (${playersState.activePlayer}) auto-drawing!`,
           "color: green; font-weight: bold"
         );
         drawCard();
@@ -221,17 +225,16 @@ export const performSacrifice = (personObj, square, ai) => {
   ) {
     return;
   }
-
   const currentOccupants = _.get(gridState, `grid.${square}.occupants`, []);
 
   const idx = currentOccupants
     .map(person => person.player)
     .indexOf(personObj.player);
-  currentOccupants.splice(idx, 1);
+  const sacrified = currentOccupants.splice(idx, 1);
 
   store.dispatch(actions.placePeopleInSquare(square, currentOccupants));
   store.dispatch(
-    actions.incrementPlayerCasualties(personObj.player, personObj)
+    actions.incrementPlayerCasualties(personObj.player, sacrified[0])
   );
   store.dispatch(
     actions.updateInstructions({

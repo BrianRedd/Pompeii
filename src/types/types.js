@@ -228,6 +228,7 @@ export const playerDetails = {
       casualties: arrayOf(object),
       population: arrayOf(object),
       saved: arrayOf(object),
+      totalPieces: number,
       ai: bool
     })
   }),
@@ -239,6 +240,7 @@ export const playerDetails = {
       casualties: [],
       population: [],
       saved: [],
+      totalPieces: 0,
       ai: false
     }
   }
