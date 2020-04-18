@@ -6,6 +6,8 @@ import PropTypes from "prop-types";
 import { Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 import { Button } from "@material-ui/core";
 
+import InstructionsModalBody from "./InstructionsModalBody";
+
 import actions from "../../redux/Actions";
 import * as types from "../../types/types";
 
@@ -21,6 +23,11 @@ const mapDispatchToProps = {
   toggleFlags: actions.toggleFlags
 };
 
+/**
+ * @function InstructionsModal
+ * @description Functional Container component for Instructions Modal
+ * @returns {React.Component} - Rendered component.
+ */
 const InstructionsModal = props => {
   const {
     flagsState: { flags },
@@ -37,7 +44,9 @@ const InstructionsModal = props => {
         <span className="fas fa-book-open mr-2" />
         Game Rules
       </ModalHeader>
-      <ModalBody>Instructions</ModalBody>
+      <ModalBody>
+        <InstructionsModalBody />
+      </ModalBody>
       <ModalFooter className="d-flex justify-content-end">
         <Button
           data-test="button-close"

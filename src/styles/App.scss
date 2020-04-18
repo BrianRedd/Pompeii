@@ -24,6 +24,10 @@ $board-width: 1320px;
   @include card-size;
 }
 
+.tile-tooltip {
+  @include square-size;
+}
+
 .main-container {
   min-width: 1840px;
   padding-left: 30px;
