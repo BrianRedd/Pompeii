@@ -1,6 +1,6 @@
 {
   "name": "pompeii",
-  "_homepage": "http://rbrianredd.com/games/pompeii/",
+  "homepage": "http://rbrianredd.com/games/pompeii/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
