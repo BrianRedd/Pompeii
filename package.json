@@ -18,7 +18,7 @@
     "formik": "^2.1.4",
     "jest-enzyme": "^7.1.2",
     "lodash": "^4.17.15",
-    "node-sass": "^4.13.1",
+    "node-sass": "^7.0.0",
     "notistack": "^0.9.8",
     "prop-types": "^15.7.2",
     "react": "^16.12.0",
